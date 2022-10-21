@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-// import store from './store'
-
+import store from './store'
+import vantConfig from './vant-config'
 import VueAxiosPlugin from 'vue-axios-plugin'
 
 Vue.use(VueAxiosPlugin, {
@@ -13,11 +13,13 @@ Vue.use(VueAxiosPlugin, {
   resHandleFunc: response => response,
   resErrorFunc: error => Promise.reject(error)
 })
+Vue.use(vantConfig)
 
 Vue.config.productionTip = false
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
 
