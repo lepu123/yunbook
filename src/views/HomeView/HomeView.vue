@@ -1,23 +1,24 @@
 <template>
   <div class="home">
-    <div class="text">
-      <div
-        ref="content"
-        class="content"
-        v-html="content"
-        @click="PageList"
-      ></div>
-      <div
-        class="content"
-        v-for="(r, i) in renderList"
-        :key="i"
-        v-show="i != 0"
-      >
-        <div class="list" v-for="(p, i) in r" :key="i" v-show="i != 0">
-          {{ p }}
-        </div>
-      </div>
-    </div>
+    主页
+<!--    <div class="text">-->
+<!--      <div-->
+<!--        ref="content"-->
+<!--        class="content"-->
+<!--        v-html="content"-->
+<!--        @click="PageList"-->
+<!--      ></div>-->
+<!--      <div-->
+<!--        class="content"-->
+<!--        v-for="(r, i) in renderList"-->
+<!--        :key="i"-->
+<!--        v-show="i != 0"-->
+<!--      >-->
+<!--        <div class="list" v-for="(p, i) in r" :key="i" v-show="i != 0">-->
+<!--          {{ p }}-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
     <!-- <button @click="PageList">1111111111111</button> -->
   </div>
@@ -112,15 +113,13 @@ export default {
           this.replaceText();
           this.PageList();
           console.log(this.renderList);
-          // console.log(this.heightList,this.viewWidth);
         });
     },
   },
   created() {},
   mounted() {
-    this.getData();
+    // this.getData();
 
-    //  console.log(this.heightList,this.textList);
   },
 };
 </script>

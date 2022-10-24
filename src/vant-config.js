@@ -1,6 +1,7 @@
-import { NavBar, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem } from 'vant'
+import { Image as VanImage, NavBar, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem } from 'vant'
 
 const vantComponents = [
+    VanImage,
     NavBar,
     Tabbar,
     TabbarItem,
