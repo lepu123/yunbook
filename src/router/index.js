@@ -1,13 +1,26 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import DetileView from '../views/DetileView.vue'
-  
+import HomeView from '../views/HomeView/HomeView.vue'
+import SortView from "@/views/SortView/SortView";
+import BookShelfView from "@/views/BookShelfView/BookShelfView";
+import MimeView from "@/views/MimeView/MimeView";
+
 Vue.use(VueRouter)
 
 const routes = [
+  // 自动重定向
+  {
+    path: '',
+    redirect: '/home'
+  },
   {
     path: '/',
-    name: 'home',
+    redirect: '/home'
+  },
+  {
+    path: '/detile',
+    name: 'detile',
     component: DetileView,
     children: [
       {
@@ -17,6 +30,27 @@ const routes = [
       }
     ],
   },
+  {
+    path: '/sort',
+    name: 'sort',
+    component: SortView,
+  },
+  {
+    path: '/home',
+    name: 'home',
+    component: HomeView,
+  },
+  {
+    path: '/bookshelf',
+    name: 'bookshelf',
+    component: BookShelfView,
+  },
+  {
+    path: '/mime',
+    name: 'mime',
+    component: MimeView,
+  }
+
   
 ]
 

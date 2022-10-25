@@ -1,5 +1,5 @@
-import { NavBar, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem,Popup,Cell } from 'vant'
 
+import { NavBar, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem,Popup,Cell } from 'vant'
 const vantComponents = [
     NavBar,
     Tabbar,
