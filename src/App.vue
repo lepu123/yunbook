@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view/>
+    <keep-alive>
+      <router-view/>
+    </keep-alive>
     <van-tabbar fixed z-index="999" active-color="#313131" inactive-color="#cecece" route>
       <van-tabbar-item  to="/bookshelf">
         <span>书架</span>
