@@ -5,19 +5,9 @@
       <!-- 外层循环渲染频道 -->
       <van-tab v-for="node in allStoreArr" :key="node.channel" :title="node.name">
         <div class="class-content">
-          <div class="sort-item">
-            <!-- 内层循环渲染分类 -->
-            <div class="sort-desc" v-for="(s,i) in node.cates"
-                 :class="{'active': i === index}"
-                 :key="s.name"
-                 @click="getFindUrl(i,s.url)">
-              {{ s.name }}
-            </div>
-          </div>
-          <div class="sort-item-content">
-            <!-- 筛选组件 -->
-            <SortComponent :url="findUrl"/>
-          </div>
+          <!-- 内层循环渲染分类 -->
+          <!-- 分类插件区分开来这里之前出了bug，修复了 -->
+          <SortItem :category="node.cates" />
         </div>
       </van-tab>
     </van-tabs>
@@ -26,12 +16,12 @@
 
 <script>
 import {mergedCategory} from "@/apis/sort";
-import SortComponent from "@/components/SortComponent";
+import SortItem from "@/components/SortItem";
 
 export default {
   name: "ClassificationView",
   components: {
-    SortComponent
+    SortItem,
   },
   data() {
     return {
@@ -39,10 +29,6 @@ export default {
       allStoreArr: [],
       // 头部的大标签所指页数
       active: 0,
-      // 所选分类的下标
-      index: 0,
-      // 请求筛选项的url
-      findUrl: '',
     };
   },
   created() {
@@ -54,10 +40,6 @@ export default {
       let {data} = await this.$axios.get(mergedCategory);
       this.allStoreArr = data;
     },
-    getFindUrl(index, url) {
-      this.index = index
-      this.findUrl = url
-    }
   },
 
 }
@@ -75,45 +57,15 @@ export default {
     background-color: #fdfdfe;
     overflow: auto;
 
-    .sort-item {
-      padding: 10px 15px;
-      width: 100vw;
-      overflow: hidden;
-      background-color: #f4f4f4;
 
-      .sort-desc {
-        display: inline-block;
-        position: relative;
-        height: 20px;
-        line-height: 20px;
-        margin: 10px 14px;
-      }
-
-      .sort-desc.active {
-        color: #e65436;
-      }
-
-      .sort-desc.active::after {
-        content: '';
-        display: inline-block;
-        position: absolute;
-        bottom: -4px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 15px;
-        height: 2.5px;
-        border-radius: 999px;
-        background-color: #e54d2e;
-      }
-    }
   }
 
   .search-btn {
     position: absolute;
-    top: 4px;
+    top: 7px;
     right: 10px;
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     z-index: 900;
     background-image: url(@/assets/image/search_icon/icon_search.png);
     background-size: cover;
