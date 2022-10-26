@@ -1,4 +1,4 @@
-import { NavBar, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem } from 'vant'
+import { NavBar, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem, Tab, Tabs, Popup, Cell, Toast ,Loading ,Overlay  } from 'vant'
 
 const vantComponents = [
     NavBar,
@@ -6,9 +6,18 @@ const vantComponents = [
     TabbarItem,
     Icon,
     Search,
-    NoticeBar, 
-    Swipe, 
-    SwipeItem
+    NoticeBar,
+    Swipe,
+    SwipeItem,
+    Tab,
+    Tabs,
+    Popup,
+    Cell,
+    Toast,
+    Loading,
+    Overlay ,
+    
+
 ]
 
 export default {
