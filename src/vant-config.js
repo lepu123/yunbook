@@ -1,6 +1,5 @@
-import { NavBar, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem, Tab, Tabs, Popup, Cell, Toast ,Loading ,Overlay  } from 'vant'
+import { NavBar, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem, Tab, Tabs, Popup, Cell, Toast ,Loading ,Overlay , Image as VanImage  } from 'vant'
 
-import { NavBar, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem,Popup,Cell, Image as VanImage, Tab, Tabs } from 'vant'
 const vantComponents = [
     NavBar,
     Tabbar,
@@ -17,8 +16,6 @@ const vantComponents = [
     Toast,
     Loading,
     Overlay ,
-    
-,
     Popup,
     Cell,
     VanImage,

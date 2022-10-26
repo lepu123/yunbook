@@ -11,7 +11,7 @@
               :src="props.active ? require('@/assets/image/home_tabbar/home_tabbar_icon_bookshelf_press.png') : require('@/assets/image/home_tabbar/home_tabbar_icon_bookshelf_normal.png')"  />
         </template>
       </van-tabbar-item>
-      <van-tabbar-item to="/home">
+      <van-tabbar-item to="/bookmallview">
         <span>书城</span>
         <template #icon="props">
           <van-image :src="props.active ? require('@/assets/image/home_tabbar/home_tabbar_icon_discover_press.png') : require('@/assets/image/home_tabbar/home_tabbar_icon_discover_normal.png')" />

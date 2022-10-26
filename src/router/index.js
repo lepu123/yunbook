@@ -59,8 +59,7 @@ const routes = [
     path: '/mime',
     name: 'mime',
     component: MimeView,
-  }
-
+  },
   {
     path: '/bookmallview',
     name: 'BookMallView',
