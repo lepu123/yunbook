@@ -11,7 +11,7 @@
     </div>
     <div class="sort-item-content">
       <!-- 筛选组件 -->
-      <SortComponent :url="category[index].url"/>
+      <SortComponent :url="category[index].url" :isShort="isShort"/>
     </div>
   </div>
 
@@ -32,7 +32,8 @@ export default {
     }
   },
   props: {
-    category: Array
+    category: Array,
+    isShort: Boolean,
   },
   methods: {
     getFindUrl(index) {
