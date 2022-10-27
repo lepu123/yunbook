@@ -1,0 +1,260 @@
+{
+    "code": 0,
+    "msg": "成功",
+    "data": {
+        "list": [
+            {
+                "name": "男生",
+                "select": false,
+                "subNavis": [
+                    {
+                        "name": "人气榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "男生人气榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=34&uuid=ca03da7b64ca443ab25ec3b662fa91e2&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "畅销榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "男生畅销榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=26&uuid=ca03da7b64ca443ab25ec3b662fa91e2&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "新书榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "男生新书榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=800&uuid=ca03da7b64ca443ab25ec3b662fa91e2&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "免费榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "男生免费榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=804&uuid=ca03da7b64ca443ab25ec3b662fa91e2&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "完结榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "男生完结榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=806&uuid=ca03da7b64ca443ab25ec3b662fa91e2&all=0"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "女生",
+                "select": true,
+                "subNavis": [
+                    {
+                        "name": "人气榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "女生人气榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=35&uuid=017de2274aa5400e9dabe30f173e98d9&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "畅销榜",
+                        "select": true,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "女生畅销榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=27&uuid=017de2274aa5400e9dabe30f173e98d9&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "新书榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "女生新书榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=900&uuid=017de2274aa5400e9dabe30f173e98d9&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "免费榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "女生免费榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=903&uuid=017de2274aa5400e9dabe30f173e98d9&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "完结榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "女生完结榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=905&uuid=017de2274aa5400e9dabe30f173e98d9&all=0"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "出版",
+                "select": false,
+                "subNavis": [
+                    {
+                        "name": "人气榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "出版人气榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=20&uuid=b5648dd3c4f24d9796f590cd81ca076e&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "畅销榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "出版畅销榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=13&uuid=b5648dd3c4f24d9796f590cd81ca076e&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "新书榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "出版新书榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=501&uuid=b5648dd3c4f24d9796f590cd81ca076e&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "免费榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "出版免费榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=504&uuid=b5648dd3c4f24d9796f590cd81ca076e&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "收藏榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "出版收藏榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=17&uuid=b5648dd3c4f24d9796f590cd81ca076e&all=0"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "听书",
+                "select": false,
+                "subNavis": [
+                    {
+                        "name": "人气榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "听书人气榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=707&uuid=b67282bb443845fabe5b543795a27618&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "畅销榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "听书畅销榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=706&uuid=b67282bb443845fabe5b543795a27618&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "免费榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "听书免费榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=712&uuid=b67282bb443845fabe5b543795a27618&all=0"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "完结榜",
+                        "select": false,
+                        "naviInfos": [
+                            {
+                                "typeDesc": "日榜",
+                                "name": "听书完结榜",
+                                "type": 0,
+                                "url": "/store/rankList.json?rankType=714&uuid=b67282bb443845fabe5b543795a27618&all=0"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
