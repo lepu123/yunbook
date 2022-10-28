@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import vantConfig from './vant-config'
 import VueAxiosPlugin from 'vue-axios-plugin'
+// import jQuery from "jquery"
 
 Vue.use(VueAxiosPlugin, {
   // 请求拦截处理
@@ -15,12 +16,17 @@ Vue.use(VueAxiosPlugin, {
 })
 Vue.use(vantConfig)
 
+// Vue.use(jQuery)
+
 Vue.config.productionTip = false
+
 
 new Vue({
   router,
   store,
   render: h => h(App)
 }).$mount('#app')
+
+// router.replace('/detile')
 
 

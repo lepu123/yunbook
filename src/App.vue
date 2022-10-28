@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view/>
-    <van-tabbar fixed z-index="999" active-color="#313131" inactive-color="#cecece" route>
+    <van-tabbar fixed z-index="100" active-color="#313131" inactive-color="#cecece" route>
       <van-tabbar-item  to="/bookshelf">
         <span>书架</span>
         <template #icon="props">
