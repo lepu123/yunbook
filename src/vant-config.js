@@ -16,11 +16,7 @@ const vantComponents = [
     Toast,
     Loading,
     Overlay ,
-    Popup,
-    Cell,
     VanImage,
-    Tab,
-    Tabs,
 ]
 
 export default {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="publish">
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
       <van-swipe-item v-for="(item, index) in bannersArr" :key="index">
         <img :src="item.cover" />
@@ -8,12 +8,22 @@
 
     <div class="short-cut">
       <ul>
-        <li v-for="item in shortCutArr" :key="item.msgId" @click="getNavData(item.url)">
+        <li
+          v-for="item in shortCutArr"
+          :key="item.msgId"
+          @click="getNavData(item.url)"
+        >
           <img :src="item.cover" />
           <p>{{ item.name }}</p>
         </li>
       </ul>
     </div>
+
+    <NewBooksComp :Arr="reasoningArr" />
+    <WatchMoreComp :Arr="niceBooks" />
+
+    <img class="midImg" :src="imgOne" />
+    <NewBooksComp :Arr="historyArr" />
 
     <div class="week-hot">
       <p
@@ -24,11 +34,10 @@
           padding-top: 8px;
         "
       >
-        <!-- 本周强推 -->
-        {{ weekHotArr.name }}
+        {{ motivationArr.name }}
       </p>
       <ul>
-        <li v-for="(item, index) in weekHotArr.list" :key="item.id">
+        <li v-for="(item, index) in motivationArr.list" :key="item.id">
           <img :src="item.cover" />
           <div>
             <p class="week-title">{{ item.title }}</p>
@@ -42,77 +51,74 @@
       </ul>
     </div>
 
-    <WatchMoreComp :Arr="everybodyArr" />
+    <NewBooksComp :Arr="sayLoveArr" />
 
-    <WatchMoreComp :Arr="yunGirlArr" />
+    <WatchMoreComp :Arr="packArr" />
+    <WatchMoreComp :Arr="niceLifeArr" />
+    <WatchMoreComp :Arr="chargingArr" />
 
-    <WatchMoreComp :Arr="modernArr" />
-
-    <WatchMoreComp :Arr="ancientArr" />
-
-    <WatchMoreComp :Arr="newBookArr" />
-
-
+    <img class="midImg" :src="imgTwo" />
   </div>
 </template>
 
 <script>
+import NewBooksComp from "./NewBooksComp.vue";
 import WatchMoreComp from "./WatchMoreComp.vue";
 export default {
   props: {
-    selectedUrl:String,
+    publishUrl: String,
   },
   data() {
     return {
       bannersArr: [],
       shortCutArr: [],
-      weekHotArr: {},
-      everybodyArr: {},
-      yunGirlArr: {},
-      modernArr: {},
-      ancientArr: {},
-      newBookArr: {},
-
-      //   everybodyMoreList: [],
+      reasoningArr: {},
+      niceBooks: {},
+      imgOne: "",
+      historyArr: {},
+      motivationArr: {},
+      sayLoveArr: {},
+      packArr: {},
+      niceLifeArr: {},
+      chargingArr: {},
+      imgTwo: "",
     };
+  },
+
+  components: {
+    NewBooksComp,
+    WatchMoreComp,
   },
   methods: {
     getData() {
       this.$axios
-        .get(
-          `https://apis.netstart.cn/yunyuedu${this.selectedUrl}`
-        )
+        .get(`https://apis.netstart.cn/yunyuedu${this.publishUrl}`)
         .then(({ data: { data } }) => {
           this.bannersArr = data.list[0].banners;
           this.shortCutArr = data.list[1].shortCut;
-          this.weekHotArr = data.list[2];
-          this.everybodyArr = data.list[3];
-          this.yunGirlArr = data.list[4];
-          this.modernArr = data.list[5];
-          this.ancientArr = data.list[6];
-          this.newBookArr = data.list[7];
+          this.reasoningArr = data.list[2];
+          this.niceBooks = data.list[3];
+          this.imgOne = data.list[4].cover;
+          this.historyArr = data.list[5];
+          this.motivationArr = data.list[6];
+          this.sayLoveArr = data.list[7];
+          this.packArr = data.list[8];
+          this.niceLifeArr = data.list[9];
+          this.chargingArr = data.list[10];
+          this.imgTwo = data.list[11].cover;
         });
     },
-
     getNavData(url) {
       this.$axios
-        .get(
-          `https://apis.netstart.cn/yunyuedu${url}`
-        )
+        .get(`https://apis.netstart.cn/yunyuedu${url}`)
         .then(({ data: { data } }) => {
           console.log(data);
         });
-    },
-    showPopup() {
-      this.show = true;
     },
   },
 
   created() {
     this.getData();
-  },
-  components: {
-    WatchMoreComp,
   },
 };
 </script>
@@ -146,6 +152,14 @@ export default {
     width: 42px;
   }
 }
+.midImg {
+  width: 96vw;
+  border-radius: 10px;
+  margin-left: 2vw;
+  height: 140px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
 
 .week-hot {
   width: 98vw;
@@ -169,6 +183,12 @@ export default {
 
       p {
         margin-top: 5px;
+        word-break: break-all;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
       }
       .week-author {
         font-size: 13px;
@@ -210,70 +230,4 @@ export default {
     }
   }
 }
-
-.everybody-reading {
-  width: 98vw;
-  margin-left: 1vw;
-  margin-top: 18px;
-  padding-top: 8px;
-  border-top: 1px solid #ccc;
-  ul {
-    li {
-      display: flex;
-      margin: 10px;
-      img {
-        height: 120px;
-      }
-
-      div {
-        margin-left: 10px;
-      }
-
-      div :nth-child(1) {
-        font-size: 18px;
-        font-weight: 700;
-      }
-
-      div :nth-child(2) {
-        font-size: 13px;
-        color: rgb(152, 141, 141);
-        margin-top: 10px;
-      }
-      div :nth-child(3) {
-        color: rgb(152, 141, 141);
-        font-size: 15px;
-        margin-top: 15px;
-        line-height: 25px;
-        text-overflow: -o-ellipsis-lastline;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-      }
-    }
-  }
-
-  .more {
-    display: flex;
-    color: rgb(152, 141, 141);
-    width: 30vw;
-    margin: 20px 38%;
-    font-size: 17px;
-    line-height: 20px;
-    div {
-      width: 14px;
-      height: 14px;
-      font-size: 14px;
-      margin-left: 5px;
-      text-align: center;
-      line-height: 16px;
-      border: 2px solid rgb(152, 141, 141);
-      border-radius: 999px;
-    }
-  }
-}
-
-
 </style>
