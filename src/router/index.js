@@ -5,7 +5,17 @@ import HomeView from '../views/HomeView/HomeView.vue'
 import SortView from "@/views/SortView/SortView";
 import BookShelfView from "@/views/BookShelfView/BookShelfView";
 import MimeView from "@/views/MimeView/MimeView";
+import BookMallView from '../views/BookMallVue/BookMallView.vue'
 
+
+
+
+
+
+import { Tab, Tabs } from 'vant';
+
+Vue.use(Tab);
+Vue.use(Tabs);
 Vue.use(VueRouter)
 
 const routes = [
@@ -49,8 +59,12 @@ const routes = [
     path: '/mime',
     name: 'mime',
     component: MimeView,
-  }
-
+  },
+  {
+    path: '/bookmallview',
+    name: 'BookMallView',
+    component: BookMallView
+  },
   
 ]
 
