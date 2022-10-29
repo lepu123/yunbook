@@ -57,6 +57,7 @@ import BoyView from "./BoyView.vue";
 import GirlView from "./GirlView.vue";
 import PublishView from "./PublishView.vue";
 import ListenBooksView from "./ListenBooksView.vue";
+
 export default {
   data() {
     return {
@@ -108,7 +109,7 @@ export default {
             this.boyUrl = data.navi[2].url;
             this.girlUrl = data.navi[3].url;
             this.publishUrl = data.navi[4].url;
-            // this.listenBooksUrl = data.navi[5].url;
+            this.listenBooksUrl = data.navi[5].url;
             // console.log(this.listenBooksUrl,'女');
           });
       } else if (this.sexNum == 1) {
@@ -127,14 +128,13 @@ export default {
             this.boyUrl = data.navi[2].url;
             this.girlUrl = data.navi[3].url;
             this.publishUrl = data.navi[4].url;
-            // this.listenBooksUrl = data.navi[5].url;
-            // console.log(this.selectedUrl,'男');
+            this.listenBooksUrl = data.navi[5].url;
+            // console.log(this.listenBooksUrl,'男');
           });
       }
 
         this.$refs.child.getData();
         this.$refs.free.getData();
-        this.$refs.listen.getData();
 
       this.toSex();
     },
@@ -160,7 +160,7 @@ export default {
     },
   },
 
-  mouend() {
+  beforeMount() {
     this.replaceSex();
   },
 };

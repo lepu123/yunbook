@@ -114,6 +114,7 @@ export default {
       margin-top: 15px;
       img {
         height: 120px;
+        width: 86px;
       }
 
       div {
