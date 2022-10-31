@@ -1,9 +1,24 @@
 <template>
   <div class="home" ref="home" @mousewheel="watcht">
+    <van-popup
+      class="top-control"
+      v-model="showAll"
+      position="top"
+      :overlay="false"
+    >
+      <van-icon name="arrow-left" @click="routeback" />
+      <div class="label" @click="catchThis">
+        <van-icon name="label-o" v-show="this.catchFlag == false" />
+        <van-icon name="label" v-show="this.catchFlag == true" />
+      </div>
+    </van-popup>
+
     <div
       class="text"
       ref="text"
-      :style="{ width: `calc((100%)*${renderList.length})`, backgroundColor : bcg ,color:cr}"
+      :style="{
+        width: `calc((100%)*${renderList.length})`,
+      }"
     >
       <div
         class="content"
@@ -17,10 +32,9 @@
         <div class="list" v-for="(p, j) in r.text" :key="j">
           <div class="item" v-if="p != ''">{{ p }}</div>
         </div>
-        <div class="count" v-show="scoll !=true">
-             {{ i + 1 + "/" + renderList.length }}
+        <div class="count" v-show="scoll != true">
+          {{ i + 1 + "/" + renderList.length }}
         </div>
-       
       </div>
 
       <van-popup v-model="showAll" position="bottom" :overlay="false">
@@ -46,8 +60,11 @@
           <div class="show" @click="show = !show">
             <van-icon name="setting-o" /><span>设置</span>
           </div>
-          <div class="night">
-            <van-icon name="closed-eye" /><span>夜间</span>
+          <div class="night" @click="changeNight">
+            <van-icon name="closed-eye" v-show="night == false" /><van-icon
+              name="eye-o"
+              v-show="night == true"
+            /><span>{{ nightText }}</span>
           </div>
           <div class="more"><van-icon name="ellipsis" /><span>更多</span></div>
         </div>
@@ -58,26 +75,57 @@
           position="left"
           :style="{ height: '100%' }"
         >
-          <div class="middle">
-            <div class="cover"><img :src="cover" alt="" /></div>
+          <div class="mulu-item" v-show="muluFlag == false">
+            <div class="middle">
+              <div class="cover"><img :src="cover" alt="" /></div>
 
-            <div class="desc">
-              <div class="title">{{ title }}</div>
-              <div class="author">{{ author }}</div>
-            </div>
-          </div>
-          <div class="bottom">
-            <div class="total">{{ "共" + lastPage + "章" }}</div>
-            <div class="reverse" @click="reverseed">{{order}} <div class="tranThree" :class="{rotate : reverse==true}"></div></div>
-          </div>
-
-          <div class="chose" v-for="(l, i) in choseList" :key="i">
-            <div class="label">{{ l.label }}</div>
-            <div class="choseItem" v-for="(t, n) in l.itemList" :key="n">
-              <div class="item-mulu" @click.prevent="choseToRead(i, n)">
-                {{ t.text }}
+              <div class="desc">
+                <div class="title">{{ title }}</div>
+                <div class="author">{{ author }}</div>
               </div>
             </div>
+            <div class="bottom">
+              <div class="total">{{ "共" + lastPage + "章" }}</div>
+              <div class="reverse" @click="reverseed">
+                {{ order }}
+                <div
+                  class="tranThree"
+                  :class="{ rotate: reverse == true }"
+                ></div>
+              </div>
+            </div>
+
+            <div class="chose" v-for="(l, i) in choseList" :key="i">
+              <div class="label" v-if="l.label">{{ l.label }}</div>
+              <div class="choseItem" v-for="(t, n) in l.itemList" :key="n">
+                <div class="item-mulu" @click.prevent="choseToRead(i, n)">
+                  {{ t.text }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="shuqian-item" v-show="muluFlag == true">
+            <div
+              class="shuqian"
+              v-for="s in shuqianList"
+              :key="s.time"
+              @click="catchGo(s.page)"
+            >
+              {{ s.name }}
+            </div>
+          </div>
+        </van-popup>
+
+        <van-popup
+          v-model="showPop"
+          position="left"
+          :overlay="false"
+          class="chose-change"
+        >
+          <div class="chose-item">
+            <div class="chose-mulu" @click="muluFlag = false">目录</div>
+            <div class="chose-shuqian" @click="muluFlag = true">书签</div>
           </div>
         </van-popup>
 
@@ -136,9 +184,27 @@
               ></div>
             </div>
             <div class="read-change">
-              <div class="silde" @click="black">滑动</div>
-              <div class="fade" @click="faded">无</div>
-              <div class="scoll" @click="scolld">卷轴</div>
+              <div
+                class="silde"
+                :class="{ active: silde == true }"
+                @click="black"
+              >
+                滑动
+              </div>
+              <div
+                class="fade"
+                :class="{ active: fade == true }"
+                @click="faded"
+              >
+                无
+              </div>
+              <div
+                class="scoll"
+                :class="{ active: scoll == true }"
+                @click="scolld"
+              >
+                卷轴
+              </div>
             </div>
           </div>
         </van-popup>
@@ -162,7 +228,7 @@ export default {
       count: 0,
       renderList: [],
       str5: [],
-      fontSize: 0,
+      fontSize: 20,
       heightList: [],
       textList: [],
       padtop: 42,
@@ -179,7 +245,13 @@ export default {
       changeValuePage: null,
       showAll: false,
       reverse: false,
-      order:'倒序'
+      order: "倒序",
+      nightText: "夜间",
+      night: false,
+      muluFlag: false,
+      shuqianList: [],
+      catchFlag: false,
+      // ltrue: true,
     };
   },
 
@@ -194,20 +266,7 @@ export default {
   },
 
   computed: {
-    cr(){
-       let backgroundColor = sessionStorage.backgroundColor
-        ? JSON.parse(sessionStorage.backgroundColor)
-        : {};
-        let fontColor=backgroundColor.fontColor
-      return fontColor;
-    },
-    bcg(){
-       let backgroundColor = sessionStorage.backgroundColor
-        ? JSON.parse(sessionStorage.backgroundColor)
-        : {};
-        let color=backgroundColor.color
-      return color;
-    },
+    //字体大小
     fontChange() {
       return JSON.parse(sessionStorage.getItem("fontsize")) + "px";
     },
@@ -223,36 +282,170 @@ export default {
   },
 
   methods: {
-    //  onTurn(){
-    //     this.$nextTick(()=>{
-    //     $("#flipbook").turn({
-    //     autoCenter: true,
-    //     height:this.viewHeight,
-    //     width:this.viewWidth,
-    //     });
-    //     })
-    //   console.log(turn);
-    //   },
-    changeColor(e){
-      if(e.target.className.split('Y')[0]=='colorBox'){
-        this.$refs.text.style.backgroundColor=e.target.className.split('Y')[1]
-        this.$refs.text.style.color=e.target.className.split('Y')[1]=='rgb(53, 57, 56)'?'#fff' : 'black'
+    // trued(){
+    //   console.log(1);
+    // },
+    //初始化字体颜色
+    changeInitCr() {
+      let nightFlag = JSON.parse(sessionStorage.getItem("night"));
+      let fontColor = null;
+
+      if (nightFlag == 1) {
+        fontColor = "#fff";
+      } else {
+        let backgroundColor = sessionStorage.backgroundColor
+          ? JSON.parse(sessionStorage.backgroundColor)
+          : {};
+        fontColor = backgroundColor.fontColor;
+      }
+
+      this.$refs.text.style.color = fontColor;
+    },
+    //进入页面初始化背景颜色
+    changeInitBcg() {
+      let nightFlag = JSON.parse(sessionStorage.getItem("night"));
+      let color = null;
+      if (nightFlag == 1) {
+        color = "rgb(53, 57, 56)";
+        this.nightText = "日间";
+        this.night = true;
+      } else {
+        console.log(1);
+        let backgroundColor = sessionStorage.backgroundColor
+          ? JSON.parse(sessionStorage.backgroundColor)
+          : {};
+        color = backgroundColor.color;
+      }
+      this.$refs.text.style.backgroundColor = color;
+    },
+    //点击收藏进入对应章节
+    catchGo(page) {
+      sessionStorage.setItem("page", page);
+      this.$emit("goPage", page);
+      this.$router.go(0);
+    },
+    //进入页面更新收藏状态
+    catchChange() {
+      let catchList = localStorage.catchList
+        ? JSON.parse(localStorage.catchList)
+        : [];
+      this.shuqianList.push(...catchList);
+      let result = catchList.find((c) => c.link == this.textId);
+      if (!result) {
+        this.catchFlag = false;
+      } else {
+        this.catchFlag = true;
+      }
+      //  console.log(this.shuqianList);
+    },
+    //点击收藏
+    catchThis() {
+      // this.catchFlag = !this.catchFlag;
+      let textNum = JSON.parse(sessionStorage.getItem("page"));
+      console.log(this.textId);
+      let catchList = localStorage.catchList
+        ? JSON.parse(localStorage.catchList)
+        : [];
+      let result = catchList.find((c) => c.link == this.textId);
+      console.log(result);
+      if (!result) {
+        localStorage.catchList = JSON.stringify([
+          ...catchList,
+          {
+            name: this.nameList[textNum],
+            link: this.textId,
+            time: new Date().getTime(),
+            page: textNum,
+          },
+        ]);
+        this.catchFlag = true;
+        this.shuqianList.push({
+          name: this.nameList[textNum],
+          link: this.textId,
+          time: new Date().getTime(),
+          page: textNum,
+        });
+      } else {
+        let newlist = catchList.filter((c) => c.link != this.textId);
+        localStorage.catchList = JSON.stringify(newlist);
+        this.catchFlag = false;
+        this.shuqianList = this.shuqianList.filter(
+          (c) => c.link != this.textId
+        );
+      }
+      // console.log(this.shuqianList);
+    },
+    //点击返回
+    routeback() {
+      this.$router.push("/detile");
+    },
+    //点击切换日/夜间模式
+    changeNight() {
+      this.night = !this.night;
+      console.log(this.night);
+      let color = null;
+      let backgroundColor = sessionStorage.backgroundColor
+        ? JSON.parse(sessionStorage.backgroundColor)
+        : {};
+      color = backgroundColor.color;
+      if (this.night == true) {
+        this.nightText = "日间";
+        sessionStorage.setItem("night", 1);
+        this.$refs.text.style.backgroundColor = "rgb(53, 57, 56)";
+        this.$refs.text.style.color = "#fff";
+      } else {
+        this.nightText = "夜间";
+        sessionStorage.setItem("night", 0);
+        this.$refs.text.style.color = "black";
+        if (color == "rgb(53, 57, 56)") {
+          this.$refs.text.style.backgroundColor = "rgb(203, 212, 209)";
+          sessionStorage.backgroundColor = JSON.stringify({
+            color: "rgb(203, 212, 209)",
+            fontColor: "black",
+          });
+        } else {
+          this.$refs.text.style.backgroundColor = color;
+        }
+      }
+    },
+    //点击修改主题颜色
+    changeColor(e) {
+      if (e.target.className.split("Y")[0] == "colorBox") {
+        // console.log( this.$refs.text.style.backgroundColor);
+        this.$refs.text.style.backgroundColor =
+          e.target.className.split("Y")[1];
+        this.$refs.text.style.color =
+          e.target.className.split("Y")[1] == "rgb(53, 57, 56)"
+            ? "#fff"
+            : "black";
         // console.log(this.bcg,color);
-       sessionStorage.backgroundColor=JSON.stringify({
-        color:e.target.className.split('Y')[1],
-        fontColor:e.target.className.split('Y')[1]=='rgb(53, 57, 56)'?'#fff' : 'black'
-       })
+        if (e.target.className.split("Y")[1] == "rgb(53, 57, 56)") {
+          this.night = true;
+          this.nightText = "日间";
+          sessionStorage.setItem("night", 1);
+        } else {
+          this.night = false;
+          this.nightText = "夜间";
+          sessionStorage.setItem("night", 0);
+        }
+        sessionStorage.backgroundColor = JSON.stringify({
+          color: e.target.className.split("Y")[1],
+          fontColor:
+            e.target.className.split("Y")[1] == "rgb(53, 57, 56)"
+              ? "#fff"
+              : "black",
+        });
       }
     },
     //点击倒顺序
     reverseed() {
       this.reverse = !this.reverse;
-      if(this.reverse==true){
-        this.order='升序'
-      }else{
-        this.order='降序'
+      if (this.reverse == true) {
+        this.order = "升序";
+      } else {
+        this.order = "降序";
       }
-      
+
       let reArray = this.choseList;
       reArray = reArray.reverse();
       for (let i = 0; i < reArray.length; i++) {
@@ -262,15 +455,13 @@ export default {
     },
     //修改当前章节名称
     pageValueChange(value) {
-     
       let pageCount = JSON.parse(sessionStorage.getItem("new"));
-      let getValue =  Math.round((value * pageCount) / 100);
-      if(getValue>0){
-        this.changeValuePage = this.nameList[getValue-1];
-      }else{
+      let getValue = Math.round((value * pageCount) / 100);
+      if (getValue > 0) {
+        this.changeValuePage = this.nameList[getValue - 1];
+      } else {
         this.changeValuePage = this.nameList[getValue];
       }
-      
 
       //  console.log(this.nameList[getValue-1],this.nameList,getValue);
     },
@@ -282,7 +473,7 @@ export default {
           sessionStorage.setItem("fontsize", 12);
           this.$router.go(0);
         }
-        console.log(1);
+        // console.log(1);
       }
       if (20 < fontSize && fontSize <= 40) {
         for (let x = 0; x < this.$refs.content.length; x++) {
@@ -290,7 +481,7 @@ export default {
           sessionStorage.setItem("fontsize", 14);
           this.$router.go(0);
         }
-        console.log(2);
+        // console.log(2);
       }
       if (40 < fontSize && fontSize <= 60) {
         for (let x = 0; x < this.$refs.content.length; x++) {
@@ -298,7 +489,7 @@ export default {
           sessionStorage.setItem("fontsize", 16);
           this.$router.go(0);
         }
-        console.log(3);
+        // console.log(3);
       }
       if (60 < fontSize && fontSize <= 80) {
         for (let x = 0; x < this.$refs.content.length; x++) {
@@ -306,7 +497,7 @@ export default {
           sessionStorage.setItem("fontsize", 18);
           this.$router.go(0);
         }
-        console.log(4);
+        // console.log(4);
       }
       if (80 < fontSize && fontSize <= 100) {
         for (let x = 0; x < this.$refs.content.length; x++) {
@@ -314,7 +505,7 @@ export default {
           sessionStorage.setItem("fontsize", 20);
           this.$router.go(0);
         }
-        console.log(5);
+        // console.log(5);
       }
     },
     //点击加载上一章
@@ -348,13 +539,18 @@ export default {
       getValue = Math.round(getValue);
       this.value = getValue;
       this.changeValuePage = this.nameList[value];
-      // console.log(this.changeValuePage);
+      // console.log(this.changeValuePage, value, this.nameList[value]);
     },
     //进入页面修改字体滑块的值
     getTextvalue() {
       let value = JSON.parse(sessionStorage.getItem("fontsize"));
-      let getValue = (value - 12 + 2) * 10;
-      this.fontSize = getValue;
+      if (!value) {
+        this.fontSize = 20;
+      } else {
+        let getValue = (value - 12 + 2) * 10;
+        this.fontSize = getValue;
+      }
+
       // console.log(this.fontSize, getValue);
     },
     //滑动滑块以跳至指定章节
@@ -363,7 +559,7 @@ export default {
       let changeValue = Math.round((value * pageCount) / 100);
       sessionStorage.setItem("page", changeValue);
       this.$emit("goPage");
-      // this.$router.go(0);
+      this.$router.go(0);
     },
     //点击目录跳至指定章节
     choseToRead(i, n) {
@@ -394,7 +590,7 @@ export default {
           }
           pageChange = lastpage - (pageChange + n);
         }
-        sessionStorage.setItem("page", pageChange-1);
+        sessionStorage.setItem("page", pageChange - 1);
         this.$emit("goPage");
         this.$router.go(0);
       }
@@ -474,7 +670,7 @@ export default {
         this.$refs.content[showPage].style.transform = `translateX(-${
           showPage * 100
         }%)`;
-         let zeroFilter = showPage == 0 ? 0 : showPage - 1;
+        let zeroFilter = showPage == 0 ? 0 : showPage - 1;
         this.$refs.content[zeroFilter].style.transform = `translateX(-${
           showPage * 100
         }%)`;
@@ -500,7 +696,7 @@ export default {
       if (this.silde == true) {
         if (e.offsetX > this.viewWidth / 2 + 120) {
           let x = 100 * (i + 1);
-           this.showAll = false;
+          this.showAll = false;
           this.scollShowPage = i + 1;
           // console.log('ri' + this.scollShowPage);
           if (i >= this.renderList.length - 1) {
@@ -517,7 +713,7 @@ export default {
             this.$refs.content[i + 1].style.transform = `translateX(-${x}%)`;
           }
         } else if (e.offsetX < this.viewWidth / 2 - 120) {
-           this.showAll = false;
+          this.showAll = false;
           let x = 100 * (i - 1);
           this.scollShowPage = i - 1;
           //  console.log('li' + this.scollShowPage);
@@ -544,7 +740,7 @@ export default {
       //淡入淡出判断
       if (this.fade == true) {
         if (e.offsetX > this.viewWidth / 2 + 120) {
-           this.showAll = false;
+          this.showAll = false;
           this.scollShowPage = i + 1;
           let x = 100 * (i + 1);
           if (i >= this.renderList.length - 1) {
@@ -594,6 +790,7 @@ export default {
           this.showAll = !this.showAll;
         }
       }
+      //滚动判断
       if (this.scoll == true) {
         this.showAll = !this.showAll;
       }
@@ -667,17 +864,24 @@ export default {
         .then(({ data }) => {
           this.content = data.data.content;
           let fontsize = JSON.parse(sessionStorage.getItem("fontsize"));
-          this.replaceText(fontsize);
+          if (!fontsize) {
+            this.replaceText(12);
+          } else {
+            this.replaceText(fontsize);
+          }
+
           this.PageList();
           this.getPagevalue();
           this.getTextvalue();
+          this.catchChange();
+          this.changeInitBcg();
+          this.changeInitCr();
         });
     },
   },
 
   mounted() {
     this.getData();
-    // this.onTurn();
   },
 };
 </script>
@@ -687,12 +891,32 @@ export default {
   width: 100%;
   height: 100%;
   position: fixed;
+  // position: a;
   top: 0;
   overflow: hidden;
   // overflow: auto;
-  
+
   background-color: rgb(203, 212, 209);
   z-index: 999;
+
+  .top-control {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 10px;
+    position: fixed;
+    top: 0;
+    height: 80px;
+    font-size: 23px;
+    // line-height: 40px;
+    .van-icon {
+      position: relative;
+      top: 10px;
+    }
+
+    .label {
+      margin-right: 20px;
+    }
+  }
 }
 .text {
   height: 100vh;
@@ -717,7 +941,7 @@ export default {
     .item {
       padding: 15px 10px;
       text-indent: 25px;
-      line-height: 1.1;
+      line-height: 1.2;
     }
     &:nth-child(1) {
       .list {
@@ -730,7 +954,7 @@ export default {
       }
     }
 
-    .count{
+    .count {
       position: absolute;
       bottom: 0;
       left: 50%;
@@ -848,13 +1072,20 @@ export default {
         .read-change {
           height: 40px;
           border-right: 10px;
-          border-right: 1px solid grey;
+          // border-right: 1px solid grey;
+
           div {
             flex: 1;
             text-align: center;
             line-height: 40px;
             border: 1px solid grey;
-            border-right: 10px;
+            border-radius: 20px;
+
+            &.active {
+              border: 3px solid grey;
+              color: white;
+              background-color: rgb(59, 57, 57);
+            }
           }
         }
         .font {
@@ -900,11 +1131,11 @@ export default {
         padding-top: 20px;
         padding-bottom: 20px;
 
-        .reverse{
+        .reverse {
           position: relative;
         }
 
-        .tranThree{
+        .tranThree {
           position: absolute;
           // padding-left: 4px;
           right: -15px;
@@ -913,17 +1144,42 @@ export default {
           bottom: 0;
           width: 0;
           height: 0;
-          border:  grey;
-          border-right: 8px solid  transparent;
+          border: grey;
+          border-right: 8px solid transparent;
           border-left: 8px solid transparent;
           border-top: 8px solid grey;
-          transition:  all linear .4s;
+          transition: all linear 0.4s;
 
-          &.rotate{
+          &.rotate {
             transform: rotate(180deg);
           }
         }
       }
+
+      .shuqian-item {
+        .shuqian {
+          height: 70px;
+          border: 1px solid #777;
+        }
+      }
+    }
+  }
+
+  .chose-change {
+    position: absolute;
+    bottom: -100px;
+    height: 100px;
+    background-color: rgb(75, 66, 66);
+    border-radius: 10px;
+    width: 10%;
+    .chose-item {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      font-size: 18px;
+      text-align: center;
+      color: aliceblue;
     }
   }
 
@@ -939,6 +1195,15 @@ export default {
       padding: 20px 10px 20px 40px;
       border-top: 1px dashed #777;
     }
+  }
+}
+
+@keyframes flip-to-left {
+  from {
+    transform: rotateY(0);
+  }
+  to {
+    transform: rotateY(-180deg);
   }
 }
 </style>
