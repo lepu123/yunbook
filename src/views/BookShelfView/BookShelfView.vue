@@ -2,9 +2,9 @@
   <div id="banner">
     <div class="banner">
       <div class="banner-top">
-        <span class="banner-top-left">
+        <span class="banner-top-left" >
           <van-cell is-link @click="showPopup">
-            书架
+            <i ref="show">书架</i> 
             <img
               src="@/assets/image/banner-images/book_toc_icon_arrow_down.png"
             />
@@ -13,15 +13,18 @@
         <van-popup class="banner-link" v-model="bannerShow">
           <div class="banner-option">
             <span class="bubble"></span>
-            <div class="banner-option-item">
+            <div class="banner-option-item" @click="changeShow">
               <img
                 src="@/assets/image/banner-images/icon_bookcase_small.png"
-              /><span>书架</span>
+              /><span ref="banner">书架</span>
             </div>
-            <div class="banner-option-item">
+            <div
+              class="banner-option-item"
+              @click="changeShow"
+            >
               <img
                 src="@/assets/image/banner-images/icon_bookcase_local_book.png"
-              /><span>本地书</span>
+              /><span ref="local">本地书</span>
             </div>
             <!-- <div>我的分组</div> -->
             <!-- <div>
@@ -50,18 +53,23 @@
             <div class="more-option">
               <span class="bubble"></span>
               <div class="more-option-item">
+                <label class="submit-book">
+                  <input type="file" accept="text/plain" @change="UpBook" />
+                </label>
                 <img src="@/assets/image/banner-images/ic_sub_menu_add.png" />
                 <span>导入本机书籍</span>
               </div>
               <div class="more-option-item">
-                <img
+                <van-cell is-link @click="showBatch" class="batch"></van-cell>
+                  <img
                   src="@/assets/image/banner-images/icon_batch_management.png"
                 />
                 <span>批量管理</span>
               </div>
-              <div class="more-option-item">
-                <img src="@/assets/image/banner-images/ic_sub_menu_list.png" />
-                <span>列表模式</span>
+              <div class="more-option-item" @click="changeShow">
+                <img v-show="localShow == 0" src="@/assets/image/banner-images/ic_sub_menu_list.png" />
+                <img v-show="localShow == 2" src="@/assets/image/banner-images/ic_sub_menu_grid.png" />
+                <span ref="lis" >列表模式</span>
               </div>
               <div class="more-option-item">
                 <img src="@/assets/image/banner-images/icon_wifi.png" />
@@ -91,24 +99,43 @@
         </div>
         </div>
         </transition> -->
-        
-        
-        <div class="banner-book" v-for="(item,i) in recommendArr" :key="item.id" @click="bookClick(i)">
-          <div class="book-image">
-            <img :src="item.cover" />
-            <span class="book-play" v-if="item.bookType == 21">
-              <img
-                src="@/assets/image/banner-images/icon_play_normal_black.png"
-              />
-            </span>
-          </div>
-          <div class="book-title van-multi-ellipsis--l2">
-            {{ item.title }}
-          </div>
-          <div class="book-chapter">看屁啊</div>
-        </div>
+        <transition name="van-fade">
+  
+        <BannerBook
+          v-if="localShow == 0"
+          :recommendArr="recommendArr"
+          :localShow="localShow"
+        />
+      
+        <BannerBook
+          v-if="localShow == 1"
+          :recommendArr="localArr"
+          :localShow="localShow"
+        />
 
+        <BannerBook
+          v-if="localShow == 2"
+          :recommendArr="recommendArr"
+          :localShow="localShow"
+        />
+
+        </transition>
       </div>
+      
+      <van-popup 
+      v-model="batchShow"
+      position="right" 
+      :style="{ height: '100%' }"
+      class="batch-item"
+      >
+      <BatchCommpontent 
+      :recommendArr = recommendArr
+      :batchShow = batchShow
+      :delArr = delArr
+      @clockbatch="clockbatch"
+      @delbook="delbook"
+      />
+      </van-popup>
     </div>
 
     <div class="dianzi"></div>
@@ -116,14 +143,21 @@
 </template>
 
 <script>
+import BannerBook from "@/components/BannerComponent/BannerBook.vue";
+import BatchCommpontent from '@/components/BannerComponent/BatchCommpontent.vue';
 export default {
   name: "BookShelfView",
   data() {
     return {
       recommendArr: [],
       bannerArr: [],
+      localArr: [],
+      delArr: [],
+      localObj: {},
+      localShow: 0,
       bannerShow: false,
       moreShow: false,
+      batchShow: false,
       isShow: true,
     };
   },
@@ -142,26 +176,104 @@ export default {
       this.$axios
         .get("https://apis.netstart.cn/yunyuedu/shelf/banner.json")
         .then(({ data }) => {
-          console.log(data.data.banners);
           this.bannerArr = data.data.banners;
         });
     },
     showPopup() {
       setTimeout(() => {
-        this.bannerShow = true
-      },100)
+        this.bannerShow = true;
+      }, 100);
     },
     showMore() {
       setTimeout(() => {
-        this.moreShow = true;       
-      },100)
+        this.moreShow = true;
+      }, 100);
+    },
+    showBatch() {
+      this.batchShow = true
+      this.moreShow = false
     },
     recommendClose() {
       this.isShow = false;
     },
-    bookClick(id) {
-      console.log(id);
+    UpBook(e) {
+      this.moreShow = false
+      console.log(e.target.files[0]);
+      let reader = new FileReader();
+      reader.readAsText(e.target.files[0]);
+      let title = e.target.files[0].name.split(".txt");
+      console.log(title[0]);
+      // 文章内容
+      reader.onload = () => {
+        console.log(reader.result);
+      };
+      this.localObj = {
+        recFlag: 1,
+        title: title[0],
+        bookType: 1,
+        cover: "https://yuedust.yuedu.126.net/images/bookDefaultIcon.png?$IMG_V",
+        author: "",
+        mime: "application/prisbookcontainer",
+        publishType: 1,
+        isMag: 0,
+        anchor: "",
+        submime: "application/epub+zip",
+        id: new Date().getTime(),
+        type: "book",
+        recordTime: new Date().getTime(),
+        groupName: "",
+        zoneType: 1,
+        order: 0,
+        groupId: "",
+      };
+      console.log(this.localObj);
+      this.localArr = [this.localObj];
+      this.recommendArr = [...this.localArr,...this.recommendArr]
+    },
+    changeShow(e) {
+      console.log(e.target.textContent);
+     
+      if (e.target.textContent == '书架') {
+          this.localShow = 0
+          this.bannerShow = false;
+          this.$refs.show.textContent = this.$refs.banner.textContent
+      }
+      if (e.target.textContent == '本地书') {
+          this.localShow = 1
+          this.bannerShow = false;
+          this.$refs.show.textContent = this.$refs.local.textContent
+      }
+      if (e.target.textContent == '列表模式') {
+          this.localShow = 2
+          console.log(this.$refs.lis);
+          this.$refs.lis.textContent = '书封模式'
+          this.moreShow = false;
+      }else if (e.target.textContent == '书封模式') {
+          this.localShow = 0
+          this.moreShow = false;
+          this.$refs.lis.textContent = '列表模式'
+      }
+      console.log(this.localShow);
+    },
+    clockbatch(item) {
+      this.batchShow = item
+    },
+    delbook(arr) {
+      for (let i = 0; i < arr.length; i++) {
+        this.recommendArr = this.recommendArr.filter((item) => item.id != arr[i].id)
+
+        for (let j = 0; j < this.localArr.length; j++) {
+           this.localArr = this.localArr.filter((item) => {
+            item.id !=  this.recommendArr[i].id
+           })
+        }
+      }
+      console.log(this.recommendArr);
     }
+  },
+  components: {
+    BannerBook,
+    BatchCommpontent,
   },
 };
 </script>
@@ -171,6 +283,16 @@ export default {
   position: relative;
   width: 100vw;
   min-height: 100vh;
+
+  .batch-item {
+    width: 100vw;
+    min-height: 100vh;
+    overflow: auto;
+  }
+
+  .van-icon {
+    display: none;
+  }
 
   .van-icon:before {
     display: none;
@@ -208,7 +330,7 @@ export default {
       min-height: 0px;
       border-radius: 3px;
       background-color: #fff;
-      animation: move .2s linear;
+      animation: move 0.2s linear;
 
       .banner-option-item {
         display: flex;
@@ -260,14 +382,32 @@ export default {
       min-height: 0px;
       border-radius: 3px;
       background-color: #fff;
-      animation: move-more .2s linear;
+      animation: move-more 0.2s linear;
 
       .more-option-item {
+        position: relative;
         display: flex;
         margin-bottom: 10px;
         font-size: 13px;
         width: 100%;
         height: 35px;
+
+        .batch {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background-color: transparent;
+        }
+
+        .submit-book {
+          position: absolute;
+          top: 0;
+          left: 0;
+          display: block;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+        }
 
         img {
           display: block;
@@ -307,6 +447,7 @@ export default {
     img {
       display: inline-block;
       margin-bottom: 2px;
+      margin-left: 5px;
       width: 5px;
       height: 5px;
     }
@@ -334,7 +475,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   width: 100vw;
-  min-height: 100vh;
+  min-height: 80vh;
 
   .banner-recommend {
     display: flex;
@@ -401,54 +542,6 @@ export default {
       }
     }
   }
-
-  .banner-book {
-    width: 26.5vw;
-    height: 200px;
-    margin: 10px 3.4vw;
-
-    .book-image {
-      position: relative;
-      width: 100%;
-      height: 140px;
-
-      img {
-        width: 100%;
-        height: 100%;
-      }
-
-      .book-play {
-        display: block;
-        position: absolute;
-        bottom: 5px;
-        left: 3px;
-        width: 15px;
-        height: 15px;
-        border-radius: 999px;
-        background-color: #fff;
-
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-    }
-
-    .book-title {
-      margin-top: 5px;
-      width: 100%;
-      height: 30px;
-      font-size: 13px;
-    }
-
-    .book-chapter {
-      width: 100%;
-      height: 20px;
-      font-size: 12px;
-      line-height: 20px;
-      color: #888;
-    }
-  }
 }
 
 @keyframes move {
@@ -471,7 +564,9 @@ export default {
   }
 }
 
-
+.van-popup {
+    overflow-y:initial;
+  }
 
 .dianzi {
   width: 100vw;
