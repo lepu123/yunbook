@@ -5,7 +5,7 @@
         font-size: 20px;
         font-weight: 600;
         margin-left: 5vw;
-        padding-top: 8px;
+        padding-top: 18px;
       "
     >
       <!-- 大家都在读 -->
@@ -111,8 +111,10 @@ export default {
     li {
       display: flex;
       margin: 10px;
+      margin-top: 15px;
       img {
         height: 120px;
+        width: 86px;
       }
 
       div {
@@ -149,7 +151,7 @@ export default {
     display: flex;
     color: rgb(152, 141, 141);
     width: 30vw;
-    margin: 20px 38%;
+    margin: 20px 35%;
     font-size: 17px;
     line-height: 20px;
   }
