@@ -1,0 +1,128 @@
+{
+    "code": 0,
+    "msg": "成功",
+    "data": {
+        "urls": [
+            {
+                "articleUuid": "audio_ada9f6fe1f044ad59d8f16ce30989524_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/5dced1b353c8412980850829a2126220.mp3"
+            },
+            {
+                "articleUuid": "audio_99b6d3561ebd4b73947aedc5253039e4_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/b0b182224fd84df2a5a0ab5c30c1ce59.mp3"
+            },
+            {
+                "articleUuid": "audio_33df47803cda411bb517c02df536cf4a_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/20e4fc79d9a24c128fd508f5c817d18a.mp3"
+            },
+            {
+                "articleUuid": "audio_8997fde2253045f39516fbc668acdf73_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/c63aa56e3fad4d58afd3a924ee75749c.mp3"
+            },
+            {
+                "articleUuid": "audio_99d29df889364b6792e7275bbe1da96e_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/0d3ec1b4ef2a49b8b37a5bf6a59e2c42.mp3"
+            },
+            {
+                "articleUuid": "audio_72d0161a677b4a59805839f8774f6f68_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/ef6530af315c43148c52a9e35b0a3df0.mp3"
+            },
+            {
+                "articleUuid": "audio_5be27ae0fb03486bb728e51b2ce32878_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/4c2f9b7316ab421b8ac2476654b7f597.mp3"
+            },
+            {
+                "articleUuid": "audio_9db0192487424c5cb4a613f625fdeb03_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/e97b82960d4040d4bb499f0ba45f0f9c.mp3"
+            },
+            {
+                "articleUuid": "audio_473f3f53b0b44d448af96e08a9c6387d_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/9b44238abc7d49549f2216805e69e79a.mp3"
+            },
+            {
+                "articleUuid": "audio_22a147a2959244ca97fc636b9ef03b8d_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/04bcff901e3344f481e60ffbefeed23c.mp3"
+            },
+            {
+                "articleUuid": "audio_c086b6a9c8404768bff2ac7d32dee6f9_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/ad769fc7cf124d898e706ecd62b4b66e.mp3"
+            },
+            {
+                "articleUuid": "audio_36f56d5a2a924548a4b27f5357a67470_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/e16795b1113649be8cd65031339cf74f.mp3"
+            },
+            {
+                "articleUuid": "audio_3f912773623040cf9af5db30dd5d8e90_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/981c424ee85f4e998bfd30a1eed06239.mp3"
+            },
+            {
+                "articleUuid": "audio_2f8fd084210748d6a244decd6c64d645_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/e98de27c0298452188e38a4f090d3faa.mp3"
+            },
+            {
+                "articleUuid": "audio_cf187fadf2214a969f512bbab9cb9b88_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/3f121669fa044c2db9f629a247f331c7.mp3"
+            },
+            {
+                "articleUuid": "audio_0e95cc30849f4f058df5c56d2796f771_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/a2c8f8bd803d407f91b6ef4a55339926.mp3"
+            },
+            {
+                "articleUuid": "audio_10620a94fd9249d0bf33c703854a9a62_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/d15f52b4e2ec4b7581f51680b7a42bc0.mp3"
+            },
+            {
+                "articleUuid": "audio_8e7f4fc64c3c40dd83858f11c470a6f8_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/f0691c21e52343c9a25e5cfaa9bef2ac.mp3"
+            },
+            {
+                "articleUuid": "audio_a633128255b94a118b1a1cf42f24f183_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/80c4537fb11047f9ba1431405e70af7b.mp3"
+            },
+            {
+                "articleUuid": "audio_8ecaa66696e24033bbbb4ad41fd65f32_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/96c4ddeeb3874f71b4085d6c3dfa7783.mp3"
+            },
+            {
+                "articleUuid": "audio_b9f2a9acb04e4f62a7684aa8915e5c27_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/68fc2ed36337490b8a085b99fcf85a9f.mp3"
+            },
+            {
+                "articleUuid": "audio_57a1890a35e94980aa1b509f3c84de5a_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/1740c46c7feb44d4899e5ed3ecd1f6e3.mp3"
+            },
+            {
+                "articleUuid": "audio_48544b25767c44c8bcc7126bd122c266_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/582ce123653f4d059aee053bcb53538d.mp3"
+            },
+            {
+                "articleUuid": "audio_023f8143218343bd97fabb66e3876a35_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/96ab88c4315341d9b38652860736267c.mp3"
+            },
+            {
+                "articleUuid": "audio_914431ae3a99473cb488b1f21bd1f1cb_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/adf4830c72c443aabb9266579ef0a7a0.mp3"
+            },
+            {
+                "articleUuid": "audio_5ee681b315d84e348b0c7fa4393455c7_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/9a4a1aa4c3aa4c449c76d02d511a2980.mp3"
+            },
+            {
+                "articleUuid": "audio_dc618dffe9f94f128df215c1d608a99e_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/de721817c09049b2a0639285611ab37e.mp3"
+            },
+            {
+                "articleUuid": "audio_c8f4f8c776cf475cad55c24222e0e782_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/4ddbd159072a429da7b6d4de21f90487.mp3"
+            },
+            {
+                "articleUuid": "audio_25c27219ad5f4534a50493a1fbf324fa_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/d33d58e7134f4a77b107482d55b836b1.mp3"
+            },
+            {
+                "articleUuid": "audio_331c570509774834a146b1f918eb9174_4",
+                "downloadUrl": "https://easyreadfs.nosdn.127.net/c5301c39d8834f619b453d8aa4d85cc9.mp3"
+            }
+        ]
+    }
+}
