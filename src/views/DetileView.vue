@@ -63,6 +63,9 @@
           <div class="choseItem" v-for="(t, n) in l.itemList" :key="n">
             <div class="item-mulu" @click.prevent="choseToRead(i, n)">
               {{ t.text }}
+              <div class="lock" v-if="t.vip == 1">
+                <van-icon name="bag-o" />
+              </div>
             </div>
           </div>
         </div>
@@ -88,7 +91,7 @@
         </div>
       </div>
 
-      <div class="das">打赏一下</div>
+      <div class="das">打赏</div>
     </div>
 
     <van-popup
@@ -118,8 +121,13 @@
       <div class="fanbangAll" ref="fanbangAll" @scroll="fanbangLoad($event)">
         <div class="fanbang" v-for="(b, i) in fanBangList" :key="i">
           <div class="fan-user">
-            <div class="index">{{ i + 1 }}</div>
-            <div class="fan-img"><img :src="b.imageUrl" alt="" /></div>
+            <span class="index" :class="{ active: i < 3 }">{{ i + 1 }} <span class="trace" v-if="i < 3"></span> </span>
+            <div
+              class="fan-img"
+              :class="{ one: i == 0, two: i == 1, three: i == 2 }"
+            >
+              <img :src="b.imageUrl" alt="" />
+            </div>
             <div class="fan-name">{{ b.nickName }}</div>
           </div>
           <div class="fan-desc">
@@ -147,22 +155,24 @@
     </van-popup>
 
     <div class="comment-item">
-      <div
-        class="comment"
-        v-for="c in commentList"
-        :key="c.userId"
-        :class="{ hasreplay: c.replyCount != 0 || c.select != '' }"
-      >
+      <div class="item-desc">
+        <p><span class="shuzi"></span> 评论</p>
+        <div class="write"><van-icon name="edit" />写评论</div>
+      </div>
+      <div class="comment" v-for="c in commentList" :key="c.userId">
         <div class="top">
-          <div class="img"><img :src="c.cover" alt="" /></div>
+          <div class="img" v-if="c.cover"><img :src="c.cover" alt="" /></div>
+          <div class="img" v-if="!c.cover"><van-icon name="contact" /></div>
           <div class="com-top">
             <div class="top-like">
               <div class="author">{{ c.author }}</div>
               <div class="level">{{ c.level }}</div>
-              <div class="like">{{ c.likes }}<van-icon name="good-job-o" /></div>
+              <div class="like">
+                {{ c.likes }}<van-icon name="good-job-o" />
+              </div>
             </div>
             <div class="top-time">
-              <div class="ground">
+              <div class="ground" v-if="c.grade.length != 0">
                 <div class="grade" v-for="(s, i) in c.grade" :key="i">
                   <van-icon name="star" />
                 </div>
@@ -177,16 +187,19 @@
           {{ c.comment }}
         </div>
         <div class="select" v-if="c.select != ''">
-          {{ c.select }}
+          <span class="label">精彩书摘</span> {{ c.select }}
         </div>
         <div class="replyList" v-if="c.replyCount != 0">
           <div class="reply-item" v-for="r in c.replyList" :key="r.commentId">
-            <div class="toauthor">
+            <!-- <div class="toauthor"> -->
+            <p class="uer-taker">
               {{ r.nickName }}
-              <div class="todesc">回复</div>
+              <span class="todesc">回复</span>
               {{ r.toNickName }}
-              <div class="rep-comment">: {{ r.comment }}</div>
-            </div>
+              <span class="rep-comment"> : {{ r.comment }} </span>
+            </p>
+            <!-- <div class="rep-comment"></div> -->
+            <!-- </div> -->
           </div>
         </div>
       </div>
@@ -339,7 +352,6 @@ export default {
       return sList;
     },
     //获得评论列表数据
-    // 'https://apis.netstart.cn/yunyuedu/sns/comment/get.json?type=3&id=13c58cc086f74e36978b4a7881b82517_4&page=1'
     getCommentData() {
       this.$axios
         .get(
@@ -349,17 +361,13 @@ export default {
           let comment = data.all.list;
           for (let i = 0; i < comment.length; i++) {
             let time = new Date(parseInt(comment[i].time));
-            let month=parseInt(time.getMonth() + 1)<10 ? '0'+parseInt(time.getMonth() + 1) : parseInt(time.getMonth() + 1)
-            let day=time.getDate()<10 ? '0'+time.getDate() : time.getDate()
-            time =
-              time.getFullYear() +
-              "年" +
-              month
-               +
-              "月" +
-              day
-               +
-              "日";
+            let month =
+              parseInt(time.getMonth() + 1) < 10
+                ? "0" + parseInt(time.getMonth() + 1)
+                : parseInt(time.getMonth() + 1);
+            let day =
+              time.getDate() < 10 ? "0" + time.getDate() : time.getDate();
+            time = time.getFullYear() + "年" + month + "月" + day + "日";
             this.commentList.push({
               cover: comment[i].avatar,
               userId: comment[i].userId,
@@ -368,7 +376,7 @@ export default {
               grade: this.listvalue(comment[i].grade),
               time,
               comment: comment[i].comment,
-              select: comment[i].select,
+              select: comment[i].select.replace(/#精彩书摘#/g, ""),
               replyCount: comment[i].replyCount,
               replyList: comment[i].replyList,
               level: "LV." + comment[i].userLevel,
@@ -412,7 +420,7 @@ export default {
               console.log(1);
             }
           }
-          // console.log(this.choseList);
+          console.log(this.choseList);
         });
     },
     //获取粉丝榜数据
@@ -470,10 +478,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// ::-webkit-scrollbar {
+//   width: 0 !important;
+// }
+// ::-webkit-scrollbar {
+//   width: 0 !important;
+//   height: 0;
+// }
 .detile {
   width: 100vw;
   height: 100vh;
   overflow: auto;
+  // padding: 20px 0;
+  background-color: rgb(209, 198, 198, 0.3);
+  z-index: 999;
+
   .van-icon-star:before {
     color: rgb(233, 162, 29);
   }
@@ -482,10 +501,17 @@ export default {
     width: 100%;
     height: 60vh;
     padding: 20px 10px;
+    background-color: #fff;
+
+    .item-mulu {
+      display: flex;
+      justify-content: space-between;
+    }
 
     .top {
       display: flex;
       font-size: 12px;
+      padding-top: 10px;
       .cover {
         width: 80px;
         height: 120px;
@@ -650,19 +676,19 @@ export default {
     height: 80px;
     line-height: 95px;
     margin: 0 20px 0;
-    border: 1px solid black;
+    // border: 1px solid black;
     display: flex;
+    margin-top: 10px;
     // flex-direction: column;
     justify-content: space-between;
-    // position: relative;
-    // top: -20px;
+    background-color: #fff;
 
     .user {
       display: flex;
       padding-left: 20px;
       .user-img {
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         border-radius: 999px;
 
         img {
@@ -707,15 +733,60 @@ export default {
       border: 1px solid black;
       padding: 20px 20px 20px 10px;
       line-height: 40px;
+      position: relative;
       .fan-user {
         display: flex;
         justify-content: flex-start;
         width: 250px;
+        .index {
+          font-size: 20px;
+          &.active {
+            color: black;
+            font-size: 40px;
+            font-weight: 700;
+
+          }
+
+          .trace{
+            display: inline-block;
+            background-color: red;
+            width: 4px;
+            height: 40px;
+            transform: rotate(40deg);
+            position: relative;
+            left: -15px;
+            top: 15px;
+          }
+        }
+        .fan-name {
+          position: absolute;
+          left: 120px;
+        }
         .fan-img {
           width: 40px;
           height: 40px;
           border-radius: 999px;
           border: 3px solid #777;
+          position: absolute;
+          left: 54px;
+          &.one,
+          &.two,
+          &.three {
+            width: 50px;
+            height: 50px;
+            // margin-left: 15px;
+            position: absolute;
+            left: 50px;
+          }
+          &.one {
+            border: 6px solid rgb(246, 176, 46);
+          }
+          &.two {
+            border: 6px solid silver;
+          }
+          &.three {
+            border: 6px solid rgb(247, 123, 22);
+          }
           img {
             height: 100%;
             width: 100%;
@@ -727,8 +798,15 @@ export default {
         display: flex;
         justify-content: space-around;
         width: 150px;
+        .fan-title {
+          font-size: 20px;
+        }
+        .fan-score {
+          color: #999;
+        }
       }
     }
+
     .load {
       width: 100%;
       height: 60px;
@@ -750,16 +828,48 @@ export default {
   }
 
   .comment-item {
+    background-color: #fff;
+    margin-top: 10px;
+    .item-desc {
+      height: 80px;
+      line-height: 80px;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 25px;
+      p {
+        color: #888;
+        font-size: 20px;
+        .shuzi {
+          width: 0;
+          height: 0;
+          border: 2px solid #888;
+          border-top: 0;
+          border-bottom: 0;
+          margin-right: 10px;
+        }
+      }
+      .write {
+        color: #888;
+        letter-spacing: 4px;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        text-align: center;
+        border: 1px solid #777;
+        height: 35px;
+        line-height: 35px;
+        border-radius: 5px;
+        width: 90px;
+      }
+    }
     .comment {
       width: 100vw;
-      height: 150px;
-      border: 1px solid black;
+      // border: 1px solid black;
       font-size: 15px;
-      &.hasreplay {
-        height: 200px;
-      }
+      padding: 25px 10px;
       .top {
         display: flex;
+        position: relative;
       }
       .img {
         width: 40px;
@@ -770,59 +880,115 @@ export default {
           height: 100%;
           border-radius: 999px;
         }
+        .van-icon-contact:before {
+          font-size: 30px;
+          position: relative;
+          top: 4px;
+          left: 5px;
+        }
       }
       .com-top {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
+        margin-left: 15px;
         .top-like {
           display: flex;
 
-          .author{
+          .author {
             color: rgb(15, 148, 179);
           }
-          .level{
-            padding: 2px;
+          .level {
+            padding: 4px;
             border-radius: 4px;
             color: red;
             font-size: 8px;
+            transform: scale(0.7);
             border: 1px solid red;
+            position: relative;
+            top: -4px;
+            margin-left: 10px;
           }
 
-          .like{
+          .like {
             font-size: 15px;
             color: #777;
+            position: absolute;
+            right: 0;
+            transform: scale(0.9);
+            .van-icon-good-job-o:before {
+              margin-left: 5px;
+            }
           }
         }
 
         .ground {
           display: flex;
+          width: 90px;
+          padding-right: 10px;
+          div {
+            flex: 1;
+          }
         }
 
         .top-time {
           display: flex;
           font-size: 14px;
-          .time{
-            padding-left: 10px;
+          margin-top: 2px;
+          .time {
             color: #777;
             line-height: 15px;
           }
         }
       }
 
+      .user-com {
+        position: relative;
+        left: 55px;
+        width: 350px;
+        margin-top: 15px;
+        line-height: 27px;
+        letter-spacing: 2px;
+      }
+
       .replyList {
-        .toauthor {
-          display: flex;
+        // .toauthor {
+        .uer-taker {
           color: #777;
-
+          width: 320px;
+          position: relative;
+          left: 55px;
+          top: 8px;
+          line-height: 30px;
+          letter-spacing: 1px;
+          background-color: rgb(170, 168, 168, 0.2);
+          padding: 10px 10px 0 10px;
           .todesc {
-            padding: 0 10px;
+            padding: 0 5px;
             color: black;
           }
+        }
 
-          .rep-comment{
-            color: black;
-          }
+        .rep-comment {
+          color: black;
+        }
+      }
+
+      .select {
+        position: relative;
+        left: 55px;
+        top: 8px;
+        width: 350px;
+        letter-spacing: 1px;
+        line-height: 27px;
+        .label {
+          padding: 2px 5px;
+          border-radius: 4px;
+          background-color: rgb(244, 161, 67, 0.5);
+          color: rgb(255, 98, 0);
+          font-size: 12px;
+          transform: scale(0.7);
+          margin-right: 10px;
         }
       }
     }

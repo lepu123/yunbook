@@ -69,6 +69,8 @@
           <div class="more"><van-icon name="ellipsis" /><span>更多</span></div>
         </div>
 
+        
+
         <van-popup
           v-model="showPop"
           class="mulu"
@@ -99,7 +101,7 @@
               <div class="label" v-if="l.label">{{ l.label }}</div>
               <div class="choseItem" v-for="(t, n) in l.itemList" :key="n">
                 <div class="item-mulu" @click.prevent="choseToRead(i, n)">
-                  {{ t.text }}
+                  {{ t.text }} <div class="lock" v-if="t.vip==1"><van-icon name="bag-o" /></div>
                 </div>
               </div>
             </div>
@@ -323,6 +325,7 @@ export default {
       sessionStorage.setItem("page", page);
       this.$emit("goPage", page);
       this.$router.go(0);
+      
     },
     //进入页面更新收藏状态
     catchChange() {
@@ -512,7 +515,7 @@ export default {
     prevPage() {
       let page = JSON.parse(sessionStorage.getItem("page"));
       if (page <= 0) {
-        alert("开头");
+        this.$toast('到开头了')
       } else {
         sessionStorage.setItem("page", page - 1);
         this.$emit("goPage");
@@ -524,7 +527,7 @@ export default {
       let page = JSON.parse(sessionStorage.getItem("page"));
       let pageCount = JSON.parse(sessionStorage.getItem("new"));
       if (page == pageCount) {
-        alert("结尾");
+        this.$toast('到结尾了')
       } else {
         sessionStorage.setItem("page", page + 1);
         this.$emit("goPage");
@@ -702,7 +705,7 @@ export default {
           if (i >= this.renderList.length - 1) {
             let gopage = page + 1;
             if (gopage >= newpage) {
-              alert("结尾");
+              this.$toast('到结尾了')
             } else {
               sessionStorage.setItem("page", gopage);
               this.$emit("goPage");
@@ -720,7 +723,7 @@ export default {
           if (i == 0) {
             let gopage = page - 1;
             if (gopage < 0) {
-              alert("开头");
+              this.$toast('到开头了')
             } else {
               sessionStorage.setItem("page", gopage);
               this.$emit("goPage");
@@ -746,7 +749,7 @@ export default {
           if (i >= this.renderList.length - 1) {
             let gopage = page + 1;
             if (gopage >= newpage) {
-              alert("结尾");
+              this.$toast('到结尾了')
             } else {
               sessionStorage.setItem("page", gopage);
               this.$emit("goPage");
@@ -768,7 +771,7 @@ export default {
           if (i == 0) {
             let gopage = page - 1;
             if (gopage < 0) {
-              alert("开头");
+             this.$toast('到开头了')
             } else {
               sessionStorage.setItem("page", gopage);
               this.$emit("goPage");
@@ -1194,6 +1197,8 @@ export default {
       line-height: 40px;
       padding: 20px 10px 20px 40px;
       border-top: 1px dashed #777;
+      display: flex;
+      justify-content: space-between;
     }
   }
 }
