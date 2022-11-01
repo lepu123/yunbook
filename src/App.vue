@@ -1,9 +1,11 @@
 <template>
   <div id="app">
     <keep-alive>
-      <router-view />
+      <router-view v-if="$route.meta.keepAlive" />
     </keep-alive>
-    <van-cell is-link @click="showPopup">
+    <router-view v-if="!$route.meta.keepAlive" />
+
+    <van-cell is-link @click="showPopup" v-if="$route.meta.showFree">
       <div class="newFree">
         <p>全场免费看5天</p>
       </div>
@@ -166,4 +168,6 @@ export default {
   transform: translate3d(-50%, -50%, 0);
   background-color: transparent;
 }
+
+
 </style>
