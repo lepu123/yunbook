@@ -97,7 +97,7 @@ export default {
       )
       .then(({ data }) => {
         this.content = data.data.content;
-        console.log(data.data);
+        // console.log(data.data);
       });
   },
 };
