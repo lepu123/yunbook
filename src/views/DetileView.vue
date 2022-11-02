@@ -1,5 +1,6 @@
 <template>
   <div class="detile" ref="detile">
+    <div class="tar-bar-top"><van-icon name="arrow-left" /></div>
     <div class="detile-item">
       <div class="top">
         <div class="cover"><img :src="dataList.cover" alt="" /></div>
@@ -59,7 +60,7 @@
 
           <div class="desc">
             <div class="title">{{ dataList.title }}</div>
-            <div class="author">{{ dataList.author }}</div>
+            <div class="author" :style=" {color:'#888',fontStze:'14'}">{{ dataList.author }}</div>
           </div>
         </div>
         <div class="bottom">
@@ -222,6 +223,7 @@
         </div>
       </div>
     </div>
+      <div class="tar-bar-bom"><van-icon name="arrow-left" /></div>
   </div>
 </template>
 
@@ -549,14 +551,35 @@ export default {
   background-color: rgb(209, 198, 198, 0.3);
   z-index: 999;
 
+  .tar-bar-top{
+    position: fixed;
+    top: 0;
+    height: 50px;
+    background-color: #fff;
+    width: 100%;
+    z-index: 999;
+    line-height: 50px;
+    font-size: 20px;
+  }
+  .tar-bar-bom{
+    position: fixed;
+    bottom: 0;
+    height: 50px;
+    background-color: #fff;
+    width: 100%;
+    z-index: 999;
+    line-height: 50px;
+    font-size: 20px;
+  }
+
   .van-icon-star:before {
     color: rgb(233, 162, 29);
   }
   // padding: 20px;
   .detile-item {
     width: 100%;
-    height: 440px;
-    padding: 20px 10px;
+    height: 450px;
+    padding: 45px 10px 20px 10px;
     background-color: #fff;
 
     .item-mulu {
@@ -603,6 +626,7 @@ export default {
 
         .value {
           display: flex;
+          z-index: 100;
         }
 
         .word {
@@ -623,14 +647,14 @@ export default {
       line-height: 1.7;
     }
     .van-icon-arrow:before {
-      padding-top: 40px;
+      padding-top: 10px;
     }
     .mulu-item {
       display: flex;
       justify-content: space-between;
       border-top: 1px solid rgb(185, 180, 180, 0.3);
       padding-top: 10px;
-      margin-top: 30px;
+      // margin-top: 10px;
 
       .van-icon-coupon-o:before {
         line-height: 25px;
@@ -732,7 +756,7 @@ export default {
     width: 92vw;
     height: 80px;
     line-height: 95px;
-    margin: 0 20px 0;
+    margin: 0 40px 0;
     // border: 1px solid black;
     display: flex;
     margin-top: 10px;
@@ -888,7 +912,7 @@ export default {
 
   .comment-item {
     background-color: #fff;
-    margin-top: 10px;
+    margin-top: 30px;
     .item-desc {
       height: 80px;
       line-height: 80px;

@@ -92,7 +92,7 @@
 
               <div class="desc">
                 <div class="title">{{ title }}</div>
-                <div class="author">{{ author }}</div>
+                <div class="author" :style=" {color:'#888',fontStze:'14'}">{{ author }}</div>
               </div>
             </div>
             <div class="bottom">
@@ -904,6 +904,7 @@ export default {
           // "/content.json"
         )
         .then(({ data }) => {
+          console.log(data);
           this.content = data.data.content;
           let fontsize = JSON.parse(sessionStorage.getItem("fontsize"));
           if (!fontsize) {
