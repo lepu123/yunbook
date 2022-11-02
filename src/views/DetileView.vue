@@ -18,7 +18,8 @@
             {{ dataList.words }}
             <div class="click">{{ dataList.clicks }}</div>
           </div>
-          <div class="price">{{ dataList.wprice }}</div>
+          <div class="price" v-if="dataList.wprice">{{ dataList.wprice+ "阅点/千字" }}</div>
+          <div class="price" v-if="dataList.price" :style="{color:'red',fontSize:'18px',fontWeight:'700'}">{{ dataList.price+'阅点' }}</div>
         </div>
       </div>
       <div class="summary">{{ dataList.summary }}</div>
@@ -35,6 +36,17 @@
           <div class="endShow" v-if="dataList.stateMode == 0">已完结</div>
         </div>
       </van-cell>
+      <van-popup
+        v-model="labelCover"
+        class="labelshow"
+        closeable
+        :style="{ height: '100%', width: '100%' }"
+        position="left"
+      >
+        <div class="label-this" @click="labelToroute(labelShow.bookRouter)">
+          {{ labelShow.name }}
+        </div>
+      </van-popup>
       <van-popup
         v-model="show"
         :style="{ width: '100%', height: '100%' }"
@@ -59,7 +71,9 @@
         </div>
 
         <div class="chose" v-for="(l, i) in choseList" :key="i">
-          <div class="label" v-if="l.label">{{ l.label }}</div>
+          <div class="label" v-if="l.label" @click="labelGo(i, l.label)">
+            {{ l.label }}
+          </div>
           <div class="choseItem" v-for="(t, n) in l.itemList" :key="n">
             <div class="item-mulu" @click.prevent="choseToRead(i, n)">
               {{ t.text }}
@@ -84,7 +98,7 @@
       @goPage="goPage"
     />
 
-    <div class="fan-item" @click="fanShow = true">
+    <div class="fan-item" @click="fanShow = true" v-if="fanList">
       <div class="user">
         <div class="user-img" v-for="f in fanList" :key="f.userId">
           <img :src="f.imageUrl" alt="" />
@@ -121,7 +135,9 @@
       <div class="fanbangAll" ref="fanbangAll" @scroll="fanbangLoad($event)">
         <div class="fanbang" v-for="(b, i) in fanBangList" :key="i">
           <div class="fan-user">
-            <span class="index" :class="{ active: i < 3 }">{{ i + 1 }} <span class="trace" v-if="i < 3"></span> </span>
+            <span class="index" :class="{ active: i < 3 }"
+              >{{ i + 1 }}.<span class="trace" v-if="i < 3"></span>
+            </span>
             <div
               class="fan-img"
               :class="{ one: i == 0, two: i == 1, three: i == 2 }"
@@ -132,7 +148,9 @@
           </div>
           <div class="fan-desc">
             <div class="fan-title">{{ b.fansTitle }}</div>
-            <div class="fan-score">{{ b.scoreValue }}</div>
+            <div class="fan-score">
+              <van-icon name="points" />{{ b.scoreValue }}
+            </div>
           </div>
         </div>
         <div class="load">
@@ -231,9 +249,37 @@ export default {
       timer: null,
       loadShow: false,
       descShow: false,
+      labelShow: {},
+      labelCover: false,
     };
   },
   methods: {
+    //跳转至第一页
+    labelToroute(route) {
+      sessionStorage.setItem("page", route);
+      this.$router.push(`/detile/reading/${this.cataList[route].text}`);
+    },
+    //点击总章节名出现跳转
+    labelGo(i, name) {
+      // console.log(this.choseList[i].itemList[0]);
+      let labelToRoute = 0;
+      if (i == 0) {
+        labelToRoute = 0;
+      } else {
+        for (let x = 0; x < i; x++) {
+          labelToRoute += this.choseList[x].itemList.length;
+        }
+        labelToRoute += 1;
+      }
+
+      this.labelShow = {
+        name: name,
+        bookRouter: labelToRoute,
+        vip: this.choseList[i].itemList[0].vip,
+      };
+      this.labelCover = true;
+      this.show = false;
+    },
     //反转目录顺序
     reverseed() {
       this.reverse = !this.reverse;
@@ -252,6 +298,7 @@ export default {
     },
     //点击目录跳转
     choseToRead(i, n) {
+       this.show = false;
       if (this.reverse == false) {
         let pageChose = 0;
         if (i == 0) {
@@ -264,7 +311,7 @@ export default {
           pageChose += n;
         }
         // console.log(pageChose);
-        this.show = false;
+       
         sessionStorage.setItem("page", pageChose);
         this.goPage();
         // this.$router.go(1);
@@ -280,7 +327,7 @@ export default {
           }
           pageChange = lastpage - (pageChange + n);
         }
-        this.show = false;
+       
         sessionStorage.setItem("page", pageChange - 1);
         this.goPage();
         // this.$router.go(0);
@@ -305,9 +352,10 @@ export default {
     getDetileData() {
       this.$axios
         .get(
-          "https://apis.netstart.cn/yunyuedu/book/getsub.json?id=13c58cc086f74e36978b4a7881b82517_4&title=女掌事"
+          "https://apis.netstart.cn/yunyuedu/book/getsub.json?id=6e2c4a5e2ccd4e21ae2e771ed95c71e6_4&title=要把读书当回事"
         )
         .then(({ data }) => {
+          console.log(data);
           let datamode = data.feed.entry;
           this.dataList = {
             title: datamode.title,
@@ -320,9 +368,8 @@ export default {
             state: datamode["pris:book"].state == 1 ? "连载中" : "完结",
             stateMode: datamode["pris:book"].state,
             words: Math.round(datamode["pris:book"].words / 10000) + "万字",
-            wprice: datamode["pris:book"].wprice + "阅点/千字",
-            // value: datamode["pris:ranking"].value,
-            //<van-icon name="star"/>
+            wprice: datamode["pris:book"].wprice ,
+            price:datamode["pris:book"].price,
             clicks: datamode["pris:subscribe"].clicksCount + "点击",
           };
           // console.log(data.feed.entry);
@@ -336,7 +383,7 @@ export default {
     getFanData() {
       this.$axios
         .get(
-          "https://apis.netstart.cn/yunyuedu/book/present/simple.json?id=13c58cc086f74e36978b4a7881b82517_4"
+          "https://apis.netstart.cn/yunyuedu/book/present/simple.json?id=6e2c4a5e2ccd4e21ae2e771ed95c71e6_4"
         )
         .then(({ data }) => {
           this.fanList = data.list;
@@ -355,7 +402,7 @@ export default {
     getCommentData() {
       this.$axios
         .get(
-          "https://apis.netstart.cn/yunyuedu/comment/getComments.json?bookId=13c58cc086f74e36978b4a7881b82517_4"
+          "https://apis.netstart.cn/yunyuedu/comment/getComments.json?bookId=6e2c4a5e2ccd4e21ae2e771ed95c71e6_4"
         )
         .then(({ data }) => {
           let comment = data.all.list;
@@ -385,30 +432,34 @@ export default {
             // console.log(comment);
           }
 
-          console.log(comment);
+          // console.log(comment);
         });
     },
     //获得小说阅读数据
     getListData() {
       this.$axios
         .get(
-          "https://apis.netstart.cn/yunyuedu/book/catalog.json?tocId=13c58cc086f74e36978b4a7881b82517_4"
+          "https://apis.netstart.cn/yunyuedu/book/catalog.json?tocId=6e2c4a5e2ccd4e21ae2e771ed95c71e6_4"
         )
         .then(({ data }) => {
+          // console.log(data);
           let listmode = data.ncx.navMap.navPoint;
 
-          // console.log(listmode);
+          console.log(listmode);  
 
           for (let i = 0; i < listmode.length; i++) {
+            // console.log(listmode[i]);
             if (listmode[i].navPoint) {
               let catamode = listmode[i].navPoint || "";
               let str = listmode[i].navLabel.replace(",", "");
               this.choseList.push({ label: str, itemList: [] });
+
               for (let x = 0; x < catamode.length; x++) {
                 this.cataList.push({
                   text: catamode[x].id,
                   vip: catamode[x].vip,
                 });
+                // console.log(this.choseList[0], i);
                 let str1 = catamode[x].navLabel.replace(",", "");
                 this.choseList[i].itemList.push({
                   text: str1,
@@ -417,10 +468,15 @@ export default {
                 this.nameList.push(str1);
               }
             } else {
-              console.log(1);
+              let str1 = listmode[i].navLabel.replace(",", "");
+              this.choseList.push({ label: '', itemList: [{text:str1}] });
+              this.cataList.push({
+                text: listmode[i].content.src,
+              });
+              this.nameList.push(str1);
             }
           }
-          console.log(this.choseList);
+          // console.log(this.choseList);
         });
     },
     //获取粉丝榜数据
@@ -499,13 +555,14 @@ export default {
   // padding: 20px;
   .detile-item {
     width: 100%;
-    height: 60vh;
+    height: 440px;
     padding: 20px 10px;
     background-color: #fff;
 
     .item-mulu {
       display: flex;
       justify-content: space-between;
+      color: #999;
     }
 
     .top {
@@ -730,7 +787,7 @@ export default {
       display: flex;
       justify-content: space-between;
       height: 80px;
-      border: 1px solid black;
+      // border: 1px solid black;
       padding: 20px 20px 20px 10px;
       line-height: 40px;
       position: relative;
@@ -744,10 +801,9 @@ export default {
             color: black;
             font-size: 40px;
             font-weight: 700;
-
           }
 
-          .trace{
+          .trace {
             display: inline-block;
             background-color: red;
             width: 4px;
@@ -803,6 +859,9 @@ export default {
         }
         .fan-score {
           color: #999;
+          .van-icon-points:before {
+            padding-right: 10px;
+          }
         }
       }
     }
