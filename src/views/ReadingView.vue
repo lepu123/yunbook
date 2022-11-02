@@ -30,7 +30,7 @@
         @click="get(i, $event)"
       >
         <div class="list" v-for="(p, j) in r.text" :key="j">
-          <div class="item" v-if="p != ''">{{ p }}</div>
+          <div class="item" v-if="p != '' ">{{ p }}</div>
         </div>
         <div class="count" v-show="scoll != true">
           {{ i + 1 + "/" + renderList.length }}
@@ -70,6 +70,17 @@
         </div>
 
         <van-popup
+          v-model="labelCover"
+          class="labelshow"
+          closeable
+          :style="{ height: '100%', width: '100%' }"
+          position="left"
+        >
+          <div class="label-this" @click="labelToroute(labelShow.bookRouter)">
+            {{ labelShow.name }}
+          </div>
+        </van-popup>
+        <van-popup
           v-model="showPop"
           class="mulu"
           position="left"
@@ -94,12 +105,16 @@
                 ></div>
               </div>
             </div>
-
             <div class="chose" v-for="(l, i) in choseList" :key="i">
-              <div class="label" v-if="l.label">{{ l.label }}</div>
+              <div class="label" v-if="l.label" @click="labelGo(i, l.label)">
+                {{ l.label }}
+              </div>
               <div class="choseItem" v-for="(t, n) in l.itemList" :key="n">
                 <div class="item-mulu" @click.prevent="choseToRead(i, n)">
                   {{ t.text }}
+                  <div class="lock" v-if="t.vip == 1">
+                    <van-icon name="bag-o" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -231,7 +246,7 @@ export default {
       fontSize: 20,
       heightList: [],
       textList: [],
-      padtop: 42,
+      padtop: 60,
       silde: false,
       show: false,
       fade: true,
@@ -251,7 +266,8 @@ export default {
       muluFlag: false,
       shuqianList: [],
       catchFlag: false,
-      // ltrue: true,
+      labelShow: {},
+      labelCover: false,
     };
   },
 
@@ -282,9 +298,33 @@ export default {
   },
 
   methods: {
-    // trued(){
-    //   console.log(1);
-    // },
+    //跳转至第一页
+    labelToroute(route) {
+      sessionStorage.setItem("page", route);
+      this.$emit("goPage", route);
+      this.$router.go(0);
+    },
+    //点击总章节名出现跳转
+    labelGo(i, name) {
+      // console.log(this.choseList[i].itemList[0]);
+      let labelToRoute = 0;
+      if (i == 0) {
+        labelToRoute = 0;
+      } else {
+        for (let x = 0; x < i; x++) {
+          labelToRoute += this.choseList[x].itemList.length;
+        }
+        labelToRoute += 1;
+      }
+
+      this.labelShow = {
+        name: name,
+        bookRouter: labelToRoute,
+        vip: this.choseList[i].itemList[0].vip,
+      };
+      this.labelCover = true;
+      this.showPop = false;
+    },
     //初始化字体颜色
     changeInitCr() {
       let nightFlag = JSON.parse(sessionStorage.getItem("night"));
@@ -512,7 +552,7 @@ export default {
     prevPage() {
       let page = JSON.parse(sessionStorage.getItem("page"));
       if (page <= 0) {
-        alert("开头");
+        this.$toast("到开头了");
       } else {
         sessionStorage.setItem("page", page - 1);
         this.$emit("goPage");
@@ -524,7 +564,7 @@ export default {
       let page = JSON.parse(sessionStorage.getItem("page"));
       let pageCount = JSON.parse(sessionStorage.getItem("new"));
       if (page == pageCount) {
-        alert("结尾");
+        this.$toast("到结尾了");
       } else {
         sessionStorage.setItem("page", page + 1);
         this.$emit("goPage");
@@ -702,7 +742,7 @@ export default {
           if (i >= this.renderList.length - 1) {
             let gopage = page + 1;
             if (gopage >= newpage) {
-              alert("结尾");
+              this.$toast("到结尾了");
             } else {
               sessionStorage.setItem("page", gopage);
               this.$emit("goPage");
@@ -720,7 +760,7 @@ export default {
           if (i == 0) {
             let gopage = page - 1;
             if (gopage < 0) {
-              alert("开头");
+              this.$toast("到开头了");
             } else {
               sessionStorage.setItem("page", gopage);
               this.$emit("goPage");
@@ -746,7 +786,7 @@ export default {
           if (i >= this.renderList.length - 1) {
             let gopage = page + 1;
             if (gopage >= newpage) {
-              alert("结尾");
+              this.$toast("到结尾了");
             } else {
               sessionStorage.setItem("page", gopage);
               this.$emit("goPage");
@@ -768,7 +808,7 @@ export default {
           if (i == 0) {
             let gopage = page - 1;
             if (gopage < 0) {
-              alert("开头");
+              this.$toast("到开头了");
             } else {
               sessionStorage.setItem("page", gopage);
               this.$emit("goPage");
@@ -797,21 +837,23 @@ export default {
     },
     //替换字符串并生成原始文本数组对象
     replaceText(replacesize) {
-      let str = this.content.replace(
-        /<div class="g-book"><div class="m-mb"><div class="m-content">/g,
-        ""
-      );
-      let str1 = str.replace(/<h1><span>/g, "<p>");
-      let str2 = str1.replace(/<\/span><\/h1>/g, "</p>");
-      let str3 = str2.replace(/<p>/g, "");
-      let str4 = str3.replace(
-        /<div id="book-bottom"><\/div><\/div><\/div><\/div>/g,
-        ""
-      );
+      // let str = this.content.replace(
+      //   /<div class="g-book"><div class="m-mb"><div class="m-content">/g,
+      //   ""
+      // );
+      // let str1 = str.replace(/<h1><span>/g, "<p>");
+      // let str2 = str1.replace(/<\/span><\/h1>/g, "</p>");
+      // let str3 = str2.replace(/<p>/g, "");
+      // let str4 = str3.replace(
+      //   /<div id="book-bottom"><\/div><\/div><\/div><\/div>/g,
+      //   ""
+      // );
+      let str3=this.content.replace(/(<([^>]+)>)/ig, "</p>")
+      let str4 = str3.replace(/\n/ig,'')
       this.str5 = str4.split("</p>");
       // console.log(this.str5);
       this.str5.forEach((i, x) => {
-        if (i != "") {
+        if (i != "" ) {
           this.heightList.push({
             width: i.length * replacesize,
             height:
@@ -849,7 +891,7 @@ export default {
             text: this.textList.slice(this.index, this.nextIndex),
           });
         }
-        // console.log(this.renderList);
+        console.log(this.renderList);
         this.index = this.nextIndex;
         this.arrNum = this.arrNum + 1;
       }
@@ -858,7 +900,7 @@ export default {
     getData() {
       this.$axios
         .get(
-          `https://apis.netstart.cn/yunyuedu/reader/book/content.json?source_uuid=13c58cc086f74e36978b4a7881b82517_4&content_uuid=${this.textId}`
+          `https://apis.netstart.cn/yunyuedu/reader/book/content.json?source_uuid=6e2c4a5e2ccd4e21ae2e771ed95c71e6_4&content_uuid=${this.textId}`
           // "/content.json"
         )
         .then(({ data }) => {
@@ -897,7 +939,7 @@ export default {
   overflow: hidden;
   // overflow: auto;
 
-  background-color: rgb(203, 212, 209);
+  background-color: rgb(203, 208, 212);
   z-index: 999;
 
   .top-control {
@@ -933,6 +975,7 @@ export default {
     height: 100vh;
     // transform: translateX(-10%);
     overflow: hidden;
+    position: relative;
     &.silde {
       transition: all 0.3s linear;
     }
@@ -1195,7 +1238,23 @@ export default {
       line-height: 40px;
       padding: 20px 10px 20px 40px;
       border-top: 1px dashed #777;
+      color: #999;
+      display: flex;
+      justify-content: space-between;
     }
+  }
+  .label-this{
+    width: 100%;
+    height: 80px;
+    font-size: 20px;
+    color: black;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    // border: 1px solid black;
+    line-height: 80px;
+    text-align: center;
+    background:rgb(45, 143, 224)
   }
 }
 
