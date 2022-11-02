@@ -3,7 +3,7 @@
     <div class="batch-top">
       <div 
       @click="checkAll" 
-      :class="this.result.length == this.recommendArr.length ? 'all-choice' : 'choice' "
+      :class="this.result.length == this.recommendArr.length && this.result.length != 0 ? 'all-choice' : 'choice' "
       ref="allChoice"
       >
         全选({{this.result.length}})

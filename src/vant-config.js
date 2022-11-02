@@ -23,7 +23,8 @@ const vantComponents = [
     Button,
     Uploader,
     SidebarItem,
-    Sidebar
+    Sidebar,
+    Slider
 ]
 
 export default {

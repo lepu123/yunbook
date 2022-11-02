@@ -29,7 +29,7 @@ const routes = [
     redirect: '/home'
   },
   {
-    path: '/detile',
+    path: '/detile/:id/:title',
     name: 'detile',
     component: DetileView,
     children: [
@@ -38,7 +38,7 @@ const routes = [
         name: 'reading',
         component: () => import("../views/ReadingView.vue"),
       }
-    ],
+    ]
   },
   {
     path: '/sort',

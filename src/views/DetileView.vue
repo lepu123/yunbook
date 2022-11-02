@@ -218,6 +218,8 @@ export default {
       timer: null,
       loadShow: false,
       descShow: false,
+      bookId: '',
+      bookTitle: '',
     };
   },
   methods: {
@@ -292,7 +294,7 @@ export default {
     getDetileData() {
       this.$axios
         .get(
-          "https://apis.netstart.cn/yunyuedu/book/getsub.json?id=13c58cc086f74e36978b4a7881b82517_4&title=女掌事"
+          `https://apis.netstart.cn/yunyuedu/book/getsub.json?id=${this.bookId}&title=${this.bookTitle}`
         )
         .then(({ data }) => {
           let datamode = data.feed.entry;
@@ -427,6 +429,11 @@ export default {
           // console.log(list);
         });
     },
+    getId() {
+      let {id,title} = this.$route.params;
+      this.bookId = id
+      this.bookTitle = title
+    },
     //滚动加载数据
     fanbangLoad: debounce(function (e) {
       let countNum = 20 * this.addFan;
@@ -460,6 +467,7 @@ export default {
     }, 500),
   },
   created() {
+    this.getId();
     this.getDetileData();
     this.getListData();
     this.getCommentData();

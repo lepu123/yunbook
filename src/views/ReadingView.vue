@@ -869,7 +869,7 @@ export default {
           } else {
             this.replaceText(fontsize);
           }
-
+          console.log(data);
           this.PageList();
           this.getPagevalue();
           this.getTextvalue();
@@ -882,6 +882,7 @@ export default {
 
   mounted() {
     this.getData();
+
   },
 };
 </script>
