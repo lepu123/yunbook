@@ -100,25 +100,24 @@
         </div>
         </transition> -->
         <transition name="van-fade">
-  
-        <BannerBook
+       
+         <BannerBook
           v-if="localShow == 0"
           :recommendArr="recommendArr"
           :localShow="localShow"
         />
-      
+       
         <BannerBook
           v-if="localShow == 1"
           :recommendArr="localArr"
           :localShow="localShow"
         />
-
+    
         <BannerBook
           v-if="localShow == 2"
           :recommendArr="recommendArr"
           :localShow="localShow"
         />
-
         </transition>
       </div>
       

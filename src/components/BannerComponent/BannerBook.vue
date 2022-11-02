@@ -24,7 +24,8 @@
         <p>还没有本地书哦</p>
       </div>
     </div>
-
+     
+     <router-link :to="`/detile/${this.bookId}/${this.title}`" tag="div">
     <div v-show="recommendArr.length != 0 && localShow != 2" class="banner-show">
       <div
         class="banner-book"
@@ -59,6 +60,7 @@
         </div>
       </div>
     </div>
+    </router-link>
   </div>
 </template>
 
@@ -68,9 +70,19 @@ export default {
     recommendArr: Array,
     localShow: Number,
   },
+  data() {
+    return {
+      bookId: '',
+      title: '',
+      // path: `/reading/${this.bookId}`
+    }
+  },
   methods: {
     bookClick(id) {
       console.log(id);
+      this.bookId = this.recommendArr[id].id
+      this.title = this.recommendArr[id].title
+      console.log( this.bookId);
     },
   },
 };

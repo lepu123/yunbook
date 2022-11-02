@@ -1,4 +1,4 @@
-import { NavBar, Slider, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem, CellGroup, Tab, Tabs, Popup, Cell, Toast, Loading, Overlay, Image as VanImage } from 'vant'
+import { Checkbox,CheckboxGroup,Button,Uploader,SidebarItem,Sidebar,NavBar, Slider, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem, CellGroup, Tab, Tabs, Popup, Cell, Toast, Loading, Overlay, Image as VanImage } from 'vant'
 
 const vantComponents = [
     NavBar,
@@ -18,7 +18,12 @@ const vantComponents = [
     Loading,
     Overlay,
     VanImage,
-    Toast,
+    Checkbox,
+    CheckboxGroup,
+    Button,
+    Uploader,
+    SidebarItem,
+    Sidebar,
     Slider
 ]
 

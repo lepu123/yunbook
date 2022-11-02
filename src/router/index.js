@@ -25,7 +25,7 @@ const routes = [
     redirect: '/bookmallview'
   },
   {
-    path: '/detile',
+    path: '/detile/:id/:title',
     name: 'detile',
     component: DetileView,
     meta: {
@@ -38,7 +38,7 @@ const routes = [
         name: 'reading',
         component: () => import("../views/ReadingView.vue"),
       }
-    ],
+    ]
   },
   {
     path: '/sort',

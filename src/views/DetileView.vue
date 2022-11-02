@@ -251,6 +251,8 @@ export default {
       timer: null,
       loadShow: false,
       descShow: false,
+      bookId: '',
+      bookTitle: '',
       labelShow: {},
       labelCover: false,
     };
@@ -354,7 +356,7 @@ export default {
     getDetileData() {
       this.$axios
         .get(
-          "https://apis.netstart.cn/yunyuedu/book/getsub.json?id=6e2c4a5e2ccd4e21ae2e771ed95c71e6_4&title=要把读书当回事"
+          `https://apis.netstart.cn/yunyuedu/book/getsub.json?id=${this.bookId}&title=${this.bookTitle}`
         )
         .then(({ data }) => {
           console.log(data);
@@ -493,6 +495,11 @@ export default {
           // console.log(list);
         });
     },
+    getId() {
+      let {id,title} = this.$route.params;
+      this.bookId = id
+      this.bookTitle = title
+    },
     //滚动加载数据
     fanbangLoad: debounce(function (e) {
       let countNum = 20 * this.addFan;
@@ -526,6 +533,7 @@ export default {
     }, 500),
   },
   created() {
+    this.getId();
     this.getDetileData();
     this.getListData();
     this.getCommentData();
