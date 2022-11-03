@@ -83,23 +83,23 @@
         </div>
       </div>
 
-      <van-pull-refresh v-model="isLoading" @refresh="onRefresh" head-height = 100>
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh" head-height = 50>
         <template #pulling="props">
           <img
             class="doge"
-            src="https://img01.yzcdn.cn/vant/doge.png"
+            src="@/assets/image/banner-images/header_loading_book.png"
             :style="{ transform: `scale(${props.distance / 80})` }"
           />
         </template>
 
         <!-- 释放提示 -->
         <template #loosing>
-          <img class="doge" src="https://img01.yzcdn.cn/vant/doge.png" />
+          <img class="doge" src="@/assets/image/banner-images/header_loading.gif" />
         </template>
 
         <!-- 加载提示 -->
         <template #loading>
-          <img class="doge" src="https://img01.yzcdn.cn/vant/doge-fire.jpg" />
+          <img class="doge" src="@/assets/image/banner-images/header_loading.gif" />
         </template>
 
         <div class="banner-body">
@@ -297,7 +297,7 @@ export default {
     onRefresh() {
       setTimeout(() => {
         this.isLoading = false;
-      }, 1000);
+      }, 500);
     },
   },
   components: {
@@ -314,8 +314,8 @@ export default {
   min-height: 100vh;
 
   .doge {
-    width: 140px;
-    height: 72px;
+    width: 50px;
+    height: 30px;
     margin-top: 8px;
     border-radius: 4px;
   }

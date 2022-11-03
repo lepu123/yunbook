@@ -104,7 +104,6 @@
           </div>
         </div>
       </van-popup>
-      <button @click="go">立刻试读</button>
     </div>
 
     <router-view
@@ -242,7 +241,10 @@
         </div>
       </div>
     </div>
-    <div class="tar-bar-bom"><van-icon name="arrow-left" /></div>
+    <div class="tar-bar-bom">
+      <span>加入书架</span>
+      <span><button @click="go">立刻试读</button></span>
+    </div>
   </div>
 </template>
 
@@ -668,6 +670,14 @@ export default {
     z-index: 200;
     line-height: 50px;
     font-size: 20px;
+
+    span {
+      display: inline-block;
+      width: 50%;
+      height: 100%;
+      text-align: center;
+      font-size: 15px;
+    }
   }
 
   .van-icon-star:before {
