@@ -36,9 +36,11 @@
             ><img src="@/assets/image/banner-images/icon_search.png"
           /></span>
           <!-- 浏览记录 -->
-          <span
+          <van-cell is-link @click="showHistory">
+            <span
             ><img src="@/assets/image/banner-images/book_shelf_history.png"
           /></span>
+          </van-cell>
           <!-- 更多 -->
 
           <van-cell is-link @click="showMore">
@@ -158,6 +160,8 @@
           @delbook="delbook"
         />
       </van-popup>
+
+       <van-popup v-model="historyShow">内容</van-popup>
     </div>
 
     <div class="dianzi"></div>
@@ -180,6 +184,7 @@ export default {
       bannerShow: false,
       moreShow: false,
       batchShow: false,
+      historyShow: false,
       isShow: true,
       isLoading: false,
     };
@@ -215,6 +220,9 @@ export default {
     showBatch() {
       this.batchShow = true;
       this.moreShow = false;
+    },
+    showHistory() {
+      this.show = true;
     },
     recommendClose() {
       this.isShow = false;
