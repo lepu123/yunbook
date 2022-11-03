@@ -7,7 +7,7 @@
 
     <div class="top">
       <van-icon name="arrow-left" @click="goBack" />
-      <span>{{ lisArr.title }}</span>
+      <span class="van-ellipsis">{{ lisArr.title }}</span>
       <van-cell title="..." @click="showShare = true" />
       <van-share-sheet
         v-model="showShare"
@@ -396,6 +396,11 @@ export default {
   font-size: 22px;
   padding-top: 20px;
   color: #fff;
+  span {
+    display: inline-block;
+    width: 40vw;
+  }
+
   .van-icon-arrow-left:before {
     content: "\e668";
     margin-left: 5vw;
@@ -656,5 +661,11 @@ export default {
     position: fixed;
     margin: 15px 0 0 15px;
   }
+}
+
+.van-count-down {
+    color: #fff;
+    font-size: 14px;
+    line-height: 20px;
 }
 </style>
