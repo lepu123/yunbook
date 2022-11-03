@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-   
+    <keep-alive>
       <router-view v-if="$route.meta.keepAlive" />
-    
+    </keep-alive>
     <router-view v-if="!$route.meta.keepAlive" />
 
     <van-cell is-link @click="showPopup" v-if="$route.meta.showFree">

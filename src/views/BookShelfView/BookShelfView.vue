@@ -2,9 +2,9 @@
   <div id="banner">
     <div class="banner">
       <div class="banner-top">
-        <span class="banner-top-left" >
+        <span class="banner-top-left">
           <van-cell is-link @click="showPopup">
-            <i ref="show">书架</i> 
+            <i ref="show">书架</i>
             <img
               src="@/assets/image/banner-images/book_toc_icon_arrow_down.png"
             />
@@ -18,10 +18,7 @@
                 src="@/assets/image/banner-images/icon_bookcase_small.png"
               /><span ref="banner">书架</span>
             </div>
-            <div
-              class="banner-option-item"
-              @click="changeShow"
-            >
+            <div class="banner-option-item" @click="changeShow">
               <img
                 src="@/assets/image/banner-images/icon_bookcase_local_book.png"
               /><span ref="local">本地书</span>
@@ -61,15 +58,21 @@
               </div>
               <div class="more-option-item">
                 <van-cell is-link @click="showBatch" class="batch"></van-cell>
-                  <img
+                <img
                   src="@/assets/image/banner-images/icon_batch_management.png"
                 />
                 <span>批量管理</span>
               </div>
               <div class="more-option-item" @click="changeShow">
-                <img v-show="localShow == 0" src="@/assets/image/banner-images/ic_sub_menu_list.png" />
-                <img v-show="localShow == 2" src="@/assets/image/banner-images/ic_sub_menu_grid.png" />
-                <span ref="lis" >列表模式</span>
+                <img
+                  v-show="localShow == 0"
+                  src="@/assets/image/banner-images/ic_sub_menu_list.png"
+                />
+                <img
+                  v-show="localShow == 2"
+                  src="@/assets/image/banner-images/ic_sub_menu_grid.png"
+                />
+                <span ref="lis">列表模式</span>
               </div>
               <div class="more-option-item">
                 <img src="@/assets/image/banner-images/icon_wifi.png" />
@@ -80,7 +83,26 @@
         </div>
       </div>
 
-      <div class="banner-body">
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh" head-height = 100>
+        <template #pulling="props">
+          <img
+            class="doge"
+            src="https://img01.yzcdn.cn/vant/doge.png"
+            :style="{ transform: `scale(${props.distance / 80})` }"
+          />
+        </template>
+
+        <!-- 释放提示 -->
+        <template #loosing>
+          <img class="doge" src="https://img01.yzcdn.cn/vant/doge.png" />
+        </template>
+
+        <!-- 加载提示 -->
+        <template #loading>
+          <img class="doge" src="https://img01.yzcdn.cn/vant/doge-fire.jpg" />
+        </template>
+
+        <div class="banner-body">
         <!-- <transition name="van-fade">
         <div class="box" v-if="isShow">
         <div class="banner-recommend " v-for="t in bannerArr" :key="t.p_id">
@@ -100,40 +122,41 @@
         </div>
         </transition> -->
         <transition name="van-fade">
-       
-         <BannerBook
-          v-if="localShow == 0"
-          :recommendArr="recommendArr"
-          :localShow="localShow"
-        />
-       
-        <BannerBook
-          v-if="localShow == 1"
-          :recommendArr="localArr"
-          :localShow="localShow"
-        />
-    
-        <BannerBook
-          v-if="localShow == 2"
-          :recommendArr="recommendArr"
-          :localShow="localShow"
-        />
+          <BannerBook
+            v-if="localShow == 0"
+            :recommendArr="recommendArr"
+            :localShow="localShow"
+          />
+
+          <BannerBook
+            v-if="localShow == 1"
+            :recommendArr="localArr"
+            :localShow="localShow"
+          />
+
+          <BannerBook
+            v-if="localShow == 2"
+            :recommendArr="recommendArr"
+            :localShow="localShow"
+          />
         </transition>
       </div>
+      </van-pull-refresh>
       
-      <van-popup 
-      v-model="batchShow"
-      position="right" 
-      :style="{ height: '100%' }"
-      class="batch-item"
+
+      <van-popup
+        v-model="batchShow"
+        position="right"
+        :style="{ height: '100%' }"
+        class="batch-item"
       >
-      <BatchCommpontent 
-      :recommendArr = recommendArr
-      :batchShow = batchShow
-      :delArr = delArr
-      @clockbatch="clockbatch"
-      @delbook="delbook"
-      />
+        <BatchCommpontent
+          :recommendArr="recommendArr"
+          :batchShow="batchShow"
+          :delArr="delArr"
+          @clockbatch="clockbatch"
+          @delbook="delbook"
+        />
       </van-popup>
     </div>
 
@@ -143,7 +166,7 @@
 
 <script>
 import BannerBook from "@/components/BannerComponent/BannerBook.vue";
-import BatchCommpontent from '@/components/BannerComponent/BatchCommpontent.vue';
+import BatchCommpontent from "@/components/BannerComponent/BatchCommpontent.vue";
 export default {
   name: "BookShelfView",
   data() {
@@ -158,6 +181,7 @@ export default {
       moreShow: false,
       batchShow: false,
       isShow: true,
+      isLoading: false,
     };
   },
   created() {
@@ -189,14 +213,14 @@ export default {
       }, 100);
     },
     showBatch() {
-      this.batchShow = true
-      this.moreShow = false
+      this.batchShow = true;
+      this.moreShow = false;
     },
     recommendClose() {
       this.isShow = false;
     },
     UpBook(e) {
-      this.moreShow = false
+      this.moreShow = false;
       console.log(e.target.files[0]);
       let reader = new FileReader();
       reader.readAsText(e.target.files[0]);
@@ -210,7 +234,8 @@ export default {
         recFlag: 1,
         title: title[0],
         bookType: 1,
-        cover: "https://yuedust.yuedu.126.net/images/bookDefaultIcon.png?$IMG_V",
+        cover:
+          "https://yuedust.yuedu.126.net/images/bookDefaultIcon.png?$IMG_V",
         author: "",
         mime: "application/prisbookcontainer",
         publishType: 1,
@@ -227,48 +252,53 @@ export default {
       };
       console.log(this.localObj);
       this.localArr = [this.localObj];
-      this.recommendArr = [...this.localArr,...this.recommendArr]
+      this.recommendArr = [...this.localArr, ...this.recommendArr];
     },
     changeShow(e) {
       console.log(e.target.textContent);
-     
-      if (e.target.textContent == '书架') {
-          this.localShow = 0
-          this.bannerShow = false;
-          this.$refs.show.textContent = this.$refs.banner.textContent
+
+      if (e.target.textContent == "书架") {
+        this.localShow = 0;
+        this.bannerShow = false;
+        this.$refs.show.textContent = this.$refs.banner.textContent;
       }
-      if (e.target.textContent == '本地书') {
-          this.localShow = 1
-          this.bannerShow = false;
-          this.$refs.show.textContent = this.$refs.local.textContent
+      if (e.target.textContent == "本地书") {
+        this.localShow = 1;
+        this.bannerShow = false;
+        this.$refs.show.textContent = this.$refs.local.textContent;
       }
-      if (e.target.textContent == '列表模式') {
-          this.localShow = 2
-          console.log(this.$refs.lis);
-          this.$refs.lis.textContent = '书封模式'
-          this.moreShow = false;
-      }else if (e.target.textContent == '书封模式') {
-          this.localShow = 0
-          this.moreShow = false;
-          this.$refs.lis.textContent = '列表模式'
+      if (e.target.textContent == "列表模式") {
+        this.localShow = 2;
+        this.$refs.lis.textContent = "书封模式";
+        this.moreShow = false;
+      } else if (e.target.textContent == "书封模式") {
+        this.localShow = 0;
+        this.moreShow = false;
+        this.$refs.lis.textContent = "列表模式";
       }
-      console.log(this.localShow);
     },
     clockbatch(item) {
-      this.batchShow = item
+      this.batchShow = item;
     },
     delbook(arr) {
       for (let i = 0; i < arr.length; i++) {
-        this.recommendArr = this.recommendArr.filter((item) => item.id != arr[i].id)
+        this.recommendArr = this.recommendArr.filter(
+          (item) => item.id != arr[i].id
+        );
 
         for (let j = 0; j < this.localArr.length; j++) {
-           this.localArr = this.localArr.filter((item) => {
-            item.id !=  this.recommendArr[i].id
-           })
+          this.localArr = this.localArr.filter((item) => {
+            item.id != this.recommendArr[i].id;
+          });
         }
       }
       console.log(this.recommendArr);
-    }
+    },
+    onRefresh() {
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 1000);
+    },
   },
   components: {
     BannerBook,
@@ -282,6 +312,13 @@ export default {
   position: relative;
   width: 100vw;
   min-height: 100vh;
+
+  .doge {
+    width: 140px;
+    height: 72px;
+    margin-top: 8px;
+    border-radius: 4px;
+  }
 
   .batch-item {
     width: 100vw;
@@ -359,7 +396,7 @@ export default {
 
   .more {
     top: 133px;
-    left: 290px;
+    left: 79%;
     width: 150px;
     min-height: 200px;
     border-radius: 3px;
@@ -406,6 +443,10 @@ export default {
           width: 100%;
           height: 100%;
           opacity: 0;
+
+          input {
+            width: 100%;
+          }
         }
 
         img {
@@ -564,8 +605,8 @@ export default {
 }
 
 .van-popup {
-    overflow-y:initial;
-  }
+  overflow-y: initial;
+}
 
 .dianzi {
   width: 100vw;
