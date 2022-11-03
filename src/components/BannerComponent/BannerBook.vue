@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <router-link :to="`/detile/${this.bookId}/${this.title}`" tag="div">
+    
       <div
         v-show="recommendArr.length != 0 && localShow != 2"
         class="banner-show"
@@ -57,6 +57,7 @@
       <div
         v-show="recommendArr.length != 0 && localShow == 2"
         class="banner-show"
+        @click="bookClick(i)"
       >
         <div class="lis-book" v-for="item in recommendArr" :key="item.id">
           <div class="lis-img">
@@ -69,7 +70,7 @@
           </div>
         </div>
       </div>
-    </router-link>
+   
   </div>
 </template>
 
@@ -88,10 +89,14 @@ export default {
   },
   methods: {
     bookClick(id) {
-      console.log(id);
       this.bookId = this.recommendArr[id].id;
       this.title = this.recommendArr[id].title;
-      console.log(this.bookId);
+      console.log(this.recommendArr[id].bookType == 0);
+      if (this.recommendArr[id].bookType == 0) {
+        this.$router.push(`/detile/${this.bookId}/${this.title}`);
+      } else {
+        this.$router.push(`/ListeningView/${this.bookId}`);
+      }
     },
   },
 };
