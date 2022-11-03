@@ -20,7 +20,7 @@
             <div class="click">{{ dataList.clicks }}</div>
           </div>
           <div class="price" v-if="dataList.wprice">{{ dataList.wprice+ "阅点/千字" }}</div>
-          <div class="price" v-if="dataList.price" :style="{color:'red',fontSize:'18px',fontWeight:'700'}">{{ dataList.price+'阅点' }}</div>
+          <div class="price" v-if="!dataList.wprice" :style="{color:'red',fontSize:'18px',fontWeight:'700'}">{{ dataList.price+'阅点' }}</div>
         </div>
       </div>
       <div class="summary">{{ dataList.summary }}</div>
@@ -101,7 +101,7 @@
 
     <div class="fan-item" @click="fanShow = true" v-if="fanList">
       <div class="user">
-        <div class="user-img" v-for="f in fanList" :key="f.userId">
+        <div class="user-img" v-for="(f,i) in fanList" :key="i">
           <img :src="f.imageUrl" alt="" />
         </div>
       </div>
@@ -178,7 +178,7 @@
         <p><span class="shuzi"></span> 评论</p>
         <div class="write"><van-icon name="edit" />写评论</div>
       </div>
-      <div class="comment" v-for="c in commentList" :key="c.userId">
+      <div class="comment" v-for="(c,i) in commentList" :key="i">
         <div class="top">
           <div class="img" v-if="c.cover"><img :src="c.cover" alt="" /></div>
           <div class="img" v-if="!c.cover"><van-icon name="contact" /></div>
@@ -209,7 +209,7 @@
           <span class="label">精彩书摘</span> {{ c.select }}
         </div>
         <div class="replyList" v-if="c.replyCount != 0">
-          <div class="reply-item" v-for="r in c.replyList" :key="r.commentId">
+          <div class="reply-item" v-for="(r,i) in c.replyList" :key="i">
             <!-- <div class="toauthor"> -->
             <p class="uer-taker">
               {{ r.nickName }}
@@ -586,7 +586,7 @@ export default {
   // padding: 20px;
   .detile-item {
     width: 100%;
-    height: 450px;
+    height: 500px;
     padding: 45px 10px 20px 10px;
     background-color: #fff;
 
@@ -764,7 +764,7 @@ export default {
     width: 92vw;
     height: 80px;
     line-height: 95px;
-    margin: 0 40px 0;
+    margin: 20px 0 0 20px;
     // border: 1px solid black;
     display: flex;
     margin-top: 10px;
@@ -920,7 +920,7 @@ export default {
 
   .comment-item {
     background-color: #fff;
-    margin-top: 30px;
+    margin-top: 10px;
     .item-desc {
       height: 80px;
       line-height: 80px;
