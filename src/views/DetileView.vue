@@ -1,6 +1,6 @@
 <template>
   <div class="detile" ref="detile">
-    <div class="tar-bar-top"><van-icon name="arrow-left" /></div>
+    <div class="tar-bar-top"><van-icon size="20" name="arrow-left" /></div>
     <div class="detile-item">
       <div class="top">
         <div class="cover"><img :src="dataList.cover" alt="" /></div>
@@ -551,6 +551,7 @@ export default {
 //   width: 0 !important;
 //   height: 0;
 // }
+
 .detile {
   width: 100vw;
   height: 100vh;
@@ -568,6 +569,14 @@ export default {
     z-index: 999;
     line-height: 50px;
     font-size: 20px;
+
+    i {
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      display: block;
+      margin-left: 10px;
+    }
   }
   .tar-bar-bom{
     position: fixed;
