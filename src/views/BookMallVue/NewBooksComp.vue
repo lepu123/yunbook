@@ -11,7 +11,12 @@
       {{ Arr.name }}
     </p>
     <ul>
-      <li v-for="item in Arr.list" :key="item.id">
+      <router-link 
+      v-for="item in Arr.list" 
+      :key="item.id"
+      :to="`/detile/${item.id}/${item.title}`" 
+      tag="li">
+
         <img :src="item.cover" />
         <p
           style="
@@ -37,7 +42,8 @@
         >
           {{ item.author }}
         </p>
-      </li>
+
+      </router-link>
     </ul>
   </div>
 </template>

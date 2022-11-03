@@ -1,6 +1,9 @@
 <template>
   <div class="banner-box">
-    <div v-show="recommendArr.length == 0 && localShow != 1" class="banner-null">
+    <div
+      v-show="recommendArr.length == 0 && localShow != 1"
+      class="banner-null"
+    >
       <div class="banner-null-img">
         <img src="@/assets/image/banner-images/book_shelf_no_data_pic.png" />
         <div class="banner-null-title">
@@ -24,42 +27,48 @@
         <p>还没有本地书哦</p>
       </div>
     </div>
-     
-     <router-link :to="`/detile/${this.bookId}/${this.title}`" tag="div">
-    <div v-show="recommendArr.length != 0 && localShow != 2" class="banner-show">
-      <div
-        class="banner-book"
-        v-for="(item, i) in recommendArr"
-        :key="item.id"
-        @click="bookClick(i)"
-      >
-        <div class="book-image">
-          <img :src="item.cover" />
-          <span class="book-play" v-if="item.bookType == 21">
-            <img
-              src="@/assets/image/banner-images/icon_play_normal_black.png"
-            />
-          </span>
-        </div>
-        <div class="book-title van-multi-ellipsis--l2">
-          {{ item.title }}
-        </div>
-        <div class="book-chapter">看屁啊</div>
-      </div>
-    </div>
 
-    <div v-show="recommendArr.length != 0 && localShow == 2" class="banner-show">
-      <div class="lis-book" v-for="item in recommendArr" :key="item.id">
-        <div class="lis-img">
-          <img :src="item.cover" />
-        </div>
-        <div class="lis-item">
-          <div class="lis-title van-multi-ellipsis--l2">{{ item.title }}</div>
-          <div class="lis-author">{{ item.author }}</div>
-          <div class="lis-author">看屁</div>
+    <router-link :to="`/detile/${this.bookId}/${this.title}`" tag="div">
+      <div
+        v-show="recommendArr.length != 0 && localShow != 2"
+        class="banner-show"
+      >
+        <div
+          class="banner-book"
+          v-for="(item, i) in recommendArr"
+          :key="item.id"
+          @click="bookClick(i)"
+        >
+          <div class="book-image">
+            <img :src="item.cover" />
+            <span class="book-play" v-if="item.bookType == 21">
+              <img
+                src="@/assets/image/banner-images/icon_play_normal_black.png"
+              />
+            </span>
+          </div>
+          <div class="book-title van-multi-ellipsis--l2">
+            {{ item.title }}
+          </div>
+          <div class="book-chapter">看屁啊</div>
         </div>
       </div>
-    </div>
+
+      <div
+        v-show="recommendArr.length != 0 && localShow == 2"
+        class="banner-show"
+      >
+        <div class="lis-book" v-for="item in recommendArr" :key="item.id">
+          <div class="lis-img">
+            <img :src="item.cover" />
+          </div>
+          <div class="lis-item">
+            <div class="lis-title van-multi-ellipsis--l2">{{ item.title }}</div>
+            <div class="lis-author">{{ item.author }}</div>
+            <div class="lis-author">看屁</div>
+          </div>
+        </div>
+      </div>
     </router-link>
   </div>
 </template>
@@ -72,17 +81,17 @@ export default {
   },
   data() {
     return {
-      bookId: '',
-      title: '',
+      bookId: "",
+      title: "",
       // path: `/reading/${this.bookId}`
-    }
+    };
   },
   methods: {
     bookClick(id) {
       console.log(id);
-      this.bookId = this.recommendArr[id].id
-      this.title = this.recommendArr[id].title
-      console.log( this.bookId);
+      this.bookId = this.recommendArr[id].id;
+      this.title = this.recommendArr[id].title;
+      console.log(this.bookId);
     },
   },
 };
