@@ -19,8 +19,16 @@
             {{ dataList.words }}
             <div class="click">{{ dataList.clicks }}</div>
           </div>
-          <div class="price" v-if="dataList.wprice">{{ dataList.wprice+ "阅点/千字" }}</div>
-          <div class="price" v-if="!dataList.wprice" :style="{color:'red',fontSize:'18px',fontWeight:'700'}">{{ dataList.price+'阅点' }}</div>
+          <div class="price" v-if="dataList.wprice">
+            {{ dataList.wprice + "阅点/千字" }}
+          </div>
+          <div
+            class="price"
+            v-if="!dataList.wprice"
+            :style="{ color: 'red', fontSize: '18px', fontWeight: '700' }"
+          >
+            {{ dataList.price + "阅点" }}
+          </div>
         </div>
       </div>
       <div class="summary">{{ dataList.summary }}</div>
@@ -60,7 +68,9 @@
 
           <div class="desc">
             <div class="title">{{ dataList.title }}</div>
-            <div class="author" :style=" {color:'#888',fontStze:'14'}">{{ dataList.author }}</div>
+            <div class="author" :style="{ color: '#888', fontStze: '14' }">
+              {{ dataList.author }}
+            </div>
           </div>
         </div>
         <div class="bottom">
@@ -101,7 +111,7 @@
 
     <div class="fan-item" @click="fanShow = true" v-if="fanList">
       <div class="user">
-        <div class="user-img" v-for="(f,i) in fanList" :key="i">
+        <div class="user-img" v-for="(f, i) in fanList" :key="i">
           <img :src="f.imageUrl" alt="" />
         </div>
       </div>
@@ -178,7 +188,7 @@
         <p><span class="shuzi"></span> 评论</p>
         <div class="write"><van-icon name="edit" />写评论</div>
       </div>
-      <div class="comment" v-for="(c,i) in commentList" :key="i">
+      <div class="comment" v-for="(c, i) in commentList" :key="i">
         <div class="top">
           <div class="img" v-if="c.cover"><img :src="c.cover" alt="" /></div>
           <div class="img" v-if="!c.cover"><van-icon name="contact" /></div>
@@ -209,7 +219,7 @@
           <span class="label">精彩书摘</span> {{ c.select }}
         </div>
         <div class="replyList" v-if="c.replyCount != 0">
-          <div class="reply-item" v-for="(r,i) in c.replyList" :key="i">
+          <div class="reply-item" v-for="(r, i) in c.replyList" :key="i">
             <!-- <div class="toauthor"> -->
             <p class="uer-taker">
               {{ r.nickName }}
@@ -223,7 +233,7 @@
         </div>
       </div>
     </div>
-      <div class="tar-bar-bom"><van-icon name="arrow-left" /></div>
+    <div class="tar-bar-bom"><van-icon name="arrow-left" /></div>
   </div>
 </template>
 
@@ -251,8 +261,8 @@ export default {
       timer: null,
       loadShow: false,
       descShow: false,
-      bookId: '',
-      bookTitle: '',
+      bookId: "",
+      bookTitle: "",
       labelShow: {},
       labelCover: false,
     };
@@ -302,7 +312,7 @@ export default {
     },
     //点击目录跳转
     choseToRead(i, n) {
-       this.show = false;
+      this.show = false;
       if (this.reverse == false) {
         let pageChose = 0;
         if (i == 0) {
@@ -315,7 +325,7 @@ export default {
           pageChose += n;
         }
         // console.log(pageChose);
-       
+
         sessionStorage.setItem("page", pageChose);
         this.goPage();
         // this.$router.go(1);
@@ -331,7 +341,7 @@ export default {
           }
           pageChange = lastpage - (pageChange + n);
         }
-       
+
         sessionStorage.setItem("page", pageChange - 1);
         this.goPage();
         // this.$router.go(0);
@@ -359,7 +369,7 @@ export default {
           `https://apis.netstart.cn/yunyuedu/book/getsub.json?id=${this.bookId}&title=${this.bookTitle}`
         )
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
           let datamode = data.feed.entry;
           this.dataList = {
             title: datamode.title,
@@ -372,8 +382,8 @@ export default {
             state: datamode["pris:book"].state == 1 ? "连载中" : "完结",
             stateMode: datamode["pris:book"].state,
             words: Math.round(datamode["pris:book"].words / 10000) + "万字",
-            wprice: datamode["pris:book"].wprice ,
-            price:datamode["pris:book"].price,
+            wprice: datamode["pris:book"].wprice,
+            price: datamode["pris:book"].price,
             clicks: datamode["pris:subscribe"].clicksCount + "点击",
           };
           // console.log(data.feed.entry);
@@ -449,37 +459,70 @@ export default {
           // console.log(data);
           let listmode = data.ncx.navMap.navPoint;
 
-          console.log(listmode);  
+          console.log(listmode);
+          if (listmode.length > 1) {
+            for (let i = 0; i < listmode.length; i++) {
+              // console.log(listmode[i].ncx);
+              if (listmode[i].navPoint) {
+                let catamode = listmode[i].navPoint || "";
+                let str = listmode[i].navLabel.replace(",", "");
+                this.choseList.push({ label: str, itemList: [] });
 
-          for (let i = 0; i < listmode.length; i++) {
-            // console.log(listmode[i]);
-            if (listmode[i].navPoint) {
-              let catamode = listmode[i].navPoint || "";
-              let str = listmode[i].navLabel.replace(",", "");
-              this.choseList.push({ label: str, itemList: [] });
-
-              for (let x = 0; x < catamode.length; x++) {
+                for (let x = 0; x < catamode.length; x++) {
+                  this.cataList.push({
+                    text: catamode[x].id,
+                    vip: catamode[x].vip,
+                  });
+                  // console.log(this.choseList[0], i);
+                  let str1 = catamode[x].navLabel.replace(",", "");
+                  this.choseList[i].itemList.push({
+                    text: str1,
+                    vip: catamode[x].vip,
+                  });
+                  this.nameList.push(str1);
+                }
+              } else if (listmode[i].ncx) {
+                console.log(1);
+              } else {
+                let str1 = listmode[i].navLabel.replace(",", "");
+                this.choseList.push({ label: "", itemList: [{ text: str1 }] });
                 this.cataList.push({
-                  text: catamode[x].id,
-                  vip: catamode[x].vip,
-                });
-                // console.log(this.choseList[0], i);
-                let str1 = catamode[x].navLabel.replace(",", "");
-                this.choseList[i].itemList.push({
-                  text: str1,
-                  vip: catamode[x].vip,
+                  text: listmode[i].content.src,
                 });
                 this.nameList.push(str1);
               }
-            } else {
-              let str1 = listmode[i].navLabel.replace(",", "");
-              this.choseList.push({ label: '', itemList: [{text:str1}] });
-              this.cataList.push({
-                text: listmode[i].content.src,
-              });
-              this.nameList.push(str1);
             }
+          }else{
+              if (listmode.navPoint) {
+                let catamode = listmode.navPoint;
+                let str = listmode.navLabel.replace(",", "");
+                let itemList=[]
+                
+
+                for (let x = 0; x < catamode.length; x++) {
+                  this.cataList.push({
+                    text: catamode[x].id,
+                    vip: catamode[x].vip,
+                  });
+                  let str1 = catamode[x].navLabel.replace(",", "");
+                  itemList.push({
+                    text: str1,
+                    vip: catamode[x].vip,
+                  });
+                  this.nameList.push(str1);
+                }
+                this.choseList.push({ label: str, itemList});
+              }else {
+                let str1 = listmode.navLabel.replace(",", "");
+                this.choseList.push({ label: "", itemList: [{ text: str1 }] });
+                this.cataList.push({
+                  text: listmode.content.src,
+                });
+                this.nameList.push(str1);
+              }
+            
           }
+
           // console.log(this.choseList);
         });
     },
@@ -496,9 +539,9 @@ export default {
         });
     },
     getId() {
-      let {id,title} = this.$route.params;
-      this.bookId = id
-      this.bookTitle = title
+      let { id, title } = this.$route.params;
+      this.bookId = id;
+      this.bookTitle = title;
     },
     //滚动加载数据
     fanbangLoad: debounce(function (e) {
@@ -560,7 +603,7 @@ export default {
   background-color: rgb(209, 198, 198, 0.3);
   z-index: 999;
 
-  .tar-bar-top{
+  .tar-bar-top {
     position: fixed;
     top: 0;
     height: 50px;
@@ -578,7 +621,7 @@ export default {
       margin-left: 10px;
     }
   }
-  .tar-bar-bom{
+  .tar-bar-bom {
     position: fixed;
     bottom: 0;
     height: 50px;
