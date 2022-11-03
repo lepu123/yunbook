@@ -1,6 +1,8 @@
 <template>
   <div class="detile" ref="detile">
-    <div class="tar-bar-top" @click="goBack"><van-icon size="20" name="arrow-left" /></div>
+    <div class="tar-bar-top" @click="goBack">
+      <van-icon size="20" name="arrow-left" />
+    </div>
     <div class="detile-item">
       <div class="top">
         <div class="cover"><img :src="dataList.cover" alt="" /></div>
@@ -40,9 +42,16 @@
             <div class="end" v-if="dataList.stateMode != 0">
               共{{ dataList.lastPage }}章
             </div>
+            <div class="end" v-if="dataList.stateMode != 0">
+              共{{ dataList.lastPage }}章
+            </div>
+            <div class="end" v-if="dataList.stateMode == 0">
+             {{newShow.time}} 更至: {{newShow.name}}
+            </div>
           </div>
 
           <div class="endShow" v-if="dataList.stateMode != 0">已完结</div>
+          <div class="endShow" :style="{color:'green'}" v-if="dataList.stateMode == 0">连载中</div>
         </div>
       </van-cell>
       <van-popup
@@ -265,9 +274,32 @@ export default {
       bookTitle: "",
       labelShow: {},
       labelCover: false,
+      newShow: {},
     };
   },
   methods: {
+    //获取最新章节
+    getNewData() {
+      this.$axios
+        .get(
+          `https://apis.netstart.cn/yunyuedu/book/simpleInfo.json?id=${this.bookId}`
+        )
+        .then(({ data }) => {
+          console.log(data);
+          let time = new Date(parseInt(data.item.update));
+          let month =
+            parseInt(time.getMonth() + 1) < 10
+              ? "0" + parseInt(time.getMonth() + 1)
+              : parseInt(time.getMonth() + 1);
+          let day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate();
+          time = month + "月" + day + "日";
+          this.newShow={
+            time,
+            name:data.item.latestArticleTitle
+          }
+          console.log(this.newShow);
+        });
+    },
     //跳转至第一页
     labelToroute(route) {
       sessionStorage.setItem("page", route);
@@ -354,13 +386,17 @@ export default {
     //子组件请求跳转
     goPage() {
       let page = JSON.parse(sessionStorage.getItem("page"));
-      this.$router.push(`/detile/${this.bookId}/${this.bookTitle}/reading/${this.cataList[page].text}`);
+      this.$router.push(
+        `/detile/${this.bookId}/${this.bookTitle}/reading/${this.cataList[page].text}`
+      );
     },
     //立刻试读跳转
     go() {
       sessionStorage.setItem("page", 0);
       sessionStorage.setItem("new", this.cataList.length);
-      this.$router.push(`/detile/${this.bookId}/${this.bookTitle}/reading/${this.cataList[0].text}`);
+      this.$router.push(
+        `/detile/${this.bookId}/${this.bookTitle}/reading/${this.cataList[0].text}`
+      );
     },
     //获得小说详情页数据
     getDetileData() {
@@ -369,7 +405,7 @@ export default {
           `https://apis.netstart.cn/yunyuedu/book/getsub.json?id=${this.bookId}&title=${this.bookTitle}`
         )
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
           let datamode = data.feed.entry;
           this.dataList = {
             title: datamode.title,
@@ -459,7 +495,7 @@ export default {
           // console.log(data);
           let listmode = data.ncx.navMap.navPoint;
 
-          console.log(listmode);
+          // console.log(listmode);
           if (listmode.length > 1) {
             for (let i = 0; i < listmode.length; i++) {
               // console.log(listmode[i].ncx);
@@ -492,35 +528,33 @@ export default {
                 this.nameList.push(str1);
               }
             }
-          }else{
-              if (listmode.navPoint) {
-                let catamode = listmode.navPoint;
-                let str = listmode.navLabel.replace(",", "");
-                let itemList=[]
-                
+          } else {
+            if (listmode.navPoint) {
+              let catamode = listmode.navPoint;
+              let str = listmode.navLabel.replace(",", "");
+              let itemList = [];
 
-                for (let x = 0; x < catamode.length; x++) {
-                  this.cataList.push({
-                    text: catamode[x].id,
-                    vip: catamode[x].vip,
-                  });
-                  let str1 = catamode[x].navLabel.replace(",", "");
-                  itemList.push({
-                    text: str1,
-                    vip: catamode[x].vip,
-                  });
-                  this.nameList.push(str1);
-                }
-                this.choseList.push({ label: str, itemList});
-              }else {
-                let str1 = listmode.navLabel.replace(",", "");
-                this.choseList.push({ label: "", itemList: [{ text: str1 }] });
+              for (let x = 0; x < catamode.length; x++) {
                 this.cataList.push({
-                  text: listmode.content.src,
+                  text: catamode[x].id,
+                  vip: catamode[x].vip,
+                });
+                let str1 = catamode[x].navLabel.replace(",", "");
+                itemList.push({
+                  text: str1,
+                  vip: catamode[x].vip,
                 });
                 this.nameList.push(str1);
               }
-            
+              this.choseList.push({ label: str, itemList });
+            } else {
+              let str1 = listmode.navLabel.replace(",", "");
+              this.choseList.push({ label: "", itemList: [{ text: str1 }] });
+              this.cataList.push({
+                text: listmode.content.src,
+              });
+              this.nameList.push(str1);
+            }
           }
 
           // console.log(this.choseList);
@@ -585,6 +619,7 @@ export default {
     this.getCommentData();
     this.getFanData();
     this.getFanListData();
+    this.getNewData();
   },
 };
 </script>
