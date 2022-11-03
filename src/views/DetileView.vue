@@ -638,7 +638,7 @@ export default {
   // padding: 20px;
   .detile-item {
     width: 100%;
-    height: 500px;
+    // height: 500px;
     padding: 45px 10px 20px 10px;
     background-color: #fff;
 
