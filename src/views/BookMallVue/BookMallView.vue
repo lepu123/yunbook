@@ -134,7 +134,7 @@ export default {
       }
 
         this.$refs.child.getData();
-        this.$refs.free.getData();
+        // this.$refs.free.getData();
 
       this.toSex();
     },

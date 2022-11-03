@@ -11,21 +11,27 @@
       {{ Arr.name }}
     </p>
     <ul>
-      <li v-for="item in Arr.list" :key="item.id">
+      <router-link
+        v-for="item in Arr.list"
+        :key="item.id"
+        :to="`/detile/${item.id}/${item.title}`"
+        tag="li"
+      >
         <img :src="item.cover" />
         <div>
           <p style="font-weight: 600">
             {{ item.title }}
           </p>
-          
+
           <p style="font-size: 13px; color: rgb(196, 181, 181)">
             {{ item.category }}
           </p>
           <p style="font-size: 13px; color: rgb(196, 181, 181)">
-            <van-icon name="eye-o" /> {{ (item.clickCount / 10000).toFixed(1) }} 万
+            <van-icon name="eye-o" />
+            {{ (item.clickCount / 10000).toFixed(1) }} 万
           </p>
         </div>
-      </li>
+      </router-link>
     </ul>
   </div>
 </template>

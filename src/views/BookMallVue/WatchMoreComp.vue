@@ -13,14 +13,19 @@
     </p>
 
     <ul>
-      <li v-for="item in Arr.list" :key="item.id">
+      <router-link
+        v-for="item in Arr.list"
+        :key="item.id"
+        :to="`/detile/${item.id}/${item.title}`"
+        tag="li"
+      >
         <img :src="item.cover" />
         <div>
           <p>{{ item.title }}</p>
           <p>{{ item.author }}/{{ item.category }}</p>
           <p>{{ item.content }}</p>
         </div>
-      </li>
+      </router-link>
     </ul>
 
     <div @click="getEverybodyMore(Arr.more.url)" class="more" v-show="Arr.more">
@@ -104,8 +109,8 @@ export default {
   padding-top: 8px;
   border-top: 1px solid #ccc;
   img {
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-}
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+  }
 
   ul {
     li {
