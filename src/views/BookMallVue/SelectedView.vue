@@ -38,63 +38,68 @@
                 @click="getPaiData(s.naviInfos[0].url)"
               />
             </van-sidebar>
-            <ul v-show="active == 3 && activeKey == 1" class="pai-list">
-              <li v-for="(item, index) in paiArr" :key="item.id">
-                <div>
-                  <img
-                    :src="item.cover"
-                    style="
-                      border-radius: 8px;
-                      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-                    "
-                  />
-                </div>
-                <div style="margin-left: 8px; margin-top: 3px; width: 60vw">
-                  <div
-                    style="
-                      display: flex;
-                      justify-content: space-between;
-                      margin-bottom: 14px;
-                      width: 50vw;
-                    "
-                  >
-                    <span
+            <ul class="pai-list">
+                <router-link
+                  v-for="(item, index) in paiArr"
+                  :key="item.id"
+                  :to="`/detile/${item.id}/${item.title}`"
+                  tag="li"
+                >
+                  <div>
+                    <img
+                      :src="item.cover"
                       style="
-                        font-size: 18px;
-                        width: 30vw;
-                        display: block;
-                        overflow: hidden;
-                        white-space: nowrap;
-                        text-overflow: ellipsis;
+                        border-radius: 8px;
+                        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
                       "
-                    >
-                      {{ item.title }}
-                    </span>
-                    <img
-                      src="@/assets/image/ranking_top1.png"
-                      v-show="index == 0"
-                      style="width: 50px; height: 20px"
-                    />
-                    <img
-                      src="@/assets/image/ranking_top2.png"
-                      v-show="index == 1"
-                      style="width: 50px; height: 20px"
-                    />
-                    <img
-                      src="@/assets/image/ranking_top3.png"
-                      v-show="index == 2"
-                      style="width: 50px; height: 20px"
                     />
                   </div>
+                  <div style="margin-left: 8px; margin-top: 3px; width: 60vw">
+                    <div
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 14px;
+                        width: 50vw;
+                      "
+                    >
+                      <span
+                        style="
+                          font-size: 18px;
+                          width: 30vw;
+                          display: block;
+                          overflow: hidden;
+                          white-space: nowrap;
+                          text-overflow: ellipsis;
+                        "
+                      >
+                        {{ item.title }}
+                      </span>
+                      <img
+                        src="@/assets/image/ranking_top1.png"
+                        v-show="index == 0"
+                        style="width: 50px; height: 20px"
+                      />
+                      <img
+                        src="@/assets/image/ranking_top2.png"
+                        v-show="index == 1"
+                        style="width: 50px; height: 20px"
+                      />
+                      <img
+                        src="@/assets/image/ranking_top3.png"
+                        v-show="index == 2"
+                        style="width: 50px; height: 20px"
+                      />
+                    </div>
 
-                  <p style="font-size: 15px; color: #ccc">
-                    {{ item.recomContent }}
-                  </p>
-                  <p style="font-size: 15px; color: #ccc">
-                    {{ item.author }} | {{ item.category }}
-                  </p>
-                </div>
-              </li>
+                    <p style="font-size: 15px; color: #ccc">
+                      {{ item.recomContent }}
+                    </p>
+                    <p style="font-size: 15px; color: #ccc">
+                      {{ item.author }} | {{ item.category }}
+                    </p>
+                  </div>
+                </router-link>
             </ul>
           </van-tab>
         </van-tabs>
@@ -123,14 +128,56 @@
           完本畅读
         </div>
         <ul class="more-list">
-          <li v-for="(c, index) in wanArr" :key="index">
-            <img :src="c.cover" />
-            <div>
-              <p>{{ c.title }}</p>
-              <p>{{ c.author }}/{{ c.category }}</p>
-              <p>{{ c.content }}</p>
+          <router-link
+            v-for="(c, index) in wanArr"
+            :key="index"
+            :to="`/detile/${c.id}/${c.title}`"
+            tag="li"
+            style="
+              display: flex;
+              width: 90vw;
+              margin-left: 5vw;
+              margin-top: 15px;
+            "
+          >
+            <img
+              :src="c.cover"
+              style="
+                height: 150px;
+                border-radius: 8px;
+                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+              "
+            />
+            <div style="margin-left: 10px">
+              <p style="font-size: 18px; font-weight: 700">{{ c.title }}</p>
+              <p
+                style="
+                  font-size: 13px;
+                  color: rgb(152, 141, 141);
+                  margin-top: 10px;
+                "
+              >
+                {{ c.author }}/{{ c.category }}
+              </p>
+              <p
+                style="
+                  color: rgb(152, 141, 141);
+                  font-size: 15px;
+                  margin-top: 15px;
+                  line-height: 25px;
+                  text-overflow: -o-ellipsis-lastline;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                "
+              >
+                {{ c.content }}
+              </p>
             </div>
-          </li>
+          </router-link>
         </ul>
       </van-popup>
     </div>
@@ -148,7 +195,12 @@
         {{ weekHotArr.name }}
       </p>
       <ul>
-        <li v-for="(item, index) in weekHotArr.list" :key="item.id">
+        <router-link
+          v-for="(item, index) in weekHotArr.list"
+          :key="item.id"
+          :to="`/detile/${item.id}/${item.title}`"
+          tag="li"
+        >
           <img :src="item.cover" />
           <div>
             <p class="week-title">{{ item.title }}</p>
@@ -158,7 +210,7 @@
             </p>
             <p v-show="index == 0" class="content">{{ item.content }}</p>
           </div>
-        </li>
+        </router-link>
       </ul>
     </div>
 
