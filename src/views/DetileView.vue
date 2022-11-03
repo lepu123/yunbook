@@ -1,6 +1,6 @@
 <template>
   <div class="detile" ref="detile">
-    <div class="tar-bar-top"><van-icon size="20" name="arrow-left" /></div>
+    <div class="tar-bar-top" @click="goBack"><van-icon size="20" name="arrow-left" /></div>
     <div class="detile-item">
       <div class="top">
         <div class="cover"><img :src="dataList.cover" alt="" /></div>
@@ -360,7 +360,7 @@ export default {
     go() {
       sessionStorage.setItem("page", 0);
       sessionStorage.setItem("new", this.cataList.length);
-      this.$router.push(`/detile/reading/${this.cataList[0].text}`);
+      this.$router.push(`/detile/${this.bookId}/${this.bookTitle}/reading/${this.cataList[0].text}`);
     },
     //获得小说详情页数据
     getDetileData() {
@@ -542,6 +542,9 @@ export default {
       let { id, title } = this.$route.params;
       this.bookId = id;
       this.bookTitle = title;
+    },
+    goBack() {
+      this.$router.go(-1);
     },
     //滚动加载数据
     fanbangLoad: debounce(function (e) {
