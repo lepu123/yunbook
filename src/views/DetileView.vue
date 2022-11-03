@@ -37,12 +37,12 @@
         <div class="mulu-item">
           <div class="endWatch">
             <van-icon name="coupon-o" />
-            <div class="end" v-if="dataList.stateMode == 0">
+            <div class="end" v-if="dataList.stateMode != 0">
               共{{ dataList.lastPage }}章
             </div>
           </div>
 
-          <div class="endShow" v-if="dataList.stateMode == 0">已完结</div>
+          <div class="endShow" v-if="dataList.stateMode != 0">已完结</div>
         </div>
       </van-cell>
       <van-popup
@@ -369,7 +369,7 @@ export default {
           `https://apis.netstart.cn/yunyuedu/book/getsub.json?id=${this.bookId}&title=${this.bookTitle}`
         )
         .then(({ data }) => {
-          // console.log(data);
+          console.log(data);
           let datamode = data.feed.entry;
           this.dataList = {
             title: datamode.title,
@@ -380,7 +380,7 @@ export default {
             category: datamode["pris:book"].category,
             type: datamode["pris:book"].paydesc,
             state: datamode["pris:book"].state == 1 ? "连载中" : "完结",
-            stateMode: datamode["pris:book"].state,
+            stateMode: datamode["pris:book"].allNeedBuy,
             words: Math.round(datamode["pris:book"].words / 10000) + "万字",
             wprice: datamode["pris:book"].wprice,
             price: datamode["pris:book"].price,
@@ -539,8 +539,8 @@ export default {
         });
     },
     getId() {
-      let { id, title } = this.$route.params;
-      this.bookId = id;
+      let { bookid, title } = this.$route.params;
+      this.bookId = bookid;
       this.bookTitle = title;
     },
     goBack() {
@@ -612,7 +612,7 @@ export default {
     height: 50px;
     background-color: #fff;
     width: 100%;
-    z-index: 999;
+    z-index: 200;
     line-height: 50px;
     font-size: 20px;
 
@@ -630,7 +630,7 @@ export default {
     height: 50px;
     background-color: #fff;
     width: 100%;
-    z-index: 999;
+    z-index: 200;
     line-height: 50px;
     font-size: 20px;
   }
@@ -641,7 +641,7 @@ export default {
   // padding: 20px;
   .detile-item {
     width: 100%;
-    height: 500px;
+    // height: 500px;
     padding: 45px 10px 20px 10px;
     background-color: #fff;
 
@@ -693,7 +693,7 @@ export default {
         }
 
         .word {
-          width: 140px;
+          // width: 140px;
           display: flex;
         }
         .click {

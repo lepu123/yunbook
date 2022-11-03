@@ -1,5 +1,5 @@
 <template>
-  <div class="top">
+  <div id="top">
     <div class="top-one">
       <div class="gender" @click="replaceSex">
         <img src="@/assets/male.png" v-show="mBu" />
@@ -28,7 +28,7 @@
         ><SelectedView :selectedUrl="selectedUrl" ref="child"
       /></van-tab>
       <van-tab title="免费">
-        <FreeView :freeUrl="freeUrl" ref="free" />
+        <FreeView :freeUrl="freeUrl" :sexNum="sexNum" ref="free" />
       </van-tab>
       <van-tab title="男生">
         <BoyView :boyUrl="boyUrl" ref="boy" />
@@ -40,7 +40,7 @@
         <PublishView :publishUrl="publishUrl" ref="publish" />
       </van-tab>
       <van-tab title="听书">
-        <ListenBooksView :listenBooksUrl="listenBooksUrl" ref="listen"/>
+        <ListenBooksView :listenBooksUrl="listenBooksUrl" ref="listen" />
       </van-tab>
     </van-tabs>
     <div class="foot">
@@ -80,8 +80,7 @@ export default {
       publishUrl:
         "/store/show.json?type=publish&uuid=b5648dd3c4f24d9796f590cd81ca076e",
       listenBooksUrl:
-      "/store/show.json?type=audio&uuid=b67282bb443845fabe5b543795a27618",
-
+        "/store/show.json?type=audio&uuid=b67282bb443845fabe5b543795a27618",
     };
   },
   components: {
@@ -90,7 +89,7 @@ export default {
     BoyView,
     GirlView,
     PublishView,
-    ListenBooksView
+    ListenBooksView,
   },
   methods: {
     replaceSex() {
@@ -133,8 +132,8 @@ export default {
           });
       }
 
-        this.$refs.child.getData();
-        // this.$refs.free.getData();
+      this.$refs.child.getData();
+      this.$refs.free.getData();
 
       this.toSex();
     },
@@ -158,10 +157,30 @@ export default {
         }, 1000);
       }
     },
+
+    render() {
+      this.mBu = true;
+      this.wBu = false;
+      this.sexNum = 1;
+      this.$axios
+        .get(
+          `https://apis.netstart.cn/yunyuedu/store/navi.json?gender=${this.sexNum}`
+        )
+        .then(({ data: { data } }) => {
+          // 精选页面的url
+          this.selectedUrl = data.navi[0].url;
+          this.freeUrl = data.navi[1].url;
+          this.boyUrl = data.navi[2].url;
+          this.girlUrl = data.navi[3].url;
+          this.publishUrl = data.navi[4].url;
+          this.listenBooksUrl = data.navi[5].url;
+          // console.log(this.listenBooksUrl,'女');
+        });
+    },
   },
 
-  beforeMount() {
-    this.replaceSex();
+  created() {
+    this.render();
   },
 };
 </script>
@@ -173,7 +192,7 @@ export default {
   font-weight: bolder;
 }
 
-.top {
+#top {
   position: relative;
   .box {
     position: absolute;
@@ -242,8 +261,5 @@ export default {
   p {
     font-size: 14px;
   }
-}
-.dianzi {
-  height: 50px;
 }
 </style>

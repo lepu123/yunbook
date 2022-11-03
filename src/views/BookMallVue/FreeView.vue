@@ -1,9 +1,9 @@
 <template>
   <div class="free">
-    <img class="topImg" :src="imgUrl" />
+    <img class="topImg" :src="imgUrl" v-if="!showBu"/>
 
     <WatchMoreComp :Arr="goodBooks" />
-    <WatchMoreComp :Arr="guessYourLike" />
+    <WatchMoreComp :Arr="guessYourLike" v-if="showBu"/>
   </div>
 </template>
 
@@ -12,23 +12,38 @@ import WatchMoreComp from "./WatchMoreComp.vue";
 export default {
   props: {
     freeUrl: String,
+    sexNum: Number,
   },
   data() {
     return {
       imgUrl: "",
       goodBooks: {},
       guessYourLike: {},
+      showBu:true,
     };
   },
   methods: {
     getData() {
-      this.$axios
-        .get(`https://apis.netstart.cn/yunyuedu${this.freeUrl}`)
-        .then(({ data: { data } }) => {
-          this.imgUrl = data.list[0].banners[0].cover;
-          this.goodBooks = data.list[1];
-          this.guessYourLike = data.list[2];
-        });
+      if (this.sexNum == 1) {
+        this.$axios
+          .get(`https://apis.netstart.cn/yunyuedu${this.freeUrl}`)
+          .then(({ data: { data } }) => {
+            
+            this.goodBooks = data.list[0];
+            this.guessYourLike = data.list[1];
+          });
+
+          this.showBu = true
+      } else {
+        this.$axios
+          .get(`https://apis.netstart.cn/yunyuedu${this.freeUrl}`)
+          .then(({ data: { data } }) => {
+            this.imgUrl = data.list[0].banners[0].cover;
+            this.goodBooks = data.list[1];
+          });
+          
+          this.showBu = false
+      }
     },
   },
   created() {

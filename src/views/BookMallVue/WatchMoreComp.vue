@@ -34,7 +34,7 @@
 
       <van-popup
         v-model="show"
-        get-container="#app"
+        get-container="#top"
         closeable
         close-icon="arrow-left"
         close-icon-position="top-left"
@@ -55,12 +55,52 @@
           {{ Arr.name }}
         </div>
         <ul class="more-list">
-          <li v-for="(c, index) in everybodyMoreList" :key="index">
-            <img :src="c.cover" />
-            <div>
-              <p>{{ c.title }}</p>
-              <p>{{ c.author }}/{{ c.category }}</p>
-              <p>{{ c.content }}</p>
+          <li
+            v-for="(c, index) in everybodyMoreList"
+            :key="index"
+            style="
+              display: flex;
+              width: 90vw;
+              margin-left: 5vw;
+              margin-top: 15px;
+            "
+          >
+            <img
+              :src="c.cover"
+              style="
+                height: 150px;
+                border-radius: 8px;
+                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+              "
+            />
+            <div style="margin-left: 10px;">
+              <p style="font-size: 18px; font-weight: 700">{{ c.title }}</p>
+              <p
+                style="
+                  font-size: 13px;
+                  color: rgb(152, 141, 141);
+                  margin-top: 10px;
+                "
+              >
+                {{ c.author }}/{{ c.category }}
+              </p>
+              <p
+                style="
+                  color: rgb(152, 141, 141);
+                  font-size: 15px;
+                  margin-top: 15px;
+                  line-height: 25px;
+                  text-overflow: -o-ellipsis-lastline;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                "
+              >
+                {{ c.content }}
+              </p>
             </div>
           </li>
         </ul>
@@ -96,7 +136,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 * {
   margin: 0;
   padding: 0;
@@ -160,5 +200,47 @@ export default {
     font-size: 17px;
     line-height: 20px;
   }
+
+  // .more-list {
+  //   li {
+  //     display: flex;
+  //     width: 90vw;
+  //     margin-left: 5vw;
+  //     margin-top: 15px;
+  //     img {
+  //       height: 150px;
+  //       border-radius: 8px;
+  //       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+  //     }
+
+  //     div {
+  //       margin-left: 10px;
+  //     }
+
+  //     div :nth-child(1) {
+  //       font-size: 18px;
+  //       font-weight: 700;
+  //     }
+
+  //     div :nth-child(2) {
+  //       font-size: 13px;
+  //       color: rgb(152, 141, 141);
+  //       margin-top: 10px;
+  //     }
+  //     div :nth-child(3) {
+  //       color: rgb(152, 141, 141);
+  //       font-size: 15px;
+  //       margin-top: 15px;
+  //       line-height: 25px;
+  //       text-overflow: -o-ellipsis-lastline;
+  //       overflow: hidden;
+  //       text-overflow: ellipsis;
+  //       display: -webkit-box;
+  //       -webkit-line-clamp: 2;
+  //       line-clamp: 2;
+  //       -webkit-box-orient: vertical;
+  //     }
+  //   }
+  // }
 }
 </style>

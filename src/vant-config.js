@@ -28,7 +28,7 @@ const vantComponents = [
     CountDown,
     ShareSheet,
     Badge,
-    PullRefresh  
+    PullRefresh   
 ]
 
 export default {

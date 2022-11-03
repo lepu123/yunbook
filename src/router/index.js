@@ -25,7 +25,7 @@ const routes = [
     redirect: '/bookmallview'
   },
   {
-    path: '/detile/:id/:title',
+    path: '/detile/:bookid/:title',
     name: 'detile',
     component: DetileView,
     meta: {

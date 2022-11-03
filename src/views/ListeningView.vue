@@ -464,7 +464,7 @@ export default {
 
 .play {
   margin-left: 5vw;
-  margin-top: 90px;
+  margin-top: 120px;
   color: #fff;
   .van-slider {
     position: relative;
@@ -524,7 +524,7 @@ export default {
 }
 
 .foot {
-  margin-top: 20px;
+  margin-top: 50px;
   border-top: 1px solid rgb(175, 169, 169);
   .foot-btn {
     color: rgb(200, 190, 190);
