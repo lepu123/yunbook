@@ -662,4 +662,10 @@ export default {
     margin: 15px 0 0 15px;
   }
 }
+
+.van-count-down {
+    color: #fff;
+    font-size: 14px;
+    line-height: 20px;
+}
 </style>
