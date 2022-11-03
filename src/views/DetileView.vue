@@ -387,7 +387,7 @@ export default {
     getFanData() {
       this.$axios
         .get(
-          "https://apis.netstart.cn/yunyuedu/book/present/simple.json?id=6e2c4a5e2ccd4e21ae2e771ed95c71e6_4"
+          `https://apis.netstart.cn/yunyuedu/book/present/simple.json?id=${this.bookId}`
         )
         .then(({ data }) => {
           this.fanList = data.list;
@@ -406,7 +406,7 @@ export default {
     getCommentData() {
       this.$axios
         .get(
-          "https://apis.netstart.cn/yunyuedu/comment/getComments.json?bookId=6e2c4a5e2ccd4e21ae2e771ed95c71e6_4"
+          `https://apis.netstart.cn/yunyuedu/comment/getComments.json?bookId=${this.bookId}`
         )
         .then(({ data }) => {
           let comment = data.all.list;
@@ -443,7 +443,7 @@ export default {
     getListData() {
       this.$axios
         .get(
-          "https://apis.netstart.cn/yunyuedu/book/catalog.json?tocId=6e2c4a5e2ccd4e21ae2e771ed95c71e6_4"
+          `https://apis.netstart.cn/yunyuedu/book/catalog.json?tocId=${this.bookId}`
         )
         .then(({ data }) => {
           // console.log(data);
@@ -488,7 +488,7 @@ export default {
       // https://apis.netstart.cn/yunyuedu/book/present/fans.json?id=13c58cc086f74e36978b4a7881b82517_4&rankType=0&offset=0
       this.$axios
         .get(
-          "https://apis.netstart.cn/yunyuedu/book/present/fans.json?id=13c58cc086f74e36978b4a7881b82517_4&rankType=0&offset=0"
+          `https://apis.netstart.cn/yunyuedu/book/present/fans.json?id=${this.bookId}&rankType=0&offset=0`
         )
         .then(({ data: { list } }) => {
           this.fanBangList = list;
@@ -512,7 +512,7 @@ export default {
         // console.log(1);
         this.$axios
           .get(
-            `https://apis.netstart.cn/yunyuedu/book/present/fans.json?id=13c58cc086f74e36978b4a7881b82517_4&rankType=0&offset=${countNum}`
+            `https://apis.netstart.cn/yunyuedu/book/present/fans.json?id=${this.bookId}&rankType=0&offset=${countNum}`
           )
           .then(({ data: { list } }) => {
             // console.log(list);
