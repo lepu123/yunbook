@@ -344,7 +344,7 @@ export default {
     //子组件请求跳转
     goPage() {
       let page = JSON.parse(sessionStorage.getItem("page"));
-      this.$router.push(`/detile/reading/${this.cataList[page].text}`);
+      this.$router.push(`/detile/${this.bookId}/${this.bookTitle}/reading/${this.cataList[page].text}`);
     },
     //立刻试读跳转
     go() {
