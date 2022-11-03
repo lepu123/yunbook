@@ -30,7 +30,7 @@ const routes = [
     component: DetileView,
     meta: {
       showFree: true,
-      keepAlive: true,
+      keepAlive: false,
     },
     children: [
       {
