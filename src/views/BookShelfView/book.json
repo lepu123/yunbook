@@ -1,0 +1,67 @@
+{
+    "code": 0,
+    "msg": "成功",
+    "data": {
+        "list": [
+            {
+                "recFlag": 0,
+                "updateTitle": "第956章 亲亲的我最爱的宝贝",
+                "readCount": 0,
+                "progressTime": 0,
+                "corner": 0,
+                "integrity": 1,
+                "articleCount": 951,
+                "totalPercent": 0.0,
+                "secId": "",
+                "updateCount": 0,
+                "updateTime": 1638301875000,
+                "submime": "application/epub+zip",
+                "publishType": 0,
+                "isMag": 0,
+                "mime": "application/prisbookcontainer",
+                "author": "江星萝",
+                "anchor": "",
+                "cover": "https://easyreadfs.nosdn.127.net/wiedV0_SJuiBMOGOcoz-6w==/8796093024953273533",
+                "bookType": 0,
+                "title": "战少，你老婆又撒娇了",
+                "id": "ts_f9b5e574c8684ea3a28a72376c2f8570_4",
+                "type": "book",
+                "order": 0,
+                "groupId": "",
+                "recordTime": 0,
+                "groupName": "",
+                "zoneType": 0
+            },
+            {
+                "recFlag": 0,
+                "updateTitle": "第3641章 大结局：混沌大帝！",
+                "readCount": 0,
+                "progressTime": 0,
+                "corner": 0,
+                "integrity": 1,
+                "articleCount": 3643,
+                "totalPercent": 0.0,
+                "secId": "",
+                "updateCount": 0,
+                "updateTime": 1653225885000,
+                "submime": "application/epub+zip",
+                "publishType": 0,
+                "isMag": 0,
+                "mime": "application/prisbookcontainer",
+                "author": "虚尘",
+                "anchor": "",
+                "cover": "https://easyreadfs.nosdn.127.net/5o9JDmShodu3vjrhlD7Tog==/8796093022310857297",
+                "bookType": 0,
+                "title": "斗天武神",
+                "id": "b32f161171944d27936796aba5c53770_4",
+                "type": "book",
+                "order": -4,
+                "groupId": "",
+                "recordTime": 1640917707598,
+                "groupName": "",
+                "zoneType": 0
+            }
+        ]
+    }
+}
+
