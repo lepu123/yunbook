@@ -900,7 +900,7 @@ export default {
     getData() {
       this.$axios
         .get(
-          `https://apis.netstart.cn/yunyuedu/reader/book/content.json?source_uuid=6e2c4a5e2ccd4e21ae2e771ed95c71e6_4&content_uuid=${this.textId}`
+          `https://apis.netstart.cn/yunyuedu/reader/book/content.json?source_uuid=${this.bookId}&content_uuid=${this.textId}`
           // "/content.json"
         )
         .then(({ data }) => {
