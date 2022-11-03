@@ -1,4 +1,4 @@
-import { Checkbox,CheckboxGroup,Button,Uploader,SidebarItem,Sidebar,NavBar, Slider, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem, CellGroup, Tab, Tabs, Popup, Cell, Toast, Loading, Overlay, Image as VanImage } from 'vant'
+import { Checkbox,CheckboxGroup,Button,Uploader,SidebarItem,Sidebar,NavBar, Slider, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem, CellGroup, Tab, Tabs, Popup, Cell, Toast, Loading, Overlay, Image as VanImage ,CountDown ,ShareSheet ,Badge    } from 'vant'
 
 const vantComponents = [
     NavBar,
@@ -24,7 +24,11 @@ const vantComponents = [
     Uploader,
     SidebarItem,
     Sidebar,
-    Slider
+    Slider,
+    CountDown,
+    ShareSheet,
+    Badge 
+
 ]
 
 export default {
