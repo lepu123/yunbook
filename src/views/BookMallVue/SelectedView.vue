@@ -39,67 +39,66 @@
               />
             </van-sidebar>
             <ul class="pai-list">
-                <router-link
-                  v-for="(item, index) in paiArr"
-                  :key="item.id"
-                  :to="`/detile/${item.id}/${item.title}`"
-                  tag="li"
-                >
-                  <div>
-                    <img
-                      :src="item.cover"
+              <li
+                v-for="(item, index) in paiArr"
+                :key="item.id"
+                @click="changeBook(item.id,item.title,item.bookType)"
+              >
+                <div>
+                  <img
+                    :src="item.cover"
+                    style="
+                      border-radius: 8px;
+                      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+                    "
+                  />
+                </div>
+                <div style="margin-left: 8px; margin-top: 3px; width: 60vw">
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      margin-bottom: 14px;
+                      width: 50vw;
+                    "
+                  >
+                    <span
                       style="
-                        border-radius: 8px;
-                        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
-                      "
-                    />
-                  </div>
-                  <div style="margin-left: 8px; margin-top: 3px; width: 60vw">
-                    <div
-                      style="
-                        display: flex;
-                        justify-content: space-between;
-                        margin-bottom: 14px;
-                        width: 50vw;
+                        font-size: 18px;
+                        width: 30vw;
+                        display: block;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
                       "
                     >
-                      <span
-                        style="
-                          font-size: 18px;
-                          width: 30vw;
-                          display: block;
-                          overflow: hidden;
-                          white-space: nowrap;
-                          text-overflow: ellipsis;
-                        "
-                      >
-                        {{ item.title }}
-                      </span>
-                      <img
-                        src="@/assets/image/ranking_top1.png"
-                        v-show="index == 0"
-                        style="width: 50px; height: 20px"
-                      />
-                      <img
-                        src="@/assets/image/ranking_top2.png"
-                        v-show="index == 1"
-                        style="width: 50px; height: 20px"
-                      />
-                      <img
-                        src="@/assets/image/ranking_top3.png"
-                        v-show="index == 2"
-                        style="width: 50px; height: 20px"
-                      />
-                    </div>
-
-                    <p style="font-size: 15px; color: #ccc">
-                      {{ item.recomContent }}
-                    </p>
-                    <p style="font-size: 15px; color: #ccc">
-                      {{ item.author }} | {{ item.category }}
-                    </p>
+                      {{ item.title }}
+                    </span>
+                    <img
+                      src="@/assets/image/ranking_top1.png"
+                      v-show="index == 0"
+                      style="width: 50px; height: 20px"
+                    />
+                    <img
+                      src="@/assets/image/ranking_top2.png"
+                      v-show="index == 1"
+                      style="width: 50px; height: 20px"
+                    />
+                    <img
+                      src="@/assets/image/ranking_top3.png"
+                      v-show="index == 2"
+                      style="width: 50px; height: 20px"
+                    />
                   </div>
-                </router-link>
+
+                  <p style="font-size: 15px; color: #ccc">
+                    {{ item.recomContent }}
+                  </p>
+                  <p style="font-size: 15px; color: #ccc">
+                    {{ item.author }} | {{ item.category }}
+                  </p>
+                </div>
+              </li>
             </ul>
           </van-tab>
         </van-tabs>
@@ -301,6 +300,14 @@ export default {
           .then(({ data: { data } }) => {
             this.wanArr = data.books;
           });
+      }
+    },
+
+    changeBook(id,title,type) {
+      if (type == 0) {
+        this.$router.push(`/detile/${id}/${title}`);
+      } else {
+        this.$router.push(`/ListeningView/${id}`);
       }
     },
   },
