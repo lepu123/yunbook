@@ -246,7 +246,7 @@ export default {
       fontSize: 20,
       heightList: [],
       textList: [],
-      padtop: 60,
+      padtop: 50,
       silde: false,
       show: false,
       fade: true,
@@ -295,6 +295,12 @@ export default {
     textId() {
       return this.$route.params.id;
     },
+    bookId(){
+      return this.$route.params.bookid;
+    },
+    bookTitle(){
+      return this.$route.params.title;
+    }
   },
 
   methods: {
@@ -417,7 +423,7 @@ export default {
     },
     //点击返回
     routeback() {
-      this.$router.push("/detile");
+      this.$router.push(`/detile/${this.bookId}/${this.bookTitle}`);
     },
     //点击切换日/夜间模式
     changeNight() {
@@ -902,9 +908,11 @@ export default {
         .get(
           `https://apis.netstart.cn/yunyuedu/reader/book/content.json?source_uuid=${this.bookId}&content_uuid=${this.textId}`
           // "/content.json"
+          // 'https://apis.netstart.cn/yunyuedu/reader/book/content.json?source_uuid=4379ada63a51434a880e9538f4f5e120_4&content_uuid=6a658dc7a86f41dda2364ddddce68f2c_4'
         )
         .then(({ data }) => {
           console.log(data);
+          console.log( this.$route);
           this.content = data.data.content;
           let fontsize = JSON.parse(sessionStorage.getItem("fontsize"));
           if (!fontsize) {
