@@ -18,22 +18,25 @@
           <span class="other-desc"
                 v-for="(cat, i) in f.catArray"
                 :key="cat.value"
-                @click="findIndex = findIndex.map((item,index) => {
-                    if (index === n) {
-                      item.index = i;
-                      item.value = cat.value;
-                    }
-                    return item
-                })"
+                @click="chooseFind(n,i,cat.value)"
                 :class="{'choose': i === findIndex[n].index}">
             <i class="dian-icon" v-show="anyMore(i)"></i> {{ cat.name }}
           </span>
           </div>
         </div>
       </CollapseTransition>
+
       <div class="article-wrap" :class="{'shorter': isShort}">
-        <sort-card v-for="a in article" :key="a.id" :articleObj="a"/>
+        <van-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            @load="onLoading"
+        >
+          <sort-card v-for="a in article" :key="a.id" :articleObj="a"/>
+        </van-list>
       </div>
+
     </div>
   </div>
 </template>
@@ -62,10 +65,14 @@ export default {
       topIndex: 0,
       //  &wordCount=0&pay=0&bookStatus=0&sort=1
       sort: 1,
-      // 保存下拉刷新的请求即翻页请求
-      pageUrl: '',
       // 渲染筛选文章数据
       article: [],
+      // 当前分类的页数
+      page: 1,
+      // 当前页面是否需要加载
+      loading: false,
+      // 请求的数据是否彻底请求完成
+      finished: false,
     }
   },
   props: {
@@ -97,6 +104,7 @@ export default {
     findToggle() {
       this.show = !this.show
     },
+    // 根据一些换行的分类不添加前面的点
     anyMore(i) {
       switch (i) {
         case 0:
@@ -113,18 +121,48 @@ export default {
           return true;
       }
     },
+    // 请求选择分类的小说
     async getFindArticleData() {
-      console.log(this.findArticleUrl);
-      let {data} = await this.$axios.get(this.findArticleUrl);
-      console.log(data)
-      this.article = data.list
+      let urlStr = this.findArticleUrl + `&page=${this.page}`
+
+      let {data} = await this.$axios.get(urlStr);
+
+      this.$nextTick(() => {
+        if (data === undefined) {
+          // 当请求不到数据时触发
+          this.finished = true
+        }
+        this.loading = false
+        this.page++
+        this.article.push(...data.list);
+      })
+
     },
     chooseSort(i, val) {
       if (this.sort !== val && this.topIndex !== i) {
         this.sort = val;
         this.topIndex = i;
+        this.article = []
+        this.page = 1
       }
-    }
+    },
+    chooseFind(n,i,value) {
+      this.findIndex = this.findIndex.map((item,index) => {
+        if (index === n) {
+          item.index = i;
+          item.value = value;
+        }
+        return item
+      })
+      this.article = []
+      this.page = 1
+    },
+    onLoading() {
+      console.log('触发了加载' + this.loading);
+      if (this.page !== 1) {
+        this.getFindArticleData();
+      }
+    },
   },
   computed: {
     findUrl() {
@@ -138,14 +176,16 @@ export default {
         urlStr = urlStr + `&${item.type}=${item.value}`;
       })
       return urlStr;
-    }
+    },
   },
   watch: {
     findUrl() {
+      this.article = [];
+      this.page = 1;
       this.getFindData();
     },
     findArticleUrl() {
-      this.getFindArticleData();
+        this.getFindArticleData();
     }
   },
   created() {
@@ -156,6 +196,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .find-top {
   position: relative;
   width: 100%;
@@ -237,10 +278,15 @@ export default {
   }
 
   .article-wrap {
+    width: 100%;
+    height: 71.5vh;
+  }
+
+  .van-list {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    height: 71.5vh;
+    height: 100%;
     overflow: auto;
   }
 

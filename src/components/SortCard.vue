@@ -23,13 +23,12 @@ export default {
 <style lang="scss" scoped>
 .article-item {
   display: inline-block;
-  margin-right: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   margin-bottom: 25px;
   width: 27.5%;
   height: 32%;
-  border-radius: 5px;
-  overflow: hidden;
-  box-shadow: 1px 2px 2px rgba(172, 160, 160, 0.99);
+  box-shadow: 1px 1px 2px rgba(172, 160, 160, 0.99);
 
   .item-img {
     width: 100%;

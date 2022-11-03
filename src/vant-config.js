@@ -1,4 +1,4 @@
-import { NavBar, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem, CellGroup, Tab, Tabs, Popup, Cell, Toast ,Loading ,Overlay , Image as VanImage  } from 'vant'
+import { NavBar, Tabbar, Search, TabbarItem, Icon, NoticeBar, Swipe, SwipeItem, CellGroup, Tab, Tabs, Popup, Cell, Toast ,Loading ,Overlay , Image as VanImage, List  } from 'vant'
 
 const vantComponents = [
     NavBar,
@@ -17,7 +17,8 @@ const vantComponents = [
     Toast,
     Loading,
     Overlay,
-    Image as VanImage
+    VanImage,
+    List,
 ]
 
 export default {
