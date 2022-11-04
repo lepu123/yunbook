@@ -42,9 +42,6 @@
             <div class="end" v-if="dataList.stateMode != 0">
               共{{ dataList.lastPage }}章
             </div>
-            <div class="end" v-if="dataList.stateMode != 0">
-              共{{ dataList.lastPage }}章
-            </div>
             <div class="end" v-if="dataList.stateMode == 0">
              {{newShow.time}} 更至: {{newShow.name}}
             </div>
@@ -287,7 +284,7 @@ export default {
           `https://apis.netstart.cn/yunyuedu/book/simpleInfo.json?id=${this.bookId}`
         )
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
           let time = new Date(parseInt(data.item.update));
           let month =
             parseInt(time.getMonth() + 1) < 10
@@ -299,7 +296,7 @@ export default {
             time,
             name:data.item.latestArticleTitle
           }
-          console.log(this.newShow);
+          // console.log(this.newShow);
         });
     },
     //跳转至第一页

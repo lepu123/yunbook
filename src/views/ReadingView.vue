@@ -246,7 +246,7 @@ export default {
       fontSize: 20,
       heightList: [],
       textList: [],
-      padtop: 50,
+      padtop: 55,
       silde: false,
       show: false,
       fade: true,
@@ -293,7 +293,9 @@ export default {
       return document.body.offsetWidth;
     },
     textId() {
-      return this.$route.params.id;
+      let tid=this.$route.params.id
+      tid=tid.replace('.html','')
+      return tid;
     },
     bookId(){
       return this.$route.params.bookid;
@@ -843,21 +845,9 @@ export default {
     },
     //替换字符串并生成原始文本数组对象
     replaceText(replacesize) {
-      // let str = this.content.replace(
-      //   /<div class="g-book"><div class="m-mb"><div class="m-content">/g,
-      //   ""
-      // );
-      // let str1 = str.replace(/<h1><span>/g, "<p>");
-      // let str2 = str1.replace(/<\/span><\/h1>/g, "</p>");
-      // let str3 = str2.replace(/<p>/g, "");
-      // let str4 = str3.replace(
-      //   /<div id="book-bottom"><\/div><\/div><\/div><\/div>/g,
-      //   ""
-      // );
       let str3=this.content.replace(/(<([^>]+)>)/ig, "</p>")
       let str4 = str3.replace(/\n/ig,'')
       this.str5 = str4.split("</p>");
-      // console.log(this.str5);
       this.str5.forEach((i, x) => {
         if (i != "" ) {
           this.heightList.push({
@@ -873,6 +863,7 @@ export default {
           this.textList.push(i);
         }
       });
+      // console.log(this.heightList);
     },
     //将原始文本数组替换为自动排版数组
     PageList() {
@@ -880,9 +871,11 @@ export default {
         for (let i = this.index; i < this.heightList.length; i++) {
           this.count += this.heightList[i].height + this.padtop;
           if (this.count > this.viewHeight * this.arrNum) {
+              console.log(this.count,this.heightList[i].height + this.padtop);
             this.nextIndex = i;
             break;
           }
+        
         }
 
         if (this.index == this.nextIndex) {
@@ -908,11 +901,11 @@ export default {
         .get(
           `https://apis.netstart.cn/yunyuedu/reader/book/content.json?source_uuid=${this.bookId}&content_uuid=${this.textId}`
           // "/content.json"
-          // 'https://apis.netstart.cn/yunyuedu/reader/book/content.json?source_uuid=4379ada63a51434a880e9538f4f5e120_4&content_uuid=6a658dc7a86f41dda2364ddddce68f2c_4'
+          // 'https://apis.netstart.cn/yunyuedu/reader/book/content.json?source_uuid=dddfca325d0e40169a2f6144441186e4_4&content_uuid=6a658dc7a86f41dda2364ddddce68f2c_4'
         )
         .then(({ data }) => {
-          console.log(data);
-          console.log( this.$route);
+          // console.log(data);
+          // console.log( this.$route);
           this.content = data.data.content;
           let fontsize = JSON.parse(sessionStorage.getItem("fontsize"));
           if (!fontsize) {
