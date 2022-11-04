@@ -577,7 +577,7 @@ export default {
       this.bookTitle = title;
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.push(`/bookshelf`);
     },
     //滚动加载数据
     fanbangLoad: debounce(function (e) {

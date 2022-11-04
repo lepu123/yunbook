@@ -29,6 +29,7 @@ export default {
       allStoreArr: [],
       // 头部的大标签所指页数
       active: 0,
+      // 是否加载动画
     };
   },
   created() {

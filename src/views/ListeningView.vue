@@ -149,7 +149,7 @@
     <div class="foot">
       <div class="foot-btn">
         <ul>
-          <li>
+          <li @click="addBook">
             <img
               src="@/assets/addBook.svg"
               style="width: 5vw; padding-top: 7px"
@@ -322,12 +322,32 @@ export default {
     },
 
     setTimeFive(duration) {
-      this.time = duration
+      this.time = duration;
     },
 
     setTimeFinish() {
       this.time = 0;
       this.showClock = false;
+    },
+
+    addBook() {
+      
+      let listeningBook = localStorage.listeningBook
+        ? JSON.parse(localStorage.listeningBook)
+        : [];
+
+      let resultsto = listeningBook.find((c) => c == this.lisId);
+
+      if (!resultsto) {
+        localStorage.listeningBook = JSON.stringify([...listeningBook,this.lisId]);
+
+      Toast.success('成功加入书架');
+      }
+
+      else if(resultsto) {
+        localStorage.listeningBook = JSON.stringify(listeningBook.filter(item => item !== this.lisId))
+        Toast('已从书架移除');
+      }
     },
   },
 
@@ -664,8 +684,8 @@ export default {
 }
 
 .van-count-down {
-    color: #fff;
-    font-size: 14px;
-    line-height: 20px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 20px;
 }
 </style>
