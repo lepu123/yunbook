@@ -30,7 +30,7 @@
         @click="get(i, $event)"
       >
         <div class="list" v-for="(p, j) in r.text" :key="j">
-          <div class="item" v-if="p != '' ">{{ p }}</div>
+          <div class="item" v-if="p != ''">{{ p }}</div>
         </div>
         <div class="count" v-show="scoll != true">
           {{ i + 1 + "/" + renderList.length }}
@@ -92,7 +92,9 @@
 
               <div class="desc">
                 <div class="title">{{ title }}</div>
-                <div class="author" :style=" {color:'#888',fontStze:'14'}">{{ author }}</div>
+                <div class="author" :style="{ color: '#888', fontStze: '14' }">
+                  {{ author }}
+                </div>
               </div>
             </div>
             <div class="bottom">
@@ -121,10 +123,11 @@
           </div>
 
           <div class="shuqian-item" v-show="muluFlag == true">
+            <div class="titl">书签</div>
             <div
               class="shuqian"
-              v-for="s in shuqianList"
-              :key="s.time"
+              v-for="(s,i) in shuqianList"
+              :key="i"
               @click="catchGo(s.page)"
             >
               {{ s.name }}
@@ -140,7 +143,7 @@
         >
           <div class="chose-item">
             <div class="chose-mulu" @click="muluFlag = false">目录</div>
-            <div class="chose-shuqian" @click="muluFlag = true">书签</div>
+            <div class="chose-shuqian" @click="showShuqian">书签</div>
           </div>
         </van-popup>
 
@@ -293,19 +296,35 @@ export default {
       return document.body.offsetWidth;
     },
     textId() {
-      let tid=this.$route.params.id
-      tid=tid.replace('.html','')
+      let tid = this.$route.params.id;
+      tid = tid.replace(".html", "");
       return tid;
     },
-    bookId(){
+    bookId() {
       return this.$route.params.bookid;
     },
-    bookTitle(){
+    bookTitle() {
       return this.$route.params.title;
-    }
+    },
   },
 
   methods: {
+    showShuqian() {
+      this.muluFlag = true
+      this.shuqianList=[]
+      let catchList = localStorage.catchList
+        ? JSON.parse(localStorage.catchList)
+        : [];
+      for (let i = 0; i < catchList.length; i++) {
+        if (catchList[i].bookId == this.bookId) {
+          // console.log(1);
+          this.shuqianList.push(
+              catchList[i]
+          );
+        }
+      }
+      // console.log(this.shuqianList);
+    },
     //跳转至第一页
     labelToroute(route) {
       sessionStorage.setItem("page", route);
@@ -358,7 +377,7 @@ export default {
         this.nightText = "日间";
         this.night = true;
       } else {
-        console.log(1);
+        // console.log(1);
         let backgroundColor = sessionStorage.backgroundColor
           ? JSON.parse(sessionStorage.backgroundColor)
           : {};
@@ -390,16 +409,17 @@ export default {
     catchThis() {
       // this.catchFlag = !this.catchFlag;
       let textNum = JSON.parse(sessionStorage.getItem("page"));
-      console.log(this.textId);
+      // console.log(this.textId);
       let catchList = localStorage.catchList
         ? JSON.parse(localStorage.catchList)
         : [];
       let result = catchList.find((c) => c.link == this.textId);
-      console.log(result);
+      // console.log(result);
       if (!result) {
         localStorage.catchList = JSON.stringify([
           ...catchList,
           {
+            bookId: this.bookId,
             name: this.nameList[textNum],
             link: this.textId,
             time: new Date().getTime(),
@@ -407,12 +427,6 @@ export default {
           },
         ]);
         this.catchFlag = true;
-        this.shuqianList.push({
-          name: this.nameList[textNum],
-          link: this.textId,
-          time: new Date().getTime(),
-          page: textNum,
-        });
       } else {
         let newlist = catchList.filter((c) => c.link != this.textId);
         localStorage.catchList = JSON.stringify(newlist);
@@ -646,6 +660,7 @@ export default {
     //点击显示目录
     showPopup() {
       this.showPop = true;
+      this.muluFlag=false
     },
     //鼠标滚动监听滚动条顶部距离
     watcht() {
@@ -845,11 +860,13 @@ export default {
     },
     //替换字符串并生成原始文本数组对象
     replaceText(replacesize) {
-      let str3=this.content.replace(/(<([^>]+)>)/ig, "</p>")
-      let str4 = str3.replace(/\n/ig,'')
+      let str2 = this.content.replace(/(<([^>]+)>)/gi, "</p>");
+      let str3 = str2.replace(/\n/gi, "");
+      let str4 = str3.replace(/\t/gi, "");
       this.str5 = str4.split("</p>");
+      // console.log(this.str5);
       this.str5.forEach((i, x) => {
-        if (i != "" ) {
+        if (i != "") {
           this.heightList.push({
             width: i.length * replacesize,
             height:
@@ -871,11 +888,10 @@ export default {
         for (let i = this.index; i < this.heightList.length; i++) {
           this.count += this.heightList[i].height + this.padtop;
           if (this.count > this.viewHeight * this.arrNum) {
-              console.log(this.count,this.heightList[i].height + this.padtop);
+            // console.log(this.count,this.heightList[i].height + this.padtop);
             this.nextIndex = i;
             break;
           }
-        
         }
 
         if (this.index == this.nextIndex) {
@@ -890,7 +906,7 @@ export default {
             text: this.textList.slice(this.index, this.nextIndex),
           });
         }
-        console.log(this.renderList);
+        // console.log(this.renderList);
         this.index = this.nextIndex;
         this.arrNum = this.arrNum + 1;
       }
@@ -913,7 +929,7 @@ export default {
           } else {
             this.replaceText(fontsize);
           }
-          console.log(data);
+          // console.log(data);
           this.PageList();
           this.getPagevalue();
           this.getTextvalue();
@@ -926,7 +942,6 @@ export default {
 
   mounted() {
     this.getData();
-
   },
 };
 </script>
@@ -1203,9 +1218,19 @@ export default {
       }
 
       .shuqian-item {
+        .titl{
+          width: 100%;
+          border-bottom: 1px solid rgb(156, 144, 144,0.3);
+          text-align: center;
+          padding-bottom: 10px;
+          font-size: 20px;
+          color: black;
+        }
         .shuqian {
           height: 70px;
-          border: 1px solid #777;
+          border-bottom: 1px solid #777;
+          line-height: 70px;
+          padding-bottom: 8px;
         }
       }
     }
@@ -1245,7 +1270,7 @@ export default {
       justify-content: space-between;
     }
   }
-  .label-this{
+  .label-this {
     width: 100%;
     height: 80px;
     font-size: 20px;
@@ -1256,7 +1281,7 @@ export default {
     // border: 1px solid black;
     line-height: 80px;
     text-align: center;
-    background:rgb(45, 143, 224)
+    background: rgb(45, 143, 224);
   }
 }
 

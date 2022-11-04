@@ -358,6 +358,7 @@ export default {
         // console.log(pageChose);
 
         sessionStorage.setItem("page", pageChose);
+          sessionStorage.setItem("new", this.cataList.length);
         this.goPage();
         // this.$router.go(1);
       } else {
@@ -374,6 +375,7 @@ export default {
         }
 
         sessionStorage.setItem("page", pageChange - 1);
+        sessionStorage.setItem("new", this.cataList.length);
         this.goPage();
         // this.$router.go(0);
       }
