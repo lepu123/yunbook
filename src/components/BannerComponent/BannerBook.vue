@@ -75,6 +75,8 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+
 export default {
   props: {
     recommendArr: Array,
@@ -84,20 +86,28 @@ export default {
     return {
       bookId: "",
       title: "",
-      // path: `/reading/${this.bookId}`
+      author: "",
+      bookType: ""
     };
+  },
+  computed: {
+    ...mapState(["historyArr"])
   },
   methods: {
     bookClick(id) {
       this.bookId = this.recommendArr[id].id;
       this.title = this.recommendArr[id].title;
-      console.log(this.recommendArr[id].bookType == 0);
+      this.author = this.recommendArr[id].author;
+      this.bookType = this.recommendArr[id].bookType;
+      this.getHistory({id:this.bookId,title:this.title,author:this.author,booktype:this.bookType})
+      console.log(this.historyArr);
       if (this.recommendArr[id].bookType == 0) {
         this.$router.push(`/detile/${this.bookId}/${this.title}`);
       } else {
         this.$router.push(`/ListeningView/${this.bookId}`);
       }
     },
+    ...mapMutations(["getHistory"])
   },
 };
 </script>
@@ -229,6 +239,8 @@ export default {
     position: relative;
     width: 100%;
     height: 140px;
+    border-radius: 4px;
+    overflow: hidden;
 
     img {
       width: 100%;

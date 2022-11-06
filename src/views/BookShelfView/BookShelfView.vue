@@ -23,10 +23,6 @@
                 src="@/assets/image/banner-images/icon_bookcase_local_book.png"
               /><span ref="local">本地书</span>
             </div>
-            <!-- <div>我的分组</div> -->
-            <!-- <div>
-            <img src=""><span>书架</span>
-          </div> -->
           </div>
         </van-popup>
 
@@ -161,7 +157,16 @@
         />
       </van-popup>
 
-       <van-popup v-model="historyShow">内容</van-popup>
+       <van-popup 
+       v-model="historyShow" 
+       position="right" 
+       :style="{ height: '100%' }"
+       class="history-item">
+         <HistoryComponent
+         :historyShow = historyShow
+         @clockhistory="clockhistory"
+         />
+       </van-popup>
     </div>
 
     <div class="dianzi"></div>
@@ -171,6 +176,7 @@
 <script>
 import BannerBook from "@/components/BannerComponent/BannerBook.vue";
 import BatchCommpontent from "@/components/BannerComponent/BatchCommpontent.vue";
+import HistoryComponent from '@/components/BannerComponent/HistoryComponent.vue';
 export default {
   name: "BookShelfView",
   data() {
@@ -222,7 +228,7 @@ export default {
       this.moreShow = false;
     },
     showHistory() {
-      this.show = true;
+      this.historyShow = true;
     },
     recommendClose() {
       this.isShow = false;
@@ -242,8 +248,7 @@ export default {
         recFlag: 1,
         title: title[0],
         bookType: 1,
-        cover:
-          "https://yuedust.yuedu.126.net/images/bookDefaultIcon.png?$IMG_V",
+        cover:"https://yuedust.yuedu.126.net/images/bookDefaultIcon.png?$IMG_V",
         author: "",
         mime: "application/prisbookcontainer",
         publishType: 1,
@@ -288,6 +293,9 @@ export default {
     clockbatch(item) {
       this.batchShow = item;
     },
+    clockhistory(item) {
+      this.historyShow = item
+    },
     delbook(arr) {
       for (let i = 0; i < arr.length; i++) {
         this.recommendArr = this.recommendArr.filter(
@@ -311,6 +319,7 @@ export default {
   components: {
     BannerBook,
     BatchCommpontent,
+    HistoryComponent,
   },
 };
 </script>
@@ -322,13 +331,19 @@ export default {
   min-height: 100vh;
 
   .doge {
-    width: 50px;
+    width: 40px;
     height: 30px;
     margin-top: 8px;
     border-radius: 4px;
   }
 
   .batch-item {
+    width: 100vw;
+    min-height: 100vh;
+    overflow: auto;
+  }
+
+  .history-item {
     width: 100vw;
     min-height: 100vh;
     overflow: auto;
