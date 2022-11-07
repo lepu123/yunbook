@@ -259,18 +259,25 @@
       <van-popup
         closeable
         position="bottom"
-        :style="{ height: '100%',width:'100%' }"
+        :style="{ height: '100%', width: '100%' }"
         v-model="userShow"
-        >
-
-        <div class="userimg"><img :src="userList.cover" alt=""></div>
-        <div class="username">{{userList.username}}</div>
-        <div class="user-info">
-          <div class="level"><div class="text">等级</div>{{userList.level}} <div class="userlevel">{{userList.levelName}}</div></div>
-         <div class="point">><div class="text">经验值</div>{{userList.points}}</div>
-        </div>
-        </van-popup
+        class="user-class"
       >
+        <div class="userimg" v-if="userList.cover" ><img :src="userList.cover" alt="" /></div>
+        <div class="userimg" v-if="!userList.cover" ><van-icon name="contact" /></div>
+        <div class="username">{{ userList.username }}</div>
+        <div class="user-info">
+          <div class="level">
+            <div class="user-text">等级</div>
+            {{ userList.level }}
+            <div class="userlevel">{{ userList.levelName }}</div>
+          </div>
+          <div class="point">
+            <div class="user-text">经验值</div>
+            {{ userList.points }}
+          </div>
+        </div>
+      </van-popup>
     </van-skeleton>
   </div>
 </template>
@@ -307,8 +314,8 @@ export default {
       loading: true,
       loadingCom: true,
       muluLoading: true,
-      userShow:false,
-      userList:{}
+      userShow: false,
+      userList: {},
     };
   },
   methods: {
@@ -321,13 +328,14 @@ export default {
         )
         .then(({ data }) => {
           console.log(data);
-          this.userList.push({
-            cover:data.userInfo.profileInfo.avatar,
-            username:data.userInfo.profileInfo.nickname,
-            level:data.userInfo.levelInfo.info.common.level,
-            levelName:'('+data.userInfo.levelInfo.info.common.levelName+')',
-            points:data.userInfo.levelInfo.info.common.points
-          })
+          this.userList = {
+            cover: data.userInfo.profileInfo.avatar,
+            username: data.userInfo.profileInfo.nickname,
+            level: data.userInfo.levelInfo.info.common.level,
+            levelName:
+              "(" + data.userInfo.levelInfo.info.common.levelName + ")",
+            points: data.userInfo.levelInfo.info.common.points,
+          };
           console.log(this.userList);
         });
     },
@@ -523,7 +531,7 @@ export default {
             let day =
               time.getDate() < 10 ? "0" + time.getDate() : time.getDate();
             time = time.getFullYear() + "年" + month + "月" + day + "日";
-            this.commentList={
+            this.commentList.push({
               cover: comment[i].avatar,
               userId: comment[i].userId,
               author: comment[i].nickName,
@@ -537,7 +545,7 @@ export default {
               replyCount: comment[i].replyCount,
               replyList: comment[i].replyList,
               level: "LV." + comment[i].userLevel,
-            };
+            });
 
             // console.log(comment);
           }
@@ -697,7 +705,7 @@ export default {
   width: 100vw;
   height: 100vh;
   overflow: auto;
-  padding:0 0 20px 0;
+  padding: 0 0 20px 0;
   background-color: rgb(209, 198, 198, 0.3);
   z-index: 999;
 
@@ -1177,7 +1185,7 @@ export default {
           justify-content: flex-start;
           padding-right: 10px;
           div {
-            flex: 0 0 5%;
+            flex: 1;
           }
         }
 
@@ -1239,6 +1247,51 @@ export default {
           font-size: 12px;
           transform: scale(0.7);
           margin-right: 10px;
+        }
+      }
+    }
+  }
+  .user-class {
+    // position: relative;
+    .userimg {
+      width: 50px;
+      height: 50px;
+      border-radius: 999px;
+      position:absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 999px;
+      }
+    }
+    .username{
+      position:absolute;
+      top: 27%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 20px;
+      color: #999;
+    }
+    .user-info{
+      display: flex;
+      position:absolute;
+      top: 35%;
+      width: 100%;
+      .point,
+      .level{
+        display: flex;
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+        height: 70px;
+        line-height: 70px;
+        color:white;
+        background-color: black;
+        .user-text{
+          color: #999;
         }
       }
     }
