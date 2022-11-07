@@ -2,7 +2,7 @@
   <div>
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
       <van-swipe-item v-for="(item, index) in bannersArr" :key="index">
-        <img :src="item.cover" />
+        <img :src="item.cover" @click="swipeToBook(item.id,item.title)" />
       </van-swipe-item>
     </van-swipe>
 
@@ -42,7 +42,7 @@
               <li
                 v-for="(item, index) in paiArr"
                 :key="item.id"
-                @click="changeBook(item.id,item.title,item.bookType)"
+                @click="changeBook(item.id, item.title, item.bookType)"
               >
                 <div>
                   <img
@@ -303,12 +303,16 @@ export default {
       }
     },
 
-    changeBook(id,title,type) {
+    changeBook(id, title, type) {
       if (type == 0) {
         this.$router.push(`/detile/${id}/${title}`);
       } else {
         this.$router.push(`/ListeningView/${id}`);
       }
+    },
+
+    swipeToBook(id,title) {
+      this.$router.push(`/detile/${id}/${title}`);
     },
   },
 

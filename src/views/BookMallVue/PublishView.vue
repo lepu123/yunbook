@@ -2,7 +2,7 @@
   <div class="publish">
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
       <van-swipe-item v-for="(item, index) in bannersArr" :key="index">
-        <img :src="item.cover" />
+        <img :src="item.cover" @click="swipeToBook(item.id, item.title)" />
       </van-swipe-item>
     </van-swipe>
 
@@ -92,7 +92,7 @@ export default {
   methods: {
     getData() {
       this.$axios
-        .get(`https://apis.netstart.cn/yunyuedu${this.publishUrl}`)
+        .get("/出版页面.json")
         .then(({ data: { data } }) => {
           this.bannersArr = data.list[0].banners;
           this.shortCutArr = data.list[1].shortCut;
@@ -114,6 +114,9 @@ export default {
         .then(({ data: { data } }) => {
           console.log(data);
         });
+    },
+    swipeToBook(id, title) {
+      this.$router.push(`/detile/${id}/${title}`);
     },
   },
 
