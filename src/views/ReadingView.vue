@@ -29,12 +29,14 @@
         :key="r.id"
         @click="get(i, $event)"
       >
-        <div class="list" v-for="(p, j) in r.text" :key="j">
-          <div class="item" v-if="p != ''">{{ p }}</div>
-        </div>
-        <div class="count" v-show="scoll != true">
-          {{ i + 1 + "/" + renderList.length }}
-        </div>
+        <van-skeleton title :row="3" :loading="loading">
+          <div class="list" v-for="(p, j) in r.text" :key="j">
+            <div class="item" v-if="p != ''">{{ p }}</div>
+          </div>
+          <div class="count" v-show="scoll != true">
+            {{ i + 1 + "/" + renderList.length }}
+          </div>
+        </van-skeleton>
       </div>
 
       <van-popup v-model="showAll" position="bottom" :overlay="false">
@@ -88,7 +90,9 @@
         >
           <div class="mulu-item" v-show="muluFlag == false">
             <div class="middle">
-              <div class="cover"><img :src="cover" alt="" /></div>
+              <div class="cover" @click="routeback">
+                <img :src="cover" alt="" />
+              </div>
 
               <div class="desc">
                 <div class="title">{{ title }}</div>
@@ -126,7 +130,7 @@
             <div class="titl">书签</div>
             <div
               class="shuqian"
-              v-for="(s,i) in shuqianList"
+              v-for="(s, i) in shuqianList"
               :key="i"
               @click="catchGo(s.page)"
             >
@@ -271,6 +275,7 @@ export default {
       catchFlag: false,
       labelShow: {},
       labelCover: false,
+      loading: true,
     };
   },
 
@@ -310,17 +315,15 @@ export default {
 
   methods: {
     showShuqian() {
-      this.muluFlag = true
-      this.shuqianList=[]
+      this.muluFlag = true;
+      this.shuqianList = [];
       let catchList = localStorage.catchList
         ? JSON.parse(localStorage.catchList)
         : [];
       for (let i = 0; i < catchList.length; i++) {
         if (catchList[i].bookId == this.bookId) {
           // console.log(1);
-          this.shuqianList.push(
-              catchList[i]
-          );
+          this.shuqianList.push(catchList[i]);
         }
       }
       // console.log(this.shuqianList);
@@ -660,7 +663,7 @@ export default {
     //点击显示目录
     showPopup() {
       this.showPop = true;
-      this.muluFlag=false
+      this.muluFlag = false;
     },
     //鼠标滚动监听滚动条顶部距离
     watcht() {
@@ -922,6 +925,7 @@ export default {
         .then(({ data }) => {
           // console.log(data);
           // console.log( this.$route);
+          this.loading = false;
           this.content = data.data.content;
           let fontsize = JSON.parse(sessionStorage.getItem("fontsize"));
           if (!fontsize) {
@@ -1045,7 +1049,7 @@ export default {
       bottom: 0;
 
       .van-cell {
-        flex: 0 0 25%;
+        flex: 1;
         .van-icon-arrow:before {
           content: "";
         }
@@ -1056,7 +1060,7 @@ export default {
         flex-direction: column;
         justify-content: space-between;
         vertical-align: bottom;
-        flex: 0 0 25%;
+        flex: 1;
         padding: 10px 16px;
         font-size: 14px;
       }
@@ -1218,9 +1222,9 @@ export default {
       }
 
       .shuqian-item {
-        .titl{
+        .titl {
           width: 100%;
-          border-bottom: 1px solid rgb(156, 144, 144,0.3);
+          border-bottom: 1px solid rgb(156, 144, 144, 0.3);
           text-align: center;
           padding-bottom: 10px;
           font-size: 20px;

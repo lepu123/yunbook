@@ -1,247 +1,277 @@
 <template>
   <div class="detile" ref="detile">
-    <div class="tar-bar-top" @click="goBack">
-      <van-icon size="20" name="arrow-left" />
-    </div>
-    <div class="detile-item">
-      <div class="top">
-        <div class="cover"><img :src="dataList.cover" alt="" /></div>
-        <div class="message">
-          <div class="title">{{ dataList.title }}</div>
-
-          <div class="category">
-            {{ dataList.category }}
-            <div class="ge">|</div>
-            <div class="author">{{ dataList.author }}</div>
-          </div>
-          <div class="value">
-            <van-icon v-for="(s, i) in startList" :key="i" name="star" />
-          </div>
-          <div class="word">
-            {{ dataList.words }}
-            <div class="click">{{ dataList.clicks }}</div>
-          </div>
-          <div class="price" v-if="dataList.wprice">
-            {{ dataList.wprice + "阅点/千字" }}
-          </div>
-          <div
-            class="price"
-            v-if="!dataList.wprice"
-            :style="{ color: 'red', fontSize: '18px', fontWeight: '700' }"
-          >
-            {{ dataList.price + "阅点" }}
-          </div>
-        </div>
+    <van-skeleton title :row="3" :loading="loading">
+      <div class="tar-bar-top" @click="goBack">
+        <van-icon size="20" name="arrow-left" />
       </div>
-      <div class="summary">{{ dataList.summary }}</div>
-      <div class="type">作品类型：{{ dataList.type }}</div>
-      <van-cell class="mulu" is-link @click="showPopup">
-        <div class="mulu-item">
-          <div class="endWatch">
-            <van-icon name="coupon-o" />
-            <div class="end" v-if="dataList.stateMode != 0">
-              共{{ dataList.lastPage }}章
-            </div>
-            <div class="end" v-if="dataList.stateMode == 0">
-             {{newShow.time}} 更至: {{newShow.name}}
-            </div>
-          </div>
-
-          <div class="endShow" v-if="dataList.stateMode != 0">已完结</div>
-          <div class="endShow" :style="{color:'green'}" v-if="dataList.stateMode == 0">连载中</div>
-        </div>
-      </van-cell>
-      <van-popup
-        v-model="labelCover"
-        class="labelshow"
-        closeable
-        :style="{ height: '100%', width: '100%' }"
-        position="left"
-      >
-        <div class="label-this" @click="labelToroute(labelShow.bookRouter)">
-          {{ labelShow.name }}
-        </div>
-      </van-popup>
-      <van-popup
-        v-model="show"
-        :style="{ width: '100%', height: '100%' }"
-        closeable
-        position="right"
-        class="mulu-show"
-      >
-        <div class="middle">
-          <div class="cover"><img :src="dataList.cover" alt="" /></div>
-
-          <div class="desc">
-            <div class="title">{{ dataList.title }}</div>
-            <div class="author" :style="{ color: '#888', fontStze: '14' }">
-              {{ dataList.author }}
-            </div>
-          </div>
-        </div>
-        <div class="bottom">
-          <div class="total">{{ "共" + dataList.lastPage + "章" }}</div>
-          <div class="reverse" @click="reverseed">
-            {{ order }}
-            <div class="tranThree" :class="{ rotate: reverse == true }"></div>
-          </div>
-        </div>
-
-        <div class="chose" v-for="(l, i) in choseList" :key="i">
-          <div class="label" v-if="l.label" @click="labelGo(i, l.label)">
-            {{ l.label }}
-          </div>
-          <div class="choseItem" v-for="(t, n) in l.itemList" :key="n">
-            <div class="item-mulu" @click.prevent="choseToRead(i, n)">
-              {{ t.text }}
-              <div class="lock" v-if="t.vip == 1">
-                <van-icon name="bag-o" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </van-popup>
-    </div>
-
-    <router-view
-      :pageNum="pagecount"
-      :choseList="choseList"
-      :nameList="nameList"
-      :cover="dataList.cover"
-      :author="dataList.author"
-      :title="dataList.title"
-      :lastPage="dataList.lastPage"
-      @goPage="goPage"
-    />
-
-    <div class="fan-item" @click="fanShow = true" v-if="fanList">
-      <div class="user">
-        <div class="user-img" v-for="(f, i) in fanList" :key="i">
-          <img :src="f.imageUrl" alt="" />
-        </div>
-      </div>
-
-      <div class="das">打赏</div>
-    </div>
-
-    <van-popup
-      v-model="fanShow"
-      :style="{ width: '100%', height: '100%' }"
-      class="fanbang-show"
-      position="right"
-    >
-      <div class="fan-top">
-        <div class="return" @click="fanShow = false">
-          <van-icon
-            name="arrow-left"
-            :style="{ color: '#777', fontSize: '25px', paddingRight: '20px' }"
-          />
-        </div>
-        <div class="bang" :style="{ fontSize: '27px', paddingLeft: '20px' }">
-          粉丝榜
-        </div>
-        <div
-          class="chenghao"
-          @click="descShow = true"
-          :style="{ color: '#777' }"
-        >
-          粉丝称号
-        </div>
-      </div>
-      <div class="fanbangAll" ref="fanbangAll" @scroll="fanbangLoad($event)">
-        <div class="fanbang" v-for="(b, i) in fanBangList" :key="i">
-          <div class="fan-user">
-            <span class="index" :class="{ active: i < 3 }"
-              >{{ i + 1 }}.<span class="trace" v-if="i < 3"></span>
-            </span>
-            <div
-              class="fan-img"
-              :class="{ one: i == 0, two: i == 1, three: i == 2 }"
-            >
-              <img :src="b.imageUrl" alt="" />
-            </div>
-            <div class="fan-name">{{ b.nickName }}</div>
-          </div>
-          <div class="fan-desc">
-            <div class="fan-title">{{ b.fansTitle }}</div>
-            <div class="fan-score">
-              <van-icon name="points" />{{ b.scoreValue }}
-            </div>
-          </div>
-        </div>
-        <div class="load">
-          <van-loading v-show="loadShow" size="54px" />
-        </div>
-      </div>
-    </van-popup>
-    <van-popup
-      v-model="descShow"
-      :style="{ width: '100%', height: '100%' }"
-      class="desc-show"
-      closeable
-      position="right"
-    >
-      <div class="desc-img">
-        <img
-          src="https://easyreadfs.nosdn.127.net/fle/a0df1d4009c7a2ec5fee/1572312391130/dashang.jpg"
-        />
-      </div>
-    </van-popup>
-
-    <div class="comment-item">
-      <div class="item-desc">
-        <p><span class="shuzi"></span> 评论</p>
-        <div class="write"><van-icon name="edit" />写评论</div>
-      </div>
-      <div class="comment" v-for="(c, i) in commentList" :key="i">
+      <div class="detile-item">
         <div class="top">
-          <div class="img" v-if="c.cover"><img :src="c.cover" alt="" /></div>
-          <div class="img" v-if="!c.cover"><van-icon name="contact" /></div>
-          <div class="com-top">
-            <div class="top-like">
-              <div class="author">{{ c.author }}</div>
-              <div class="level">{{ c.level }}</div>
-              <div class="like">
-                {{ c.likes }}<van-icon name="good-job-o" />
+          <div class="cover"><img :src="dataList.cover" alt="" /></div>
+          <div class="message">
+            <div class="title">{{ dataList.title }}</div>
+
+            <div class="category">
+              {{ dataList.category }}
+              <div class="ge">|</div>
+              <div class="author">{{ dataList.author }}</div>
+            </div>
+            <div class="value">
+              <van-icon v-for="(s, i) in startList" :key="i" name="star" />
+            </div>
+            <div class="word">
+              {{ dataList.words }}
+              <div class="click">{{ dataList.clicks }}</div>
+            </div>
+            <div class="price" v-if="dataList.wprice">
+              {{ dataList.wprice + "阅点/千字" }}
+            </div>
+            <div
+              class="price"
+              v-if="!dataList.wprice"
+              :style="{ color: 'red', fontSize: '18px', fontWeight: '700' }"
+            >
+              {{ dataList.price + "阅点" }}
+            </div>
+          </div>
+        </div>
+        <div class="summary">{{ dataList.summary }}</div>
+        <div class="type">作品类型：{{ dataList.type }}</div>
+        <van-cell class="mulu" is-link @click="showPopup">
+          <div class="mulu-item">
+            <div class="endWatch">
+              <van-icon name="coupon-o" />
+              <div class="end" v-if="dataList.stateMode != 0">
+                共{{ dataList.lastPage }}章
+              </div>
+              <div class="end" v-if="dataList.stateMode == 0">
+                {{ newShow.time }} 更至: {{ newShow.name }}
               </div>
             </div>
-            <div class="top-time">
-              <div class="ground" v-if="c.grade.length != 0">
-                <div class="grade" v-for="(s, i) in c.grade" :key="i">
-                  <van-icon name="star" />
+
+            <div class="endShow" v-if="dataList.stateMode != 0">已完结</div>
+            <div
+              class="endShow"
+              :style="{ color: 'green' }"
+              v-if="dataList.stateMode == 0"
+            >
+              连载中
+            </div>
+          </div>
+        </van-cell>
+        <van-popup
+          v-model="labelCover"
+          class="labelshow"
+          closeable
+          :style="{ height: '100%', width: '100%' }"
+          position="left"
+        >
+          <div class="label-this" @click="labelToroute(labelShow.bookRouter)">
+            {{ labelShow.name }}
+          </div>
+        </van-popup>
+        <van-popup
+          v-model="show"
+          :style="{ width: '100%', height: '100%' }"
+          closeable
+          position="right"
+          class="mulu-show"
+        >
+          <div class="middle">
+            <div class="cover"><img :src="dataList.cover" alt="" /></div>
+
+            <div class="desc">
+              <div class="title">{{ dataList.title }}</div>
+              <div class="author" :style="{ color: '#888', fontStze: '14' }">
+                {{ dataList.author }}
+              </div>
+            </div>
+          </div>
+          <div class="bottom">
+            <div class="total">{{ "共" + dataList.lastPage + "章" }}</div>
+            <div class="reverse" @click="reverseed">
+              {{ order }}
+              <div class="tranThree" :class="{ rotate: reverse == true }"></div>
+            </div>
+          </div>
+          <van-skeleton title :row="3" :loading="muluLoading">
+            <div class="chose" v-for="(l, i) in choseList" :key="i">
+              <div class="label" v-if="l.label" @click="labelGo(i, l.label)">
+                {{ l.label }}
+              </div>
+              <div class="choseItem" v-for="(t, n) in l.itemList" :key="n">
+                <div class="item-mulu" @click.prevent="choseToRead(i, n)">
+                  {{ t.text }}
+                  <div class="lock" v-if="t.vip == 1">
+                    <van-icon name="bag-o" />
+                  </div>
                 </div>
               </div>
+            </div>
+          </van-skeleton>
+        </van-popup>
+      </div>
 
-              <div class="time">{{ c.time }}</div>
+      <router-view
+        :pageNum="pagecount"
+        :choseList="choseList"
+        :nameList="nameList"
+        :cover="dataList.cover"
+        :author="dataList.author"
+        :title="dataList.title"
+        :lastPage="dataList.lastPage"
+        @goPage="goPage"
+      />
+
+      <div class="fan-item" @click="fanShow = true" v-if="fanList">
+        <div class="user">
+          <div class="user-img" v-for="(f, i) in fanList" :key="i">
+            <img :src="f.imageUrl" alt="" />
+          </div>
+        </div>
+
+        <div class="das">打赏</div>
+      </div>
+
+      <van-popup
+        v-model="fanShow"
+        :style="{ width: '100%', height: '100%' }"
+        class="fanbang-show"
+        position="right"
+      >
+        <div class="fan-top">
+          <div class="return" @click="fanShow = false">
+            <van-icon
+              name="arrow-left"
+              :style="{ color: '#777', fontSize: '25px', paddingRight: '20px' }"
+            />
+          </div>
+          <div class="bang" :style="{ fontSize: '27px', paddingLeft: '20px' }">
+            粉丝榜
+          </div>
+          <div
+            class="chenghao"
+            @click="descShow = true"
+            :style="{ color: '#777' }"
+          >
+            粉丝称号
+          </div>
+        </div>
+        <div class="fanbangAll" ref="fanbangAll" @scroll="fanbangLoad($event)">
+          <div class="fanbang" v-for="(b, i) in fanBangList" :key="i">
+            <div class="fan-user">
+              <span class="index" :class="{ active: i < 3 }"
+                >{{ i + 1 }}.<span class="trace" v-if="i < 3"></span>
+              </span>
+              <div
+                class="fan-img"
+                :class="{ one: i == 0, two: i == 1, three: i == 2 }"
+              >
+                <img :src="b.imageUrl" alt="" />
+              </div>
+              <div class="fan-name">{{ b.nickName }}</div>
+            </div>
+            <div class="fan-desc">
+              <div class="fan-title">{{ b.fansTitle }}</div>
+              <div class="fan-score">
+                <van-icon name="points" />{{ b.scoreValue }}
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="user-com">
-          {{ c.comment }}
-        </div>
-        <div class="select" v-if="c.select != ''">
-          <span class="label">精彩书摘</span> {{ c.select }}
-        </div>
-        <div class="replyList" v-if="c.replyCount != 0">
-          <div class="reply-item" v-for="(r, i) in c.replyList" :key="i">
-            <!-- <div class="toauthor"> -->
-            <p class="uer-taker">
-              {{ r.nickName }}
-              <span class="todesc">回复</span>
-              {{ r.toNickName }}
-              <span class="rep-comment"> : {{ r.comment }} </span>
-            </p>
-            <!-- <div class="rep-comment"></div> -->
-            <!-- </div> -->
+          <div class="load">
+            <van-loading v-show="loadShow" size="54px" />
           </div>
         </div>
+      </van-popup>
+      <van-popup
+        v-model="descShow"
+        :style="{ width: '100%', height: '100%' }"
+        class="desc-show"
+        closeable
+        position="right"
+      >
+        <div class="desc-img">
+          <img
+            src="https://easyreadfs.nosdn.127.net/fle/a0df1d4009c7a2ec5fee/1572312391130/dashang.jpg"
+          />
+        </div>
+      </van-popup>
+
+      <div class="comment-item">
+        <div class="item-desc">
+          <p><span class="shuzi"></span> 评论</p>
+          <div class="write"><van-icon name="edit" />写评论</div>
+        </div>
+        <van-skeleton title :row="3" :loading="loadingCom">
+          <div class="comment" v-for="(c, i) in commentList" :key="i">
+            <div class="top">
+              <div class="img" v-if="c.cover" @click="goUser(c.userId)">
+                <img :src="c.cover" alt="" />
+              </div>
+              <div class="img" v-if="!c.cover" @click="goUser(c.userId)">
+                <van-icon name="contact" />
+              </div>
+              <div class="com-top">
+                <div class="top-like">
+                  <div class="author">{{ c.author }}</div>
+                  <div class="level">{{ c.level }}</div>
+                  <div class="like">
+                    {{ c.likes }}<van-icon name="good-job-o" />
+                  </div>
+                </div>
+                <div class="top-time">
+                  <div class="ground" v-if="c.grade.length != 0">
+                    <div class="grade" v-for="(s, i) in c.grade" :key="i">
+                      <van-icon name="star" />
+                    </div>
+                  </div>
+
+                  <div class="time">{{ c.time }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="user-com">
+              {{ c.comment }}
+            </div>
+            <div class="select" v-if="c.select != ''">
+              <span class="label">精彩书摘</span> {{ c.select }}
+            </div>
+            <div class="replyList" v-if="c.replyCount != 0">
+              <div class="reply-item" v-for="(r, i) in c.replyList" :key="i">
+                <!-- <div class="toauthor"> -->
+                <p class="uer-taker">
+                  {{ r.nickName }}
+                  <span class="todesc">回复</span>
+                  {{ r.toNickName }}
+                  <span class="rep-comment"> : {{ r.comment }} </span>
+                </p>
+                <!-- <div class="rep-comment"></div> -->
+                <!-- </div> -->
+              </div>
+            </div>
+          </div>
+        </van-skeleton>
       </div>
-    </div>
-    <div class="tar-bar-bom">
-      <span>加入书架</span>
-      <span><button @click="go">立刻试读</button></span>
-    </div>
+      <div class="tar-bar-bom">
+        <span>加入书架</span>
+        <span><button @click="go">立刻试读</button></span>
+      </div>
+      <van-popup
+        closeable
+        position="bottom"
+        :style="{ height: '100%',width:'100%' }"
+        v-model="userShow"
+        >
+
+        <div class="userimg"><img :src="userList.cover" alt=""></div>
+        <div class="username">{{userList.username}}</div>
+        <div class="user-info">
+          <div class="level"><div class="text">等级</div>{{userList.level}} <div class="userlevel">{{userList.levelName}}</div></div>
+         <div class="point">><div class="text">经验值</div>{{userList.points}}</div>
+        </div>
+        </van-popup
+      >
+    </van-skeleton>
   </div>
 </template>
 
@@ -274,9 +304,33 @@ export default {
       labelShow: {},
       labelCover: false,
       newShow: {},
+      loading: true,
+      loadingCom: true,
+      muluLoading: true,
+      userShow:false,
+      userList:{}
     };
   },
   methods: {
+    goUser(id) {
+      // console.log(id);
+      this.userShow = true;
+      this.$axios
+        .get(
+          `https://apis.netstart.cn/yunyuedu/sns/user/getUserInfo.json?userId=${id}`
+        )
+        .then(({ data }) => {
+          console.log(data);
+          this.userList.push({
+            cover:data.userInfo.profileInfo.avatar,
+            username:data.userInfo.profileInfo.nickname,
+            level:data.userInfo.levelInfo.info.common.level,
+            levelName:'('+data.userInfo.levelInfo.info.common.levelName+')',
+            points:data.userInfo.levelInfo.info.common.points
+          })
+          console.log(this.userList);
+        });
+    },
     //获取最新章节
     getNewData() {
       this.$axios
@@ -292,10 +346,10 @@ export default {
               : parseInt(time.getMonth() + 1);
           let day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate();
           time = month + "月" + day + "日";
-          this.newShow={
+          this.newShow = {
             time,
-            name:data.item.latestArticleTitle
-          }
+            name: data.item.latestArticleTitle,
+          };
           // console.log(this.newShow);
         });
     },
@@ -358,7 +412,7 @@ export default {
         // console.log(pageChose);
 
         sessionStorage.setItem("page", pageChose);
-          sessionStorage.setItem("new", this.cataList.length);
+        sessionStorage.setItem("new", this.cataList.length);
         this.goPage();
         // this.$router.go(1);
       } else {
@@ -408,6 +462,7 @@ export default {
         .then(({ data }) => {
           // console.log(data);
           let datamode = data.feed.entry;
+          this.loading = false;
           this.dataList = {
             title: datamode.title,
             cover: datamode.link[1].href,
@@ -456,7 +511,9 @@ export default {
           `https://apis.netstart.cn/yunyuedu/comment/getComments.json?bookId=${this.bookId}`
         )
         .then(({ data }) => {
+          this.loadingCom = false;
           let comment = data.all.list;
+          // console.log(data);
           for (let i = 0; i < comment.length; i++) {
             let time = new Date(parseInt(comment[i].time));
             let month =
@@ -466,7 +523,7 @@ export default {
             let day =
               time.getDate() < 10 ? "0" + time.getDate() : time.getDate();
             time = time.getFullYear() + "年" + month + "月" + day + "日";
-            this.commentList.push({
+            this.commentList={
               cover: comment[i].avatar,
               userId: comment[i].userId,
               author: comment[i].nickName,
@@ -474,11 +531,13 @@ export default {
               grade: this.listvalue(comment[i].grade),
               time,
               comment: comment[i].comment,
-              select: comment[i].select.replace(/#精彩书摘#/g, ""),
+              select: comment[i].select
+                ? comment[i].select.replace(/#精彩书摘#/g, "")
+                : "",
               replyCount: comment[i].replyCount,
               replyList: comment[i].replyList,
               level: "LV." + comment[i].userLevel,
-            });
+            };
 
             // console.log(comment);
           }
@@ -495,7 +554,7 @@ export default {
         .then(({ data }) => {
           // console.log(data);
           let listmode = data.ncx.navMap.navPoint;
-
+          this.muluLoading = false;
           // console.log(listmode);
           if (listmode.length > 1) {
             for (let i = 0; i < listmode.length; i++) {
@@ -638,7 +697,7 @@ export default {
   width: 100vw;
   height: 100vh;
   overflow: auto;
-  // padding: 20px 0;
+  padding:0 0 20px 0;
   background-color: rgb(209, 198, 198, 0.3);
   z-index: 999;
 
@@ -1115,9 +1174,10 @@ export default {
         .ground {
           display: flex;
           width: 90px;
+          justify-content: flex-start;
           padding-right: 10px;
           div {
-            flex: 1;
+            flex: 0 0 5%;
           }
         }
 

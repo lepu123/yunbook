@@ -1,0 +1,68 @@
+{
+    "userInfo": {
+        "userId": "1347822209012",
+        "accountType": 0,
+        "newUserWelfareEndTime": 0,
+        "profileInfo": {
+            "nickname": "幸福~味道",
+            "avatar": "https://easyreadfs.nosdn.127.net/_w0OM6DsDhMMG6ZhD9AnAw==/8796093024015813583",
+            "gender": 0,
+            "birthday": 0,
+            "labels": []
+        },
+        "levelInfo": {
+            "info": {
+                "common": {
+                    "signDaysCount": 0,
+                    "masterLevel": 0,
+                    "level": 1,
+                    "levelName": "普通用户",
+                    "points": 2,
+                    "newPoints": 61,
+                    "money": 0,
+                    "hongbao": 0,
+                    "ranking": 0,
+                    "rankTotal": 0,
+                    "nextLevel": 2,
+                    "nextLevelPointsLeft": 110
+                },
+                "profile": {
+                    "alreadygot": 0,
+                    "form": {
+                        "avatar": {
+                            "done": 0,
+                            "points": 0,
+                            "alreadygot": 0
+                        },
+                        "nickname": {
+                            "done": 0,
+                            "points": 10,
+                            "alreadygot": 0
+                        },
+                        "intro": {
+                            "done": 0,
+                            "points": 10,
+                            "alreadygot": 0
+                        },
+                        "label": {
+                            "done": 0,
+                            "eachitempoints": 5,
+                            "alreadygot": 0
+                        }
+                    }
+                },
+                "sns": {
+                    "eachsnspoints": 0
+                },
+                "other": {
+                    "url": "http://easyread.163.com/points/guide.html"
+                }
+            }
+        },
+        "socialRelInfo": {
+            "followType": 0
+        }
+    },
+    "resDesc": "成功",
+    "resCode": 0
+}
