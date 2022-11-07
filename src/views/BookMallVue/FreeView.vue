@@ -1,6 +1,6 @@
 <template>
   <div class="free">
-    <img class="topImg" :src="imgUrl" v-if="!showBu"/>
+    <img class="topImg" :src="imgUrl" v-if="!showBu" @click="swipeToBook(item.id,item.title)"/>
 
     <WatchMoreComp :Arr="goodBooks" />
     <WatchMoreComp :Arr="guessYourLike" v-if="showBu"/>
@@ -44,6 +44,9 @@ export default {
           
           this.showBu = false
       }
+    },
+        swipeToBook(id,title) {
+      this.$router.push(`/detile/${id}/${title}`);
     },
   },
   created() {

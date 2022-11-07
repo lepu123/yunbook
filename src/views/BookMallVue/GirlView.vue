@@ -2,7 +2,7 @@
   <div class="girl">
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
       <van-swipe-item v-for="(item, index) in bannersArr" :key="index">
-        <img :src="item.cover" />
+        <img :src="item.cover" @click="swipeToBook(item.id,item.title)" />
       </van-swipe-item>
     </van-swipe>
 
@@ -51,6 +51,9 @@ export default {
           this.nowSayLove = data.list[6];
           this.oldSayLove = data.list[7];
         });
+    },
+        swipeToBook(id,title) {
+      this.$router.push(`/detile/${id}/${title}`);
     },
   },
   created() {
