@@ -1,6 +1,6 @@
 import { Checkbox,CheckboxGroup,Button,Uploader,SidebarItem,Sidebar,NavBar, Slider, Tabbar, Search, TabbarItem, Icon, NoticeBar,
      Swipe, SwipeItem, CellGroup, Tab, Tabs, Popup, Cell, Toast, Loading, Overlay, Image as VanImage ,CountDown ,ShareSheet ,
-     Badge,PullRefresh, List,Skeleton     } from 'vant'
+     Badge,PullRefresh, List,Skeleton ,Switch     } from 'vant'
 
 const vantComponents = [
     NavBar,
@@ -32,7 +32,8 @@ const vantComponents = [
     Badge,
     PullRefresh,
     List,
-    Skeleton
+    Skeleton,
+    Switch
 ]
 
 export default {
