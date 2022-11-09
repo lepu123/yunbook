@@ -263,6 +263,7 @@
         v-model="userShow"
         class="user-class"
       >
+      <div class="bg"><img src="../../public/bg.jpg" alt=""></div>
         <div class="userimg" v-if="userList.cover" ><img :src="userList.cover" alt="" /></div>
         <div class="userimg" v-if="!userList.cover" ><van-icon name="contact" /></div>
         <div class="username">{{ userList.username }}</div>
@@ -319,6 +320,7 @@ export default {
     };
   },
   methods: {
+    // 获取用户信息
     goUser(id) {
       // console.log(id);
       this.userShow = true;
@@ -1253,6 +1255,16 @@ export default {
   }
   .user-class {
     // position: relative;
+    .bg{
+      width: 100%;
+      height: 252px;
+      position: absolute;
+      top: 0;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
     .userimg {
       width: 50px;
       height: 50px;
@@ -1265,7 +1277,14 @@ export default {
         width: 100%;
         height: 100%;
         border-radius: 999px;
+        opacity: 0.6;
       }
+       .van-icon-contact:before {
+          font-size: 30px;
+          position: relative;
+          top: 4px;
+          left: 5px;
+        }
     }
     .username{
       position:absolute;
@@ -1273,7 +1292,7 @@ export default {
       left: 50%;
       transform: translateX(-50%);
       font-size: 20px;
-      color: #999;
+      color: rgb(224, 217, 217);
     }
     .user-info{
       display: flex;

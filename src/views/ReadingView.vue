@@ -314,6 +314,7 @@ export default {
   },
 
   methods: {
+    //展示书签页
     showShuqian() {
       this.muluFlag = true;
       this.shuqianList = [];
@@ -705,7 +706,19 @@ export default {
       this.scoll = true;
       this.$refs.home.style.overflowY = "auto";
       this.$refs.text.style.display = "block";
+      let color=null
+      let fontColor=null
+      let backgroundColor = sessionStorage.backgroundColor
+          ? JSON.parse(sessionStorage.backgroundColor)
+          : {};
+        color = backgroundColor.color;
+        fontColor = backgroundColor.fontColor;
       // console.log("sct" + this.scollShowPage);
+      for(let i=0 ; i<this.$refs.content.length;i++){
+        this.$refs.content[i].style.backgroundColor=color
+        this.$refs.content[i].style.fontColor=fontColor
+      }
+
       if (this.scollShowPage <= 1) {
         this.$refs.home.scrollTop = this.scollShowPage * this.viewHeight;
       } else {
