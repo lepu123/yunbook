@@ -1,11 +1,6 @@
 <template>
   <div class="home" ref="home" @mousewheel="watcht">
-    <van-popup
-      class="top-control"
-      v-model="showAll"
-      position="top"
-      :overlay="false"
-    >
+    <van-popup class="top-control" v-model="showAll" position="top" :overlay="false">
       <van-icon name="arrow-left" @click="routeback" />
       <div class="label" @click="catchThis">
         <van-icon name="label-o" v-show="this.catchFlag == false" />
@@ -13,22 +8,11 @@
       </div>
     </van-popup>
 
-    <div
-      class="text"
-      ref="text"
-      :style="{
-        width: `calc((100%)*${renderList.length})`,
-      }"
-    >
-      <div
-        class="content"
-        :class="{ silde: silde == true, fade: fade == true }"
-        :style="{ fontSize: fontChange }"
-        ref="content"
-        v-for="(r, i) in renderList"
-        :key="r.id"
-        @click="get(i, $event)"
-      >
+    <div class="text" ref="text" :style="{
+      width: `calc((100%)*${renderList.length})`,
+    }">
+      <div class="content" :class="{ silde: silde == true, fade: fade == true }" :style="{ fontSize: fontChange }"
+        ref="content" v-for="(r, i) in renderList" :key="r.id" @click="get(i, $event)">
         <van-skeleton title :row="3" :loading="loading">
           <div class="list" v-for="(p, j) in r.text" :key="j">
             <div class="item" v-if="p != ''">{{ p }}</div>
@@ -46,48 +30,35 @@
           <div class="btnPre" @click="prevPage">
             <van-icon name="arrow-left" />
           </div>
-          <van-slider
-            v-model="value"
-            @change="pageOnChange"
-            @input="pageValueChange(value)"
-            active-color="red"
-          />
-          <div class="btnNext" @click="nextPage"><van-icon name="arrow" /></div>
+          <van-slider v-model="value" @change="pageOnChange" @input="pageValueChange(value)" active-color="red" />
+          <div class="btnNext" @click="nextPage">
+            <van-icon name="arrow" />
+          </div>
         </div>
 
         <div class="bottom-control">
-          <van-cell is-link @click="showPopup"
-            ><van-icon name="orders-o" />目录</van-cell
-          >
+          <van-cell is-link @click="showPopup">
+            <van-icon name="orders-o" />目录
+          </van-cell>
           <div class="show" @click="show = !show">
             <van-icon name="setting-o" /><span>设置</span>
           </div>
           <div class="night" @click="changeNight">
-            <van-icon name="closed-eye" v-show="night == false" /><van-icon
-              name="eye-o"
-              v-show="night == true"
-            /><span>{{ nightText }}</span>
+            <van-icon name="closed-eye" v-show="night == false" />
+            <van-icon name="eye-o" v-show="night == true" /><span>{{ nightText }}</span>
           </div>
-          <div class="more"><van-icon name="ellipsis" /><span>更多</span></div>
+          <div class="more">
+            <van-icon name="ellipsis" /><span>更多</span>
+          </div>
         </div>
 
-        <van-popup
-          v-model="labelCover"
-          class="labelshow"
-          closeable
-          :style="{ height: '100%', width: '100%' }"
-          position="left"
-        >
+        <van-popup v-model="labelCover" class="labelshow" closeable :style="{ height: '100%', width: '100%' }"
+          position="left">
           <div class="label-this" @click="labelToroute(labelShow.bookRouter)">
             {{ labelShow.name }}
           </div>
         </van-popup>
-        <van-popup
-          v-model="showPop"
-          class="mulu"
-          position="left"
-          :style="{ height: '100%' }"
-        >
+        <van-popup v-model="showPop" class="mulu" position="left" :style="{ height: '100%' }">
           <div class="mulu-item" v-show="muluFlag == false">
             <div class="middle">
               <div class="cover" @click="routeback">
@@ -105,10 +76,7 @@
               <div class="total">{{ "共" + lastPage + "章" }}</div>
               <div class="reverse" @click="reverseed">
                 {{ order }}
-                <div
-                  class="tranThree"
-                  :class="{ rotate: reverse == true }"
-                ></div>
+                <div class="tranThree" :class="{ rotate: reverse == true }"></div>
               </div>
             </div>
             <div class="chose" v-for="(l, i) in choseList" :key="i">
@@ -128,35 +96,20 @@
 
           <div class="shuqian-item" v-show="muluFlag == true">
             <div class="titl">书签</div>
-            <div
-              class="shuqian"
-              v-for="(s, i) in shuqianList"
-              :key="i"
-              @click="catchGo(s.page)"
-            >
+            <div class="shuqian" v-for="(s, i) in shuqianList" :key="i" @click="catchGo(s.page)">
               {{ s.name }}
             </div>
           </div>
         </van-popup>
 
-        <van-popup
-          v-model="showPop"
-          position="left"
-          :overlay="false"
-          class="chose-change"
-        >
+        <van-popup v-model="showPop" position="left" :overlay="false" class="chose-change">
           <div class="chose-item">
             <div class="chose-mulu" @click="muluFlag = false">目录</div>
             <div class="chose-shuqian" @click="showShuqian">书签</div>
           </div>
         </van-popup>
 
-        <van-popup
-          class="setting"
-          v-model="show"
-          position="bottom"
-          :overlay="false"
-        >
+        <van-popup class="setting" v-model="show" position="bottom" :overlay="false">
           <div class="title-list">
             <span class="title">字号</span>
             <div class="title">主题</div>
@@ -164,67 +117,38 @@
           </div>
           <div class="change">
             <div class="font-change">
-              <van-slider
-                class="font"
-                v-model="fontSize"
-                @change="textOnChange"
-                :step="20"
-              />
+              <van-slider class="font" v-model="fontSize" @change="textOnChange" :step="20" />
             </div>
             <div class="color-change" @click="changeColor($event)">
-              <div
-                class="colorBoxYrgb(203, 212, 209)"
-                :style="{
-                  backgroundColor: 'rgb(203, 212, 209)',
-                  width: '80px',
-                  height: '50px',
-                }"
-              ></div>
-              <div
-                class="colorBoxYrgb(207, 207, 182)"
-                :style="{
-                  backgroundColor: 'rgb(207, 207, 182)',
-                  width: '80px',
-                  height: '50px',
-                }"
-              ></div>
-              <div
-                class="colorBoxYrgb(142, 190, 158)"
-                :style="{
-                  backgroundColor: 'rgb(142, 190, 158)',
-                  width: '80px',
-                  height: '50px',
-                }"
-              ></div>
-              <div
-                class="colorBoxYrgb(53, 57, 56)"
-                :style="{
-                  backgroundColor: 'rgb(53, 57, 56)',
-                  width: '80px',
-                  height: '50px',
-                }"
-              ></div>
+              <div class="colorBoxYrgb(203, 212, 209)" :style="{
+                backgroundColor: 'rgb(203, 212, 209)',
+                width: '80px',
+                height: '50px',
+              }"></div>
+              <div class="colorBoxYrgb(207, 207, 182)" :style="{
+                backgroundColor: 'rgb(207, 207, 182)',
+                width: '80px',
+                height: '50px',
+              }"></div>
+              <div class="colorBoxYrgb(142, 190, 158)" :style="{
+                backgroundColor: 'rgb(142, 190, 158)',
+                width: '80px',
+                height: '50px',
+              }"></div>
+              <div class="colorBoxYrgb(53, 57, 56)" :style="{
+                backgroundColor: 'rgb(53, 57, 56)',
+                width: '80px',
+                height: '50px',
+              }"></div>
             </div>
             <div class="read-change">
-              <div
-                class="silde"
-                :class="{ active: silde == true }"
-                @click="black"
-              >
+              <div class="silde" :class="{ active: silde == true }" @click="black">
                 滑动
               </div>
-              <div
-                class="fade"
-                :class="{ active: fade == true }"
-                @click="faded"
-              >
+              <div class="fade" :class="{ active: fade == true }" @click="faded">
                 无
               </div>
-              <div
-                class="scoll"
-                :class="{ active: scoll == true }"
-                @click="scolld"
-              >
+              <div class="scoll" :class="{ active: scoll == true }" @click="scolld">
                 卷轴
               </div>
             </div>
@@ -450,40 +374,59 @@ export default {
       this.night = !this.night;
       console.log(this.night);
       let color = null;
+      let fontColor = null;
       let backgroundColor = sessionStorage.backgroundColor
         ? JSON.parse(sessionStorage.backgroundColor)
         : {};
       color = backgroundColor.color;
+      fontColor = backgroundColor.fontColor;
       if (this.night == true) {
         this.nightText = "日间";
         sessionStorage.setItem("night", 1);
-        this.$refs.text.style.backgroundColor = "rgb(53, 57, 56)";
-        this.$refs.text.style.color = "#fff";
+
+        for (let x = 0; x < this.$refs.content.length; x++) {
+          this.$refs.content[x].style.color = "#fff";
+          this.$refs.content[x].style.backgroundColor = "rgb(53, 57, 56)";
+        }
+        sessionStorage.backgroundColor = JSON.stringify({
+          color: "rgb(53, 57, 56)",
+          fontColor: "#fff"
+        });
       } else {
         this.nightText = "夜间";
         sessionStorage.setItem("night", 0);
-        this.$refs.text.style.color = "black";
+        // this.$refs.text.style.color = "black";
         if (color == "rgb(53, 57, 56)") {
-          this.$refs.text.style.backgroundColor = "rgb(203, 212, 209)";
+
+          for (let x = 0; x < this.$refs.content.length; x++) {
+            this.$refs.content[x].style.color = "black";
+            this.$refs.content[x].style.backgroundColor = "rgb(203, 212, 209)";
+          }
           sessionStorage.backgroundColor = JSON.stringify({
             color: "rgb(203, 212, 209)",
             fontColor: "black",
           });
         } else {
-          this.$refs.text.style.backgroundColor = color;
+          for (let x = 0; x < this.$refs.content.length; x++) {
+            this.$refs.content[x].style.backgroundColor = color;
+            this.$refs.content[x].style.color = fontColor
+          }
+
         }
       }
     },
     //点击修改主题颜色
     changeColor(e) {
       if (e.target.className.split("Y")[0] == "colorBox") {
+        for (let i = 0; i < this.$refs.content.length; i++) {
+          this.$refs.content[i].style.backgroundColor =
+            e.target.className.split("Y")[1];
+          this.$refs.content[i].style.color =
+            e.target.className.split("Y")[1] == "rgb(53, 57, 56)"
+              ? "#fff"
+              : "black";
+        }
         // console.log( this.$refs.text.style.backgroundColor);
-        this.$refs.text.style.backgroundColor =
-          e.target.className.split("Y")[1];
-        this.$refs.text.style.color =
-          e.target.className.split("Y")[1] == "rgb(53, 57, 56)"
-            ? "#fff"
-            : "black";
         // console.log(this.bcg,color);
         if (e.target.className.split("Y")[1] == "rgb(53, 57, 56)") {
           this.night = true;
@@ -677,22 +620,31 @@ export default {
       this.silde = false;
       this.fade = true;
       this.scoll = false;
+      let fontColor = null
+      let backgroundColor = sessionStorage.backgroundColor
+        ? JSON.parse(sessionStorage.backgroundColor)
+        : 'px';
+      if (backgroundColor == 'px') {
+        fontColor = 'black'
+      } else {
+        fontColor = backgroundColor.fontColor;
+      }
+      for (let x = 0; x < this.$refs.content.length; x++) {
+        this.$refs.content[x].style.color = fontColor;
+      }
 
       if (this.scrollTop != 0) {
         let showPage = Math.round(this.scrollTop / this.viewHeight);
         this.scollShowPage = showPage;
-        this.$refs.content[showPage].style.transform = `translateX(-${
-          showPage * 100
-        }%)`;
+        this.$refs.content[showPage].style.transform = `translateX(-${showPage * 100
+          }%)`;
         let zeroFilter = showPage == 0 ? 0 : showPage - 1;
-        this.$refs.content[zeroFilter].style.transform = `translateX(-${
-          showPage * 100
-        }%)`;
+        this.$refs.content[zeroFilter].style.transform = `translateX(-${showPage * 100
+          }%)`;
         for (let x = showPage - 2; x >= 0; x--) {
           if (x > 0) {
-            this.$refs.content[x].style.transform = `translateX(-${
-              (x + 1) * 100
-            }%)`;
+            this.$refs.content[x].style.transform = `translateX(-${(x + 1) * 100
+              }%)`;
           } else {
             this.$refs.content[x].style.transform = `translateX(-${100}%)`;
           }
@@ -706,18 +658,17 @@ export default {
       this.scoll = true;
       this.$refs.home.style.overflowY = "auto";
       this.$refs.text.style.display = "block";
-      let color=null
-      let fontColor=null
+      let fontColor = null
       let backgroundColor = sessionStorage.backgroundColor
-          ? JSON.parse(sessionStorage.backgroundColor)
-          : {};
-        color = backgroundColor.color;
+        ? JSON.parse(sessionStorage.backgroundColor)
+        : 'px';
+      if (backgroundColor == 'px') {
+        fontColor = 'black'
+      } else {
         fontColor = backgroundColor.fontColor;
-      // console.log("sct" + this.scollShowPage);
-      for(let i=0 ; i<this.$refs.content.length;i++){
-        this.$refs.content[i].style.backgroundColor=color
-        this.$refs.content[i].style.fontColor=fontColor
       }
+      // console.log("sct" + this.scollShowPage);
+
 
       if (this.scollShowPage <= 1) {
         this.$refs.home.scrollTop = this.scollShowPage * this.viewHeight;
@@ -727,7 +678,7 @@ export default {
       }
 
       for (let x = 0; x < this.$refs.content.length; x++) {
-        this.$refs.content[x].style.color = "black";
+        this.$refs.content[x].style.color = fontColor;
         this.$refs.content[x].style.transform = `translateX(0)`;
       }
     },
@@ -735,8 +686,17 @@ export default {
     black() {
       this.$refs.home.style.overflow = "hidden";
       this.$refs.text.style.display = "flex";
+      let fontColor = null
+      let backgroundColor = sessionStorage.backgroundColor
+        ? JSON.parse(sessionStorage.backgroundColor)
+        : 'px';
+      if (backgroundColor == 'px') {
+        fontColor = 'black'
+      } else {
+        fontColor = backgroundColor.fontColor;
+      }
       for (let x = 0; x < this.$refs.content.length; x++) {
-        this.$refs.content[x].style.color = "black";
+        this.$refs.content[x].style.color = fontColor;
       }
       this.scoll = false;
       this.silde = true;
@@ -746,18 +706,15 @@ export default {
         // console.log(showPage);
         this.scollShowPage = showPage;
 
-        this.$refs.content[showPage].style.transform = `translateX(-${
-          showPage * 100
-        }%)`;
+        this.$refs.content[showPage].style.transform = `translateX(-${showPage * 100
+          }%)`;
         let zeroFilter = showPage == 0 ? 0 : showPage - 1;
-        this.$refs.content[zeroFilter].style.transform = `translateX(-${
-          showPage * 100
-        }%)`;
+        this.$refs.content[zeroFilter].style.transform = `translateX(-${showPage * 100
+          }%)`;
         for (let x = showPage - 2; x >= 0; x--) {
           if (x > 0) {
-            this.$refs.content[x].style.transform = `translateX(-${
-              (x + 1) * 100
-            }%)`;
+            this.$refs.content[x].style.transform = `translateX(-${(x + 1) * 100
+              }%)`;
           } else {
             this.$refs.content[x].style.transform = `translateX(-${100}%)`;
           }
@@ -772,6 +729,16 @@ export default {
       let newpage = JSON.parse(sessionStorage.getItem("new"));
       // console.log(e.offsetX, this.viewWidth / 2);
       // //滑动判断
+      let fontColor = null
+      let backgroundColor = sessionStorage.backgroundColor
+        ? JSON.parse(sessionStorage.backgroundColor)
+        : 'px';
+      if (backgroundColor == 'px') {
+        fontColor = 'black'
+      } else {
+        fontColor = backgroundColor.fontColor;
+      }
+
       if (this.silde == true) {
         if (e.offsetX > this.viewWidth / 2 + 120) {
           let x = 100 * (i + 1);
@@ -837,7 +804,7 @@ export default {
             this.timer = setTimeout(() => {
               this.$refs.content[i].style.transform = `translateX(-${x}%)`;
               this.$refs.content[i + 1].style.transform = `translateX(-${x}%)`;
-              this.$refs.content[i + 1].style.color = `black`;
+              this.$refs.content[i + 1].style.color = fontColor;
             }, 500);
           }
         } else if (e.offsetX < this.viewWidth / 2 - 120) {
@@ -859,7 +826,7 @@ export default {
             this.timer = setTimeout(() => {
               this.$refs.content[i].style.transform = `translateX(-${x}%)`;
               this.$refs.content[i - 1].style.transform = `translateX(-${x}%)`;
-              this.$refs.content[i - 1].style.color = `black`;
+              this.$refs.content[i - 1].style.color = fontColor;
             }, 500);
           }
         } else if (
@@ -888,10 +855,10 @@ export default {
             height:
               x == 0
                 ? Math.ceil((i.length * replacesize) / this.viewWidth) *
-                  replacesize *
-                  2
+                replacesize *
+                2
                 : Math.ceil((i.length * replacesize) / this.viewWidth) *
-                  replacesize,
+                replacesize,
           });
           this.textList.push(i);
         }
@@ -900,7 +867,7 @@ export default {
     },
     //将原始文本数组替换为自动排版数组
     PageList() {
-      for (;;) {
+      for (; ;) {
         for (let i = this.index; i < this.heightList.length; i++) {
           this.count += this.heightList[i].height + this.padtop;
           if (this.count > this.viewHeight * this.arrNum) {
@@ -984,6 +951,7 @@ export default {
     top: 0;
     height: 80px;
     font-size: 23px;
+
     // line-height: 40px;
     .van-icon {
       position: relative;
@@ -995,6 +963,7 @@ export default {
     }
   }
 }
+
 .text {
   height: 100vh;
   // ;
@@ -1010,17 +979,21 @@ export default {
     // transform: translateX(-10%);
     overflow: hidden;
     position: relative;
+
     &.silde {
       transition: all 0.3s linear;
     }
+
     &.fade {
       transition: color 0.5s linear;
     }
+
     .item {
       padding: 15px 10px;
       text-indent: 25px;
       line-height: 1.2;
     }
+
     &:nth-child(1) {
       .list {
         &:nth-child(1) {
@@ -1063,10 +1036,12 @@ export default {
 
       .van-cell {
         flex: 1;
+
         .van-icon-arrow:before {
           content: "";
         }
       }
+
       div {
         text-align: center;
         display: flex;
@@ -1103,18 +1078,21 @@ export default {
       height: 50px;
       line-height: 50px;
       padding: 0 5%;
+
       .van-slider {
         position: relative;
         flex: 1;
         top: 50%;
         padding-left: 5px;
       }
+
       .btnPre {
         width: 60px;
         text-align: center;
         font-size: 18px;
         padding-right: 10px;
       }
+
       .btnNext {
         width: 60px;
         text-align: center;
@@ -1142,11 +1120,13 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
+
         .read-change,
         .color-change {
           display: flex;
           justify-content: space-around;
         }
+
         .read-change {
           height: 40px;
           border-right: 10px;
@@ -1166,6 +1146,7 @@ export default {
             }
           }
         }
+
         .font {
           width: 90%;
         }
@@ -1176,16 +1157,20 @@ export default {
       padding: 20px 20px;
       width: 80%;
       font-size: 16px;
+
       .middle {
         display: flex;
+
         .cover {
           width: 100px;
           height: 120px;
+
           img {
             width: 100%;
             height: 100%;
           }
         }
+
         .desc {
           height: 80px;
           padding-left: 30px;
@@ -1243,6 +1228,7 @@ export default {
           font-size: 20px;
           color: black;
         }
+
         .shuqian {
           height: 70px;
           border-bottom: 1px solid #777;
@@ -1260,6 +1246,7 @@ export default {
     background-color: rgb(75, 66, 66);
     border-radius: 10px;
     width: 10%;
+
     .chose-item {
       height: 100%;
       display: flex;
@@ -1277,6 +1264,7 @@ export default {
       color: black;
       font-size: 18px;
     }
+
     .item-mulu {
       height: 80px;
       line-height: 40px;
@@ -1287,6 +1275,7 @@ export default {
       justify-content: space-between;
     }
   }
+
   .label-this {
     width: 100%;
     height: 80px;
@@ -1306,6 +1295,7 @@ export default {
   from {
     transform: rotateY(0);
   }
+
   to {
     transform: rotateY(-180deg);
   }
