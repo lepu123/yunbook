@@ -211,6 +211,7 @@ export default {
     author: String,
     title: String,
     lastPage: String,
+    cataList: Array
   },
 
   computed: {
@@ -520,24 +521,32 @@ export default {
     //点击加载上一章
     prevPage() {
       let page = JSON.parse(sessionStorage.getItem("page"));
-      if (page <= 0) {
-        this.$toast("到开头了");
+      if (this.cataList[page].vip == 1) {
+        this.$toast("请付款");
       } else {
-        sessionStorage.setItem("page", page - 1);
-        this.$emit("goPage");
-        this.$router.go(0);
+        if (page <= 0) {
+          this.$toast("到开头了");
+        } else {
+          sessionStorage.setItem("page", page - 1);
+          this.$emit("goPage");
+          this.$router.go(0);
+        }
       }
     },
     //点击加载下一章
     nextPage() {
       let page = JSON.parse(sessionStorage.getItem("page"));
       let pageCount = JSON.parse(sessionStorage.getItem("new"));
-      if (page == pageCount) {
-        this.$toast("到结尾了");
+      if (this.cataList[page].vip == 1) {
+        this.$toast("请付款");
       } else {
-        sessionStorage.setItem("page", page + 1);
-        this.$emit("goPage");
-        this.$router.go(0);
+        if (page == pageCount) {
+          this.$toast("到结尾了");
+        } else {
+          sessionStorage.setItem("page", page + 1);
+          this.$emit("goPage");
+          this.$router.go(0);
+        }
       }
     },
     //进入页面修改章节进度滑块的值
@@ -566,9 +575,14 @@ export default {
     pageOnChange(value) {
       let pageCount = JSON.parse(sessionStorage.getItem("new"));
       let changeValue = Math.round((value * pageCount) / 100);
-      sessionStorage.setItem("page", changeValue);
-      this.$emit("goPage");
-      this.$router.go(0);
+      if (this.cataList[changeValue].vip == 1) {
+        this.getPagevalue()
+        this.$toast("请付款");
+      } else {
+        sessionStorage.setItem("page", changeValue);
+        this.$emit("goPage");
+        this.$router.go(0);
+      }
     },
     //点击目录跳至指定章节
     choseToRead(i, n) {
@@ -584,9 +598,14 @@ export default {
           pageChose += n;
         }
         // console.log(pageChose);
-        sessionStorage.setItem("page", pageChose);
-        this.$emit("goPage", pageChose);
-        this.$router.go(0);
+        if (this.cataList[pageChose].vip == 1) {
+          this.$toast("请付款");
+        } else {
+          sessionStorage.setItem("page", pageChose);
+          this.$emit("goPage", pageChose);
+          this.$router.go(0);
+        }
+
       } else {
         let lastpage = JSON.parse(sessionStorage.getItem("new"));
         let pageChange = 0;
@@ -599,9 +618,14 @@ export default {
           }
           pageChange = lastpage - (pageChange + n);
         }
-        sessionStorage.setItem("page", pageChange - 1);
-        this.$emit("goPage");
-        this.$router.go(0);
+        if (this.cataList[pageChange - 1].vip == 1) {
+          this.$toast("请付款");
+        } else {
+          sessionStorage.setItem("page", pageChange - 1);
+          this.$emit("goPage");
+          this.$router.go(0);
+        }
+
       }
     },
     //点击显示目录
@@ -747,12 +771,16 @@ export default {
           // console.log('ri' + this.scollShowPage);
           if (i >= this.renderList.length - 1) {
             let gopage = page + 1;
-            if (gopage >= newpage) {
-              this.$toast("到结尾了");
+            if (this.cataList[gopage].vip == 1) {
+              this.$toast("请付款");
             } else {
-              sessionStorage.setItem("page", gopage);
-              this.$emit("goPage");
-              this.$router.go(0);
+              if (gopage >= newpage) {
+                this.$toast("到结尾了");
+              } else {
+                sessionStorage.setItem("page", gopage);
+                this.$emit("goPage");
+                this.$router.go(0);
+              }
             }
           } else {
             this.$refs.content[i].style.transform = `translateX(-${x}%)`;
@@ -765,12 +793,16 @@ export default {
           //  console.log('li' + this.scollShowPage);
           if (i == 0) {
             let gopage = page - 1;
-            if (gopage < 0) {
-              this.$toast("到开头了");
+            if (this.cataList[gopage].vip == 1) {
+              this.$toast("请付款");
             } else {
-              sessionStorage.setItem("page", gopage);
-              this.$emit("goPage");
-              this.$router.go(0);
+              if (gopage < 0) {
+                this.$toast("到开头了");
+              } else {
+                sessionStorage.setItem("page", gopage);
+                this.$emit("goPage");
+                this.$router.go(0);
+              }
             }
           } else {
             this.$refs.content[i].style.transform = `translateX(-${x}%)`;
@@ -791,12 +823,16 @@ export default {
           let x = 100 * (i + 1);
           if (i >= this.renderList.length - 1) {
             let gopage = page + 1;
-            if (gopage >= newpage) {
-              this.$toast("到结尾了");
+            if (this.cataList[gopage].vip == 1) {
+              this.$toast("请付款");
             } else {
-              sessionStorage.setItem("page", gopage);
-              this.$emit("goPage");
-              this.$router.go(0);
+              if (gopage >= newpage) {
+                this.$toast("到结尾了");
+              } else {
+                sessionStorage.setItem("page", gopage);
+                this.$emit("goPage");
+                this.$router.go(0);
+              }
             }
           } else {
             this.$refs.content[i].style.color = `transparent`;
@@ -813,12 +849,16 @@ export default {
           this.scollShowPage = i - 1;
           if (i == 0) {
             let gopage = page - 1;
-            if (gopage < 0) {
-              this.$toast("到开头了");
+            if (this.cataList[gopage].vip == 1) {
+              this.$toast("请付款");
             } else {
-              sessionStorage.setItem("page", gopage);
-              this.$emit("goPage");
-              this.$router.go(0);
+              if (gopage < 0) {
+                this.$toast("到开头了");
+              } else {
+                sessionStorage.setItem("page", gopage);
+                this.$emit("goPage");
+                this.$router.go(0);
+              }
             }
           } else {
             this.$refs.content[i].style.color = `transparent`;

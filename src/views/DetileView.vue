@@ -25,11 +25,7 @@
             <div class="price" v-if="dataList.wprice">
               {{ dataList.wprice + "阅点/千字" }}
             </div>
-            <div
-              class="price"
-              v-if="!dataList.wprice"
-              :style="{ color: 'red', fontSize: '18px', fontWeight: '700' }"
-            >
+            <div class="price" v-if="!dataList.wprice" :style="{ color: 'red', fontSize: '18px', fontWeight: '700' }">
               {{ dataList.price + "阅点" }}
             </div>
           </div>
@@ -49,33 +45,19 @@
             </div>
 
             <div class="endShow" v-if="dataList.stateMode != 0">已完结</div>
-            <div
-              class="endShow"
-              :style="{ color: 'green' }"
-              v-if="dataList.stateMode == 0"
-            >
+            <div class="endShow" :style="{ color: 'green' }" v-if="dataList.stateMode == 0">
               连载中
             </div>
           </div>
         </van-cell>
-        <van-popup
-          v-model="labelCover"
-          class="labelshow"
-          closeable
-          :style="{ height: '100%', width: '100%' }"
-          position="left"
-        >
+        <van-popup v-model="labelCover" class="labelshow" closeable :style="{ height: '100%', width: '100%' }"
+          position="left">
           <div class="label-this" @click="labelToroute(labelShow.bookRouter)">
             {{ labelShow.name }}
           </div>
         </van-popup>
-        <van-popup
-          v-model="show"
-          :style="{ width: '100%', height: '100%' }"
-          closeable
-          position="right"
-          class="mulu-show"
-        >
+        <van-popup v-model="show" :style="{ width: '100%', height: '100%' }" closeable position="right"
+          class="mulu-show">
           <div class="middle">
             <div class="cover"><img :src="dataList.cover" alt="" /></div>
 
@@ -111,16 +93,8 @@
         </van-popup>
       </div>
 
-      <router-view
-        :pageNum="pagecount"
-        :choseList="choseList"
-        :nameList="nameList"
-        :cover="dataList.cover"
-        :author="dataList.author"
-        :title="dataList.title"
-        :lastPage="dataList.lastPage"
-        @goPage="goPage"
-      />
+      <router-view :pageNum="pagecount" :choseList="choseList" :cataList="cataList" :nameList="nameList" :cover="dataList.cover"
+        :author="dataList.author" :title="dataList.title" :lastPage="dataList.lastPage" @goPage="goPage" />
 
       <div class="fan-item" @click="fanShow = true" v-if="fanList">
         <div class="user">
@@ -132,40 +106,24 @@
         <div class="das">打赏</div>
       </div>
 
-      <van-popup
-        v-model="fanShow"
-        :style="{ width: '100%', height: '100%' }"
-        class="fanbang-show"
-        position="right"
-      >
+      <van-popup v-model="fanShow" :style="{ width: '100%', height: '100%' }" class="fanbang-show" position="right">
         <div class="fan-top">
           <div class="return" @click="fanShow = false">
-            <van-icon
-              name="arrow-left"
-              :style="{ color: '#777', fontSize: '25px', paddingRight: '20px' }"
-            />
+            <van-icon name="arrow-left" :style="{ color: '#777', fontSize: '25px', paddingRight: '20px' }" />
           </div>
           <div class="bang" :style="{ fontSize: '27px', paddingLeft: '20px' }">
             粉丝榜
           </div>
-          <div
-            class="chenghao"
-            @click="descShow = true"
-            :style="{ color: '#777' }"
-          >
+          <div class="chenghao" @click="descShow = true" :style="{ color: '#777' }">
             粉丝称号
           </div>
         </div>
         <div class="fanbangAll" ref="fanbangAll" @scroll="fanbangLoad($event)">
           <div class="fanbang" v-for="(b, i) in fanBangList" :key="i">
             <div class="fan-user">
-              <span class="index" :class="{ active: i < 3 }"
-                >{{ i + 1 }}.<span class="trace" v-if="i < 3"></span>
+              <span class="index" :class="{ active: i < 3 }">{{ i + 1 }}.<span class="trace" v-if="i < 3"></span>
               </span>
-              <div
-                class="fan-img"
-                :class="{ one: i == 0, two: i == 1, three: i == 2 }"
-              >
+              <div class="fan-img" :class="{ one: i == 0, two: i == 1, three: i == 2 }">
                 <img :src="b.imageUrl" alt="" />
               </div>
               <div class="fan-name">{{ b.nickName }}</div>
@@ -182,24 +140,19 @@
           </div>
         </div>
       </van-popup>
-      <van-popup
-        v-model="descShow"
-        :style="{ width: '100%', height: '100%' }"
-        class="desc-show"
-        closeable
-        position="right"
-      >
+      <van-popup v-model="descShow" :style="{ width: '100%', height: '100%' }" class="desc-show" closeable
+        position="right">
         <div class="desc-img">
-          <img
-            src="https://easyreadfs.nosdn.127.net/fle/a0df1d4009c7a2ec5fee/1572312391130/dashang.jpg"
-          />
+          <img src="https://easyreadfs.nosdn.127.net/fle/a0df1d4009c7a2ec5fee/1572312391130/dashang.jpg" />
         </div>
       </van-popup>
 
       <div class="comment-item">
         <div class="item-desc">
           <p><span class="shuzi"></span> 评论</p>
-          <div class="write"><van-icon name="edit" />写评论</div>
+          <div class="write">
+            <van-icon name="edit" />写评论
+          </div>
         </div>
         <van-skeleton title :row="3" :loading="loadingCom">
           <div class="comment" v-for="(c, i) in commentList" :key="i">
@@ -215,7 +168,8 @@
                   <div class="author">{{ c.author }}</div>
                   <div class="level">{{ c.level }}</div>
                   <div class="like">
-                    {{ c.likes }}<van-icon name="good-job-o" />
+                    {{ c.likes }}
+                    <van-icon name="good-job-o" />
                   </div>
                 </div>
                 <div class="top-time">
@@ -256,16 +210,13 @@
         <span>加入书架</span>
         <span><button @click="go">立刻试读</button></span>
       </div>
-      <van-popup
-        closeable
-        position="bottom"
-        :style="{ height: '100%', width: '100%' }"
-        v-model="userShow"
-        class="user-class"
-      >
-      <div class="bg"><img src="../../public/bg.jpg" alt=""></div>
-        <div class="userimg" v-if="userList.cover" ><img :src="userList.cover" alt="" /></div>
-        <div class="userimg" v-if="!userList.cover" ><van-icon name="contact" /></div>
+      <van-popup closeable position="bottom" :style="{ height: '100%', width: '100%' }" v-model="userShow"
+        class="user-class">
+        <div class="bg"><img src="../../public/bg.jpg" alt=""></div>
+        <div class="userimg" v-if="userList.cover"><img :src="userList.cover" alt="" /></div>
+        <div class="userimg" v-if="!userList.cover">
+          <van-icon name="contact" />
+        </div>
         <div class="username">{{ userList.username }}</div>
         <div class="user-info">
           <div class="level">
@@ -420,10 +371,15 @@ export default {
           pageChose += n;
         }
         // console.log(pageChose);
+        if (this.cataList[pageChose].vip == 1) {
+          this.show = true
+          this.$toast("请付款");
+        } else {
+          sessionStorage.setItem("page", pageChose);
+          sessionStorage.setItem("new", this.cataList.length);
+          this.goPage();
+        }
 
-        sessionStorage.setItem("page", pageChose);
-        sessionStorage.setItem("new", this.cataList.length);
-        this.goPage();
         // this.$router.go(1);
       } else {
         let lastpage = JSON.parse(sessionStorage.getItem("new"));
@@ -438,9 +394,17 @@ export default {
           pageChange = lastpage - (pageChange + n);
         }
 
-        sessionStorage.setItem("page", pageChange - 1);
-        sessionStorage.setItem("new", this.cataList.length);
-        this.goPage();
+        if (this.cataList[pageChange - 1].vip == 1) {
+          this.show = true
+          this.$toast("请付款");
+
+        } else {
+          sessionStorage.setItem("page", pageChange - 1);
+          sessionStorage.setItem("new", this.cataList.length);
+          this.goPage();
+        }
+
+
         // this.$router.go(0);
       }
     },
@@ -729,6 +693,7 @@ export default {
       margin-left: 10px;
     }
   }
+
   .tar-bar-bom {
     position: fixed;
     bottom: 0;
@@ -751,6 +716,7 @@ export default {
   .van-icon-star:before {
     color: rgb(233, 162, 29);
   }
+
   // padding: 20px;
   .detile-item {
     width: 100%;
@@ -768,24 +734,29 @@ export default {
       display: flex;
       font-size: 12px;
       padding-top: 10px;
+
       .cover {
         width: 80px;
         height: 120px;
+
         img {
           width: 100%;
           height: 100%;
         }
       }
+
       .message {
         padding-left: 20px;
         display: flex;
         justify-content: space-around;
         flex-direction: column;
         color: #777;
+
         .title {
           font-size: 16px;
           color: black;
         }
+
         .category {
           display: flex;
           justify-content: flex-start;
@@ -809,6 +780,7 @@ export default {
           // width: 140px;
           display: flex;
         }
+
         .click {
           padding-left: 20px;
         }
@@ -822,9 +794,11 @@ export default {
       color: #777;
       line-height: 1.7;
     }
+
     .van-icon-arrow:before {
       padding-top: 10px;
     }
+
     .mulu-item {
       display: flex;
       justify-content: space-between;
@@ -847,23 +821,29 @@ export default {
         margin-right: 10px;
       }
     }
+
     .type {
       margin-top: 30px;
       font-size: 14px;
       color: #777;
     }
+
     .mulu-show {
       padding: 20px 10px;
+
       .middle {
         display: flex;
+
         .cover {
           width: 100px;
           height: 120px;
+
           img {
             width: 100%;
             height: 100%;
           }
         }
+
         .desc {
           height: 80px;
           padding-left: 30px;
@@ -877,6 +857,7 @@ export default {
           }
         }
       }
+
       .bottom {
         display: flex;
         flex-direction: row;
@@ -918,6 +899,7 @@ export default {
           color: black;
           font-size: 18px;
         }
+
         .item-mulu {
           height: 80px;
           line-height: 40px;
@@ -943,6 +925,7 @@ export default {
     .user {
       display: flex;
       padding-left: 20px;
+
       .user-img {
         width: 40px;
         height: 40px;
@@ -955,6 +938,7 @@ export default {
         }
       }
     }
+
     .das {
       font-size: 20px;
       color: #777;
@@ -962,8 +946,10 @@ export default {
       padding-right: 50px;
     }
   }
+
   .fanbang-show {
     padding-top: 80px;
+
     .fan-top {
       position: fixed;
       top: 0;
@@ -974,13 +960,16 @@ export default {
       line-height: 80px;
     }
   }
+
   .van-icon-cross:before {
     content: 0;
   }
+
   .fanbangAll {
     height: 100%;
     width: 100%;
     overflow: auto;
+
     // position: absolute;
     // top: 80px;
     .fanbang {
@@ -991,12 +980,15 @@ export default {
       padding: 20px 20px 20px 10px;
       line-height: 40px;
       position: relative;
+
       .fan-user {
         display: flex;
         justify-content: flex-start;
         width: 250px;
+
         .index {
           font-size: 20px;
+
           &.active {
             color: black;
             font-size: 40px;
@@ -1014,10 +1006,12 @@ export default {
             top: 15px;
           }
         }
+
         .fan-name {
           position: absolute;
           left: 120px;
         }
+
         .fan-img {
           width: 40px;
           height: 40px;
@@ -1025,6 +1019,7 @@ export default {
           border: 3px solid #777;
           position: absolute;
           left: 54px;
+
           &.one,
           &.two,
           &.three {
@@ -1034,15 +1029,19 @@ export default {
             position: absolute;
             left: 50px;
           }
+
           &.one {
             border: 6px solid rgb(246, 176, 46);
           }
+
           &.two {
             border: 6px solid silver;
           }
+
           &.three {
             border: 6px solid rgb(247, 123, 22);
           }
+
           img {
             height: 100%;
             width: 100%;
@@ -1050,15 +1049,19 @@ export default {
           }
         }
       }
+
       .fan-desc {
         display: flex;
         justify-content: space-around;
         width: 150px;
+
         .fan-title {
           font-size: 20px;
         }
+
         .fan-score {
           color: #999;
+
           .van-icon-points:before {
             padding-right: 10px;
           }
@@ -1077,8 +1080,10 @@ export default {
       }
     }
   }
+
   .desc-img {
     width: 100vw;
+
     // height: 100vh;
     img {
       width: 100%;
@@ -1089,15 +1094,18 @@ export default {
   .comment-item {
     background-color: #fff;
     margin-top: 10px;
+
     .item-desc {
       height: 80px;
       line-height: 80px;
       display: flex;
       justify-content: space-between;
       padding: 0 25px;
+
       p {
         color: #888;
         font-size: 20px;
+
         .shuzi {
           width: 0;
           height: 0;
@@ -1107,6 +1115,7 @@ export default {
           margin-right: 10px;
         }
       }
+
       .write {
         color: #888;
         letter-spacing: 4px;
@@ -1121,24 +1130,29 @@ export default {
         width: 90px;
       }
     }
+
     .comment {
       width: 100vw;
       // border: 1px solid black;
       font-size: 15px;
       padding: 25px 10px;
+
       .top {
         display: flex;
         position: relative;
       }
+
       .img {
         width: 40px;
         height: 40px;
         border-radius: 999px;
+
         img {
           width: 100%;
           height: 100%;
           border-radius: 999px;
         }
+
         .van-icon-contact:before {
           font-size: 30px;
           position: relative;
@@ -1146,17 +1160,20 @@ export default {
           left: 5px;
         }
       }
+
       .com-top {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
         margin-left: 15px;
+
         .top-like {
           display: flex;
 
           .author {
             color: rgb(15, 148, 179);
           }
+
           .level {
             padding: 4px;
             border-radius: 4px;
@@ -1175,6 +1192,7 @@ export default {
             position: absolute;
             right: 0;
             transform: scale(0.9);
+
             .van-icon-good-job-o:before {
               margin-left: 5px;
             }
@@ -1186,6 +1204,7 @@ export default {
           width: 90px;
           justify-content: flex-start;
           padding-right: 10px;
+
           div {
             flex: 1;
           }
@@ -1195,6 +1214,7 @@ export default {
           display: flex;
           font-size: 14px;
           margin-top: 2px;
+
           .time {
             color: #777;
             line-height: 15px;
@@ -1212,6 +1232,7 @@ export default {
       }
 
       .replyList {
+
         // .toauthor {
         .uer-taker {
           color: #777;
@@ -1223,6 +1244,7 @@ export default {
           letter-spacing: 1px;
           background-color: rgb(170, 168, 168, 0.2);
           padding: 10px 10px 0 10px;
+
           .todesc {
             padding: 0 5px;
             color: black;
@@ -1241,6 +1263,7 @@ export default {
         width: 350px;
         letter-spacing: 1px;
         line-height: 27px;
+
         .label {
           padding: 2px 5px;
           border-radius: 4px;
@@ -1253,63 +1276,73 @@ export default {
       }
     }
   }
+
   .user-class {
+
     // position: relative;
-    .bg{
+    .bg {
       width: 100%;
       height: 252px;
       position: absolute;
       top: 0;
-      img{
+
+      img {
         width: 100%;
         height: 100%;
       }
     }
+
     .userimg {
       width: 50px;
       height: 50px;
       border-radius: 999px;
-      position:absolute;
+      position: absolute;
       top: 10%;
       left: 50%;
       transform: translateX(-50%);
+
       img {
         width: 100%;
         height: 100%;
         border-radius: 999px;
         opacity: 0.6;
       }
-       .van-icon-contact:before {
-          font-size: 30px;
-          position: relative;
-          top: 4px;
-          left: 5px;
-        }
+
+      .van-icon-contact:before {
+        font-size: 30px;
+        position: relative;
+        top: 4px;
+        left: 5px;
+      }
     }
-    .username{
-      position:absolute;
+
+    .username {
+      position: absolute;
       top: 27%;
       left: 50%;
       transform: translateX(-50%);
       font-size: 20px;
       color: rgb(224, 217, 217);
     }
-    .user-info{
+
+    .user-info {
       display: flex;
-      position:absolute;
+      position: absolute;
       top: 35%;
       width: 100%;
+
       .point,
-      .level{
+      .level {
         display: flex;
         flex: 1;
         text-align: center;
         justify-content: center;
         height: 70px;
         line-height: 70px;
-        color:white;
+        color: white;
         background-color: black;
-        .user-text{
+
+        .user-text {
           color: #999;
         }
       }
