@@ -1245,7 +1245,7 @@ export default {
       .user-com {
         position: relative;
         left: 55px;
-        width: 350px;
+        width: 80vw;
         margin-top: 15px;
         line-height: 27px;
         letter-spacing: 2px;
@@ -1280,7 +1280,7 @@ export default {
         position: relative;
         left: 55px;
         top: 8px;
-        width: 350px;
+        width: 80vw;
         letter-spacing: 1px;
         line-height: 27px;
 
