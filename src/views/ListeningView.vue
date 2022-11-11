@@ -331,21 +331,17 @@ export default {
     },
 
     addBook() {
-      
-      let listeningBook = localStorage.listeningBook
-        ? JSON.parse(localStorage.listeningBook)
-        : [];
+      let listeningBook = localStorage.listeningBook? JSON.parse(localStorage.listeningBook) : [];
 
-      let resultsto = listeningBook.find((c) => c == this.lisId);
+      let resultsto = listeningBook.find(({id}) => id == this.lisId);
 
       if (!resultsto) {
-        localStorage.listeningBook = JSON.stringify([...listeningBook,this.lisId]);
-
-      Toast.success('成功加入书架');
+        localStorage.listeningBook = JSON.stringify([{id:this.lisId,type:'book'},...listeningBook]);
+       Toast.success('成功加入书架');
       }
 
       else if(resultsto) {
-        localStorage.listeningBook = JSON.stringify(listeningBook.filter(item => item !== this.lisId))
+        localStorage.listeningBook = JSON.stringify(listeningBook.filter(({id}) => id !== this.lisId))
         Toast('已从书架移除');
       }
     },

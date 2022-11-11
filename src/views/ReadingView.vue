@@ -598,9 +598,15 @@ export default {
       let value = JSON.parse(sessionStorage.getItem("page"));
       let pageCount = JSON.parse(sessionStorage.getItem("new"));
       let getValue = (value * 100) / pageCount;
+      console.log(value);
+      console.log(Math.round(getValue));
+      let { bookid, id } = this.$route.params
+      console.log(bookid,id);
+      
       getValue = Math.round(getValue);
       this.value = getValue;
       this.changeValuePage = this.nameList[value];
+      console.log(this.nameList);
       // console.log(this.changeValuePage, value, this.nameList[value]);
     },
     //进入页面修改字体滑块的值
