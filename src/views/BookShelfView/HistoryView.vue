@@ -10,6 +10,7 @@
         <img src="@/assets/image/banner-images/home_null_data_icon.png" />
         <p>没有任何内容哦</p>
       </div>
+
       <div v-show="historyArr.length != 0">
         <div class="history-item" v-for="item in historyArr" :key="item.id" @click="go(item.id,item.title,item.bookType,item.author)">
           <div class="history-title">
@@ -26,12 +27,12 @@
             <span v-show="(new Date().getTime() - item.time) / 1000 < 60" class="history-time">
               {{ Math.floor((new Date().getTime() - item.time) / 1000) + "秒前" }}
             </span>
-            <span v-show="(new Date().getDate() - new Date(item.time).getDate()) == 0 && (new Date().getTime() - item.time) / 1000 > 60" class="history-time">
+            <span v-show="(new Date().getTime() - item.time) / 1000 >= 60" class="history-time">
               今天{{
                  new Date(item.time).getHours() +":" + new Date(item.time).getMinutes()
                  }}
             </span>
-            <span v-show="(new Date().getDate() - new Date(item.time).getDate()) > 0" class="history-time">
+            <span v-show="(new Date().getTime() - item.time) / 1000 / 60 / 60 >= 24" class="history-time">
               {{
                 new Date(item.time).getMonth() +1+"月"+new Date(item.time).getDate() +"日  " + new Date(item.time).getHours()  +":" +new Date(item.time).getMinutes()
               }}
@@ -51,29 +52,23 @@ import { mapState, mapMutations } from "vuex";
 export default {
   props: {
     historyShow: Boolean,
+    istop: Boolean
   },
   data() {
-    return {
-       localHistory: []
-    };
+    return {};
   },
-  // mounted() {
-  //   this.getLocalData()
-  // },
+  
   computed: {
-    ...mapState(["historyArr","isExit"]),
+    ...mapState(["historyArr"]),
   },
   methods: {
     clockHistory() {
       this.$emit("clockhistory", false);
+      this.$router.go(-1)
     },
-    // getLocalData() {
-    //   this.localHistory = localStorage.historyArr ? JSON.parse(localStorage.historyArr) : []
-    //   console.log(JSON.parse(localStorage.historyArr));
-    //   console.log(this.localHistory);
-    // },
     go(id,title,bookType,author) {
-      this.getHistory({id,title,author,bookType})  
+      this.getHistory({id,title,author,bookType})
+      console.log(bookType);  
       if (bookType == 0) {
         this.$router.push(`/detile/${id}/${title}`);
       } else {
@@ -82,7 +77,6 @@ export default {
     },
     empty() {
        this.empty()
-       this.localHistory = []
     }, 
     ...mapMutations(["getHistory","empty"]),
   },
@@ -90,6 +84,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#history {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+}
+
 .history-top {
   position: fixed;
   top: 0;
@@ -99,6 +100,8 @@ export default {
   width: 100vw;
   height: 39px;
   line-height: 39px;
+  background-color: #fff;
+  z-index: 999;
 
   i {
     display: inline-block;
@@ -186,11 +189,8 @@ export default {
        }
 
        .history-time {
-        display: inline-block;
-        padding-right: 20px;
-        width: 120px;
+        width: 80px;
         height: 100%;
-        text-align: right;
         line-height: 30px;
         font-size: 13px;
         color: gray;

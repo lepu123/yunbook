@@ -207,8 +207,8 @@
         </van-skeleton>
       </div>
       <div class="tar-bar-bom">
-        <span>加入书架</span>
-        <span><button @click="go">立刻试读</button></span>
+        <span @click="addBook">加入书架</span>
+        <span @click="go">立刻试读</span>
       </div>
       <van-popup closeable position="bottom" :style="{ height: '100%', width: '100%' }" v-model="userShow"
         class="user-class">
@@ -236,6 +236,7 @@
 
 <script>
 import { debounce } from "lodash-es";
+import { Toast } from "vant";
 export default {
   name: "DetileView",
   data() {
@@ -423,6 +424,7 @@ export default {
     go() {
       sessionStorage.setItem("page", 0);
       sessionStorage.setItem("new", this.cataList.length);
+      console.log(this.cataList);
       this.$router.push(
         `/detile/${this.bookId}/${this.bookTitle}/reading/${this.cataList[0].text}`
       );
@@ -613,7 +615,24 @@ export default {
       this.bookTitle = title;
     },
     goBack() {
-      this.$router.push(`/bookshelf`);
+      this.$router.go(-1);
+    },
+    addBook() {
+      let { bookid } = this.$route.params;
+
+       let listeningBook = localStorage.listeningBook? JSON.parse(localStorage.listeningBook) : [];
+
+      let resultsto = listeningBook.find(({id}) => id == bookid);
+
+      if (!resultsto) {
+        localStorage.listeningBook = JSON.stringify([{id:bookid,type:'book'},...listeningBook]);
+       Toast.success('成功加入书架');
+      }
+
+      else if(resultsto) {
+        localStorage.listeningBook = JSON.stringify(listeningBook.filter(({id}) => id !== bookid))
+        Toast('已从书架移除');
+      }
     },
     //滚动加载数据
     fanbangLoad: debounce(function (e) {

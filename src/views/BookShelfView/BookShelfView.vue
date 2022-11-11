@@ -1,7 +1,7 @@
 <template>
   <div id="banner">
     <div class="banner">
-      <div class="banner-top">
+      <div class="banner-top" >
         <span class="banner-top-left">
           <van-cell is-link @click="showPopup">
             <i ref="show">书架</i>
@@ -33,9 +33,9 @@
           /></span>
           <!-- 浏览记录 -->
           <van-cell is-link @click="showHistory">
-            <span
-            ><img src="@/assets/image/banner-images/book_shelf_history.png"
-          /></span>
+               <span>
+                <img src="@/assets/image/banner-images/book_shelf_history.png"/>
+               </span>
           </van-cell>
           <!-- 更多 -->
 
@@ -152,6 +152,7 @@
           :recommendArr="recommendArr"
           :batchShow="batchShow"
           :delArr="delArr"
+          @changeGroup="changeGroup"
           @clockbatch="clockbatch"
           @delbook="delbook"
         />
@@ -177,6 +178,7 @@
 import BannerBook from "@/components/BannerComponent/BannerBook.vue";
 import BatchCommpontent from "@/components/BannerComponent/BatchCommpontent.vue";
 import HistoryComponent from '@/components/BannerComponent/HistoryComponent.vue';
+import { mapState} from "vuex";
 export default {
   name: "BookShelfView",
   data() {
@@ -193,25 +195,67 @@ export default {
       historyShow: false,
       isShow: true,
       isLoading: false,
+      istop:true,
+      transitionName:''
     };
+  },
+  // watch: {
+  //   isExit(val) {
+  //     if (val[0] != null) {
+  //       let arr = localStorage.historyArr? JSON.parse(localStorage.historyArr) : [];
+  //       console.log(this.isExit);
+  //       let results = arr.find(({id}) => id == val[0]);
+  //       if (!results) {
+  //          localStorage.historyArr = JSON.stringify([this.historyArr[0],...arr])
+  //       } else if (results) {
+  //         let newArr = arr.filter(({id}) => id !== val[0])
+  //         localStorage.historyArr = JSON.stringify([results,...newArr])
+  //       }
+  //     }
+        
+  //   }
+  // },
+  computed: {
+    ...mapState(["historyArr",'isExit'])
   },
   created() {
     this.getData();
+    this.getadd();
   },
   methods: {
     getData() {
       this.$axios
-        .get("https://apis.netstart.cn/yunyuedu/shelf/info.json")
+        // .get("https://apis.netstart.cn/yunyuedu/shelf/info.json")
+        .get("./recommend.json")
         .then(({ data }) => {
           console.log(data.data.list);
           this.recommendArr = data.data.list;
         });
 
+      // this.$axios
+      //   .get("https://apis.netstart.cn/yunyuedu/shelf/banner.json")
+      //   .then(({ data }) => {
+      //     this.bannerArr = data.data.banners;
+      //   });
+    },
+     getadd() {
+      let listeningBook = localStorage.listeningBook? JSON.parse(localStorage.listeningBook) : [];
+      console.log(listeningBook);
+
       this.$axios
-        .get("https://apis.netstart.cn/yunyuedu/shelf/banner.json")
-        .then(({ data }) => {
-          this.bannerArr = data.data.banners;
-        });
+          .get(`https://apis.netstart.cn/yunyuedu/shelf/detail.json?ids=${JSON.stringify(listeningBook)}`)
+          .then(({ data }) => { 
+            console.log(data.data.list);
+            let arr = data.data.list
+              for (let j = 0; j < arr.length; j++) {
+                let resultsto = this.recommendArr.find(({id}) => id == arr[j].id);
+                if (!resultsto) {
+                  this.recommendArr = [arr[j],...this.recommendArr] 
+                }
+              }    
+            console.log(this.recommendArr);
+          });
+      
     },
     showPopup() {
       setTimeout(() => {
@@ -296,6 +340,13 @@ export default {
     clockhistory(item) {
       this.historyShow = item
     },
+    changeGroup({arr,obj}) {
+       for (let i = 0; i < arr.length; i++) {
+          this.recommendArr = this.recommendArr.filter((t) => t.id != arr[i].id)
+       }
+       console.log(this.recommendArr,'???');
+       this.recommendArr = [obj,...this.recommendArr]
+    },
     delbook(arr) {
       for (let i = 0; i < arr.length; i++) {
         this.recommendArr = this.recommendArr.filter(
@@ -313,6 +364,7 @@ export default {
     onRefresh() {
       setTimeout(() => {
         this.isLoading = false;
+        this.getadd();
       }, 500);
     },
   },
@@ -329,6 +381,80 @@ export default {
   position: relative;
   width: 100vw;
   min-height: 100vh;
+
+  .banner-body {
+  margin-top: 39px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100vw;
+  min-height: 80vh;
+
+  .banner-recommend {
+    display: flex;
+    margin: 10px auto;
+    width: 93vw;
+    height: 100px;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0px 3px 3px #888888;
+
+    .banner-recommend-image {
+      margin: 5px 5px;
+      width: 20vw;
+      height: 90px;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .banner-recommend-item {
+      margin: 5px 0;
+      width: 100%;
+      height: 90px;
+
+      .item-title {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        height: 20px;
+        margin-bottom: 18px;
+
+        span {
+          display: block;
+          margin-top: 8px;
+          font-size: 14px;
+        }
+
+        :nth-child(1) {
+          margin-left: 10px;
+          font-weight: 700;
+        }
+
+        :nth-child(2) {
+          margin-top: 5px;
+          color: rgba(218, 73, 21, 0.906);
+
+          img {
+            width: 13px;
+            height: 13px;
+            margin-right: 5px;
+          }
+        }
+      }
+
+      .item-body {
+        margin-left: 10px;
+        margin-right: 5px;
+        width: 90%;
+        height: 26px;
+        font-size: 13px;
+        color: gray;
+      }
+    }
+  }
+}
 
   .doge {
     width: 40px;
@@ -499,7 +625,7 @@ export default {
   height: 39px;
   overflow: hidden;
   background-color: #fff;
-  z-index: 999;
+  z-index: 888;
 
   .banner-top-left {
     float: left;
@@ -533,79 +659,7 @@ export default {
   }
 }
 
-.banner-body {
-  margin-top: 43px;
-  display: flex;
-  flex-wrap: wrap;
-  width: 100vw;
-  min-height: 80vh;
 
-  .banner-recommend {
-    display: flex;
-    margin: 10px auto;
-    width: 93vw;
-    height: 100px;
-    border-radius: 3px;
-    overflow: hidden;
-    box-shadow: 0px 3px 3px #888888;
-
-    .banner-recommend-image {
-      margin: 5px 5px;
-      width: 20vw;
-      height: 90px;
-
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-    .banner-recommend-item {
-      margin: 5px 0;
-      width: 100%;
-      height: 90px;
-
-      .item-title {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        height: 20px;
-        margin-bottom: 18px;
-
-        span {
-          display: block;
-          margin-top: 8px;
-          font-size: 14px;
-        }
-
-        :nth-child(1) {
-          margin-left: 10px;
-          font-weight: 700;
-        }
-
-        :nth-child(2) {
-          margin-top: 5px;
-          color: rgba(218, 73, 21, 0.906);
-
-          img {
-            width: 13px;
-            height: 13px;
-            margin-right: 5px;
-          }
-        }
-      }
-
-      .item-body {
-        margin-left: 10px;
-        margin-right: 5px;
-        width: 90%;
-        height: 26px;
-        font-size: 13px;
-        color: gray;
-      }
-    }
-  }
-}
 
 @keyframes move {
   from {

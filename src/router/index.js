@@ -32,13 +32,6 @@ const routes = [
       showFree: false,
       keepAlive: false,
     },
-    children: [
-      {
-        path: 'reading/:id',
-        name: 'reading',
-        component: () => import("../views/ReadingView.vue"),
-      }
-    ]
   },
   {
     path: '/sort',
@@ -65,7 +58,14 @@ const routes = [
     meta: {
       showFree: true,
       keepAlive: true,
-    }
+    },
+    children: [
+      {
+        path: 'history',
+        name: 'history',
+        component: () => import("../views/BookShelfView/HistoryView.vue"),
+      }
+    ]
   },
   {
     path: '/mime',

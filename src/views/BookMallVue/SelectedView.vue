@@ -42,7 +42,7 @@
               <li
                 v-for="(item, index) in paiArr"
                 :key="item.id"
-                @click="changeBook(item.id, item.title, item.bookType)"
+                @click="changeBook(item.id,item.title,item.bookType,item.author)"
               >
                 <div>
                   <img
@@ -252,6 +252,7 @@
 
 <script>
 import WatchMoreComp from "./WatchMoreComp.vue";
+import { mapMutations } from "vuex";
 import SortComponent from "@/components/SortComponent.vue";
 export default {
   props: {
@@ -343,7 +344,8 @@ export default {
       }
     },
 
-    changeBook(id, title, type) {
+    changeBook(id,title,type,author) {
+      this.getHistory({id,title,author,type}) 
       if (type == 0) {
         this.$router.push(`/detile/${id}/${title}`);
       } else {
@@ -354,6 +356,7 @@ export default {
     swipeToBook(id, title) {
       this.$router.push(`/detile/${id}/${title}`);
     },
+    ...mapMutations(["getHistory","empty"]),
   },
 
   created() {
