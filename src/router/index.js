@@ -32,6 +32,13 @@ const routes = [
       showFree: false,
       keepAlive: false,
     },
+    children:[
+      {
+        path:"reading/:id",
+        name:'reading',
+        component:()=>import('../views/ReadingView.vue') 
+      }
+    ]
   },
   {
     path: '/sort',

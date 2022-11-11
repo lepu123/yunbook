@@ -93,8 +93,9 @@
         </van-popup>
       </div>
 
-      <router-view :pageNum="pagecount" :choseList="choseList" :cataList="cataList" :nameList="nameList" :cover="dataList.cover"
-        :author="dataList.author" :title="dataList.title" :lastPage="dataList.lastPage" @goPage="goPage" />
+      <router-view :pageNum="pagecount" :choseList="choseList" :cataList="cataList" :nameList="nameList"
+        :cover="dataList.cover" :author="dataList.author" :title="dataList.title" :lastPage="dataList.lastPage"
+        @goPage="goPage" />
 
       <div class="fan-item" @click="fanShow = true" v-if="fanList">
         <div class="user">
@@ -150,12 +151,47 @@
       <div class="comment-item">
         <div class="item-desc">
           <p><span class="shuzi"></span> 评论</p>
-          <div class="write">
+          <div class="write" @click="commend">
             <van-icon name="edit" />写评论
           </div>
         </div>
         <van-skeleton title :row="3" :loading="loadingCom">
-          <div class="comment" v-for="(c, i) in commentList" :key="i">
+          <div class="item-desc" v-if="userComList.length !=0">
+            <p>我的评论</p>
+          </div>
+          <div class="userCom"  v-for="(u, i) in userComList" :key="i">
+            <div class="top">
+              <div class="img" @click="goMe()">
+                <van-icon name="contact" />
+              </div>
+              <div class="com-top">
+                <div class="top-like">
+                  <div class="author">{{ u.username }}</div>
+                  <div class="level">LV.{{ u.userlevel }}</div>
+                  <div class="like">
+                    {{ u.userlike }}
+                    <van-icon name="good-job-o" />
+                  </div>
+                </div>
+                <div class="top-time">
+                  <div class="ground" v-if="u.grade.length != 0">
+                    <div class="grade" v-for="(s, i) in u.grade" :key="i">
+                      <van-icon name="star" />
+                    </div>
+                  </div>
+
+                  <div class="time">{{ u.time }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="user-com">
+              {{ u.comText }}
+            </div>
+          </div>
+          <div class="item-desc" v-if="userComList.length !=0">
+            <p>其他评论</p>
+          </div>
+          <div class="comment" v-for="(c) in commentList" :key="c.id">
             <div class="top">
               <div class="img" v-if="c.cover" @click="goUser(c.userId)">
                 <img :src="c.cover" alt="" />
@@ -204,6 +240,14 @@
               </div>
             </div>
           </div>
+          <van-popup v-model="commendShow" closeable position="bottom" :style="{ height: '30%' }" class="write-com">
+            <textarea class="commInput" ref="input"></textarea>
+            <div class="rate"> 你的评分是：<van-rate v-model="userStar"  color="#ffd21e"
+  void-icon="star"
+  void-color="#eee" /></div>
+           <div class="sheep" @click="sheep">分享一下</div>
+            <div class="submit" @click="submit">提交</div>
+          </van-popup>
         </van-skeleton>
       </div>
       <div class="tar-bar-bom">
@@ -269,9 +313,54 @@ export default {
       muluLoading: true,
       userShow: false,
       userList: {},
+      commendShow: false,
+      commValue: '',
+      userComList: [],
+      userStar: 0
     };
   },
   methods: {
+    //分享功能
+    sheep(){
+      let input = document.createElement("input");  
+        input.value = window.location.href; 
+        document.body.appendChild(input);   
+        input.select();  
+        document.execCommand("Copy");   
+        document.body.removeChild(input); 
+    },
+    //个人主页
+    goMe() {
+      this.$router.push('/mime')
+    },
+    // 提交评论
+    submit() {
+      // console.log( this.$refs.input.value);
+      let time = new Date();
+      let month =
+        parseInt(time.getMonth() + 1) < 10
+          ? "0" + parseInt(time.getMonth() + 1)
+          : parseInt(time.getMonth() + 1);
+      let day =
+        time.getDate() < 10 ? "0" + time.getDate() : time.getDate();
+      time = time.getFullYear() + "年" + month + "月" + day + "日";
+      this.userComList.push({
+        username: '我',
+        userlevel: '1',
+        userlike: '0',
+        grade: this.listvalue(this.userStar),
+        comText: this.$refs.input.value,
+        time: time,
+        id: new Date().getTime()
+      })
+      this.commendShow = false
+      this.$refs.input.value = ''
+      this.userStar = 0
+    },
+    // 评论显示
+    commend() {
+      this.commendShow = true
+    },
     // 获取用户信息
     goUser(id) {
       // console.log(id);
@@ -424,7 +513,8 @@ export default {
     go() {
       sessionStorage.setItem("page", 0);
       sessionStorage.setItem("new", this.cataList.length);
-      console.log(this.cataList);
+      // console.log(this.cataList);
+      console.log(this.cataList[0].text,this.$route.params.bookid,this.$route.params.id);
       this.$router.push(
         `/detile/${this.bookId}/${this.bookTitle}/reading/${this.cataList[0].text}`
       );
@@ -556,10 +646,10 @@ export default {
                 }
               } else {
                 let str1 = listmode[i].navLabel.replace(",", "");
-                this.choseList.push({ label: "", itemList: [{ text: str1 , vip:listmode[i].vip? listmode[i].vip : 0}] });
+                this.choseList.push({ label: "", itemList: [{ text: str1, vip: listmode[i].vip ? listmode[i].vip : 0 }] });
                 this.cataList.push({
                   text: listmode[i].content.src,
-                  vip:listmode[i].vip? listmode[i].vip : 0
+                  vip: listmode[i].vip ? listmode[i].vip : 0
                 });
                 this.nameList.push(str1);
               }
@@ -585,11 +675,11 @@ export default {
               this.choseList.push({ label: str, itemList });
             } else {
               let str1 = listmode.navLabel.replace(",", "");
-              this.choseList.push({ label: "", itemList: [{ text: str1 , vip:listmode.vip? listmode.vip : 0}] });
-                this.cataList.push({
-                  text: listmode.content.src,
-                  vip:listmode.vip? listmode.vip : 0
-                });
+              this.choseList.push({ label: "", itemList: [{ text: str1, vip: listmode.vip ? listmode.vip : 0 }] });
+              this.cataList.push({
+                text: listmode.content.src,
+                vip: listmode.vip ? listmode.vip : 0
+              });
               this.nameList.push(str1);
             }
           }
@@ -613,24 +703,25 @@ export default {
       let { bookid, title } = this.$route.params;
       this.bookId = bookid;
       this.bookTitle = title;
+      // console.log(this.$route.params.bookid);
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.push('/bookshelf');
     },
     addBook() {
       let { bookid } = this.$route.params;
 
-       let listeningBook = localStorage.listeningBook? JSON.parse(localStorage.listeningBook) : [];
+      let listeningBook = localStorage.listeningBook ? JSON.parse(localStorage.listeningBook) : [];
 
-      let resultsto = listeningBook.find(({id}) => id == bookid);
+      let resultsto = listeningBook.find(({ id }) => id == bookid);
 
       if (!resultsto) {
-        localStorage.listeningBook = JSON.stringify([{id:bookid,type:'book'},...listeningBook]);
-       Toast.success('成功加入书架');
+        localStorage.listeningBook = JSON.stringify([{ id: bookid, type: 'book' }, ...listeningBook]);
+        Toast.success('成功加入书架');
       }
 
-      else if(resultsto) {
-        localStorage.listeningBook = JSON.stringify(listeningBook.filter(({id}) => id !== bookid))
+      else if (resultsto) {
+        localStorage.listeningBook = JSON.stringify(listeningBook.filter(({ id }) => id !== bookid))
         Toast('已从书架移除');
       }
     },
@@ -638,11 +729,11 @@ export default {
     fanbangLoad: debounce(function (e) {
       let countNum = 20 * this.addFan;
       let countScoll = Math.round(e.target.scrollTop + e.target.clientHeight);
-      console.log(countScoll, e.target.scrollHeight);
+      // console.log(countScoll, e.target.scrollHeight);
       if (countScoll >= e.target.scrollHeight) {
         this.loadShow = true;
-        clearTimeout(this.timer);
-        this.timer = null;
+        // clearTimeout(this.timer);
+        // this.timer = null;
         // console.log(1);
         this.$axios
           .get(
@@ -651,12 +742,12 @@ export default {
           .then(({ data: { list } }) => {
             // console.log(list);
             if (list.length != 0) {
-              this.timer = setTimeout(() => {
+              // this.timer = setTimeout(() => {
                 this.loadShow = false;
                 this.fanBangList.push(...list);
                 this.addFan += 1;
-                console.log(list, this.fanBangList);
-              }, 500);
+                // console.log(list, this.fanBangList);
+              // }, 500);
             } else {
               // console.log(1);
               this.loadShow = false;
@@ -664,7 +755,7 @@ export default {
             }
           });
       }
-    }, 500),
+    }, 1000),
   },
   created() {
     this.getId();
@@ -691,7 +782,7 @@ export default {
   width: 100vw;
   height: 100vh;
   overflow: auto;
-  padding: 0 0 20px 0;
+  padding: 0 0 60px 0;
   background-color: rgb(209, 198, 198, 0.3);
   z-index: 999;
 
@@ -1151,7 +1242,9 @@ export default {
       }
     }
 
-    .comment {
+
+    .comment,
+    .userCom {
       width: 100vw;
       // border: 1px solid black;
       font-size: 15px;
@@ -1221,7 +1314,7 @@ export default {
 
         .ground {
           display: flex;
-          width: 90px;
+          // width: 90px;
           justify-content: flex-start;
           padding-right: 10px;
 
@@ -1293,6 +1386,37 @@ export default {
           transform: scale(0.7);
           margin-right: 10px;
         }
+      }
+    }
+
+    .write-com{
+      padding: 20px;
+     color: rgb(225, 119, 32);
+    
+      .commInput{
+        width: 60vw;
+        height: 60%;
+        position: absolute;
+        top: 20%;
+        border-radius: 8px;
+        color: black;
+      }
+      .submit{
+        position: absolute;
+        right: 20%;
+        top: 70%;
+        width: 50px;
+        height: 30px;
+        border-radius: 8px;
+        color: white;
+        line-height: 30px;
+        font-size: 12px;
+        text-align: center;
+        background-color: rgb(225, 119, 32);
+      }
+      .sheep{
+        position: absolute;
+        bottom: 5%;
       }
     }
   }

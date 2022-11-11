@@ -13,18 +13,18 @@
     }">
       <div class="content" :class="{ silde: silde == true, fade: fade == true }" :style="{ fontSize: fontChange }"
         ref="content" v-for="(r, i) in renderList" :key="r.id" @click="get(i, $event)">
-          <div class="list" v-for="(p, j) in r.text" :key="j">
-            <div class="item" v-if="p != ''">{{ p }}</div>
-          </div>
-          <div class="count" v-show="scoll != true">
-            {{ i + 1 + "/" + renderList.length }}
-          </div>
+        <div class="list" v-for="(p, j) in r.text" :key="j">
+          <div class="item" v-if="p != ''">{{ p }}</div>
+        </div>
+        <div class="count" v-show="scoll != true">
+          {{ i + 1 + "/" + renderList.length }}
+        </div>
       </div>
-      <div class="scorll-con" v-if="scoll==true">
-            <div class="prev" @click="prevPage">上一章</div>
-          <div class="next" @click="nextPage">下一章</div>
-          </div>
-         
+      <div class="scorll-con" v-if="scoll == true">
+        <div class="prev" @click="prevPage">上一章</div>
+        <div class="next" @click="nextPage">下一章</div>
+      </div>
+
       <van-popup v-model="showAll" position="bottom" :overlay="false">
         <!-- <div class="value">{{ value + "%" + changeValuePage }}</div> -->
         <div class="currentPage">{{ changeValuePage }}</div>
@@ -39,7 +39,7 @@
         </div>
 
         <div class="bottom-control">
-          <div  @click="showPopup">
+          <div @click="showPopup">
             <van-icon name="orders-o" /><span>目录</span>
           </div>
           <div class="show" @click="show = !show">
@@ -50,7 +50,7 @@
             <van-icon name="eye-o" v-show="night == true" /><span>{{ nightText }}</span>
           </div>
           <div class="more">
-            <van-icon name="ellipsis" /><span>更多</span>
+            <van-icon name="ellipsis" @click="onSelect" /><span>分享</span>
           </div>
         </div>
 
@@ -202,6 +202,8 @@ export default {
       labelShow: {},
       labelCover: false,
       loading: true,
+      showPopover: false,
+      actions: [{ text: '分享' }],
     };
   },
 
@@ -241,6 +243,15 @@ export default {
   },
 
   methods: {
+    //分享
+    onSelect() {
+      let input = document.createElement("input");
+      input.value = window.location.href;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand("Copy");
+      document.body.removeChild(input);
+    },
     //展示书签页
     showShuqian() {
       this.muluFlag = true;
@@ -358,6 +369,7 @@ export default {
           },
         ]);
         this.catchFlag = true;
+        this.$toast("已收藏");
       } else {
         let newlist = catchList.filter((c) => c.link != this.textId);
         localStorage.catchList = JSON.stringify(newlist);
@@ -365,6 +377,7 @@ export default {
         this.shuqianList = this.shuqianList.filter(
           (c) => c.link != this.textId
         );
+        this.$toast("已取消收藏");
       }
       // console.log(this.shuqianList);
     },
@@ -559,12 +572,12 @@ export default {
       console.log(value);
       console.log(Math.round(getValue));
       let { bookid, id } = this.$route.params
-      console.log(bookid,id);
-      
+      console.log(bookid, id);
+
       getValue = Math.round(getValue);
       this.value = getValue;
       this.changeValuePage = this.nameList[value];
-      console.log(this.nameList);
+      // console.log(this.nameList);
       // console.log(this.changeValuePage, value, this.nameList[value]);
     },
     //进入页面修改字体滑块的值
@@ -651,6 +664,9 @@ export default {
       this.$refs.text.style.display = "flex";
       this.silde = false;
       this.fade = true;
+      this.scoll = false;
+      this.showAll=false
+      this.setread()
       if (this.scrollTop != 0) {
         let showPage = Math.round(this.scrollTop / this.viewHeight);
         this.scollShowPage = showPage;
@@ -674,6 +690,8 @@ export default {
       this.silde = false;
       this.fade = false;
       this.scoll = true;
+      this.showAll=false
+      this.setread()
       this.$refs.home.style.overflowY = "auto";
       this.$refs.text.style.display = "block";
       let fontColor = null
@@ -683,12 +701,14 @@ export default {
         : 'px';
       if (backgroundColor == 'px') {
         fontColor = 'black'
-        color='rgb(203, 212, 209)'
+        color = 'rgb(203, 212, 209)'
       } else {
         fontColor = backgroundColor.fontColor;
         color = backgroundColor.color;
       }
       // console.log("sct" + this.scollShowPage);
+      this.$refs.text.style.color = fontColor;
+      this.$refs.text.style.backgroundColor = color;
       for (let x = 0; x < this.$refs.content.length; x++) {
         this.$refs.content[x].style.color = fontColor;
         this.$refs.content[x].style.backgroundColor = color;
@@ -713,6 +733,28 @@ export default {
       this.scoll = false;
       this.silde = true;
       this.fade = false;
+      this.showAll=false
+      let fontColor = null
+      let color = null
+      this.setread()
+      let backgroundColor = sessionStorage.backgroundColor
+        ? JSON.parse(sessionStorage.backgroundColor)
+        : 'px';
+
+      if (backgroundColor == 'px') {
+        fontColor = 'black'
+        color = 'rgb(203, 212, 209)'
+      } else {
+        fontColor = backgroundColor.fontColor;
+        color = backgroundColor.color;
+      }
+      this.$refs.text.style.color = fontColor;
+      this.$refs.text.style.backgroundColor = color;
+      // console.log("sct" + this.scollShowPage);
+      for (let x = 0; x < this.$refs.content.length; x++) {
+        this.$refs.content[x].style.color = fontColor;
+        this.$refs.content[x].style.backgroundColor = color;
+      }
       if (this.scrollTop != 0) {
         let showPage = Math.round(this.scrollTop / this.viewHeight);
         // console.log(showPage);
@@ -732,6 +774,13 @@ export default {
           }
         }
       }
+    },
+    setread() {
+      sessionStorage.reading = JSON.stringify({
+        scoll: this.scoll,
+        silde: this.silde,
+        fade: this.fade,
+      });
     },
     //点击切换下一页/章与上一页/章
     get(i, e) {
@@ -760,14 +809,15 @@ export default {
           if (i >= this.renderList.length - 1) {
             let gopage = page + 1;
             if (gopage >= newpage) {
-               this.$toast("到结尾了");
+              this.$toast("到结尾了");
             } else {
               if (this.cataList[gopage].vip == 1) {
-               this.$toast("请付款");
+                this.$toast("请付款");
               } else {
                 sessionStorage.setItem("page", gopage);
                 this.$emit("goPage");
                 this.$router.go(0);
+                this.setread()
               }
             }
           } else {
@@ -782,14 +832,15 @@ export default {
           if (i == 0) {
             let gopage = page - 1;
             if (gopage < 0) {
-             this.$toast("到开头了");
+              this.$toast("到开头了");
             } else {
               if (this.cataList[gopage].vip == 1) {
-                 this.$toast("请付款");
+                this.$toast("请付款");
               } else {
                 sessionStorage.setItem("page", gopage);
                 this.$emit("goPage");
                 this.$router.go(0);
+                this.setread()
               }
             }
           } else {
@@ -812,14 +863,15 @@ export default {
           if (i >= this.renderList.length - 1) {
             let gopage = page + 1;
             if (gopage >= newpage) {
-               this.$toast("到结尾了");
+              this.$toast("到结尾了");
             } else {
               if (this.cataList[gopage].vip == 1) {
-               this.$toast("请付款");
+                this.$toast("请付款");
               } else {
                 sessionStorage.setItem("page", gopage);
                 this.$emit("goPage");
                 this.$router.go(0);
+                this.setread()
               }
             }
           } else {
@@ -838,14 +890,15 @@ export default {
           if (i == 0) {
             let gopage = page - 1;
             if (gopage < 0) {
-             this.$toast("到开头了");
+              this.$toast("到开头了");
             } else {
               if (this.cataList[gopage].vip == 1) {
-                 this.$toast("请付款");
+                this.$toast("请付款");
               } else {
                 sessionStorage.setItem("page", gopage);
                 this.$emit("goPage");
                 this.$router.go(0);
+                this.setread()
               }
             }
           } else {
@@ -941,13 +994,34 @@ export default {
           } else {
             this.replaceText(fontsize);
           }
-          // console.log(data);
+
+
           this.PageList();
           this.getPagevalue();
           this.getTextvalue();
           this.catchChange();
           this.changeInitBcg();
           this.changeInitCr();
+          let reading = sessionStorage.reading
+            ? JSON.parse(sessionStorage.reading)
+            : 'px';
+          if (reading == 'px') {
+            return
+          } else {
+            if (reading.scoll == true) {
+              this.scoll = false
+              this.fade = true
+              this.silde = reading.silde
+            } else {
+              this.scoll = reading.scoll
+              this.fade = reading.fade
+              this.silde = reading.silde
+            }
+
+          }
+
+          // console.log(data);
+
         });
     },
   },
@@ -1042,7 +1116,7 @@ export default {
     }
   }
 
-  .scorll-con{
+  .scorll-con {
     width: 100vw;
     height: 50px;
     display: flex;
@@ -1051,7 +1125,8 @@ export default {
     text-align: center;
     line-height: 50px;
     color: #999;
-    div{
+
+    div {
       flex: 1;
       border-right: 1px solid gray;
     }
@@ -1076,6 +1151,7 @@ export default {
       position: absolute;
       width: 100%;
       bottom: 0;
+
       div {
         text-align: center;
         display: flex;
