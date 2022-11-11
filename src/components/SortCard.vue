@@ -1,5 +1,5 @@
 <template>
-  <div class="article-item" @click="gotoDetail">
+  <div class="article-item" @click="$router.push(`/detile/${articleObj.id}/${articleObj.title}}`)">
     <div class="item-img">
       <img :src="articleObj.cover" :alt="articleObj.title">
       <i class="play-icon" v-if="channel === 'ting'"></i>
@@ -18,15 +18,6 @@ export default {
   props: {
     articleObj: Object,
     channel: String,
-  },
-  methods: {
-    gotoDetail() {
-      if (this.channel !== 'ting') {
-        this.$router.push(`/detile/${this.articleObj.id}/${this.articleObj.title}`)
-      } else if (this.channel === 'ting') {
-        this.$router.push(`/ListeningView/${this.articleObj.id}`)
-      }
-    }
   }
 }
 </script>
