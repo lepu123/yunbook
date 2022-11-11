@@ -529,11 +529,12 @@ export default {
           // console.log(data);
           let listmode = data.ncx.navMap.navPoint;
           this.muluLoading = false;
-          // console.log(listmode);
+          // console.log(listmode)
           if (listmode.length > 1) {
             for (let i = 0; i < listmode.length; i++) {
               // console.log(listmode[i].ncx);
               if (listmode[i].navPoint) {
+                console.log(2);
                 let catamode = listmode[i].navPoint || "";
                 let str = listmode[i].navLabel.replace(",", "");
                 this.choseList.push({ label: str, itemList: [] });
@@ -551,13 +552,12 @@ export default {
                   });
                   this.nameList.push(str1);
                 }
-              } else if (listmode[i].ncx) {
-                console.log(1);
               } else {
                 let str1 = listmode[i].navLabel.replace(",", "");
-                this.choseList.push({ label: "", itemList: [{ text: str1 }] });
+                this.choseList.push({ label: "", itemList: [{ text: str1 , vip:listmode[i].vip? listmode[i].vip : 0}] });
                 this.cataList.push({
                   text: listmode[i].content.src,
+                  vip:listmode[i].vip? listmode[i].vip : 0
                 });
                 this.nameList.push(str1);
               }
@@ -583,15 +583,16 @@ export default {
               this.choseList.push({ label: str, itemList });
             } else {
               let str1 = listmode.navLabel.replace(",", "");
-              this.choseList.push({ label: "", itemList: [{ text: str1 }] });
-              this.cataList.push({
-                text: listmode.content.src,
-              });
+              this.choseList.push({ label: "", itemList: [{ text: str1 , vip:listmode.vip? listmode.vip : 0}] });
+                this.cataList.push({
+                  text: listmode.content.src,
+                  vip:listmode.vip? listmode.vip : 0
+                });
               this.nameList.push(str1);
             }
           }
 
-          // console.log(this.choseList);
+          // console.log(this.cataList);
         });
     },
     //获取粉丝榜数据

@@ -13,16 +13,18 @@
     }">
       <div class="content" :class="{ silde: silde == true, fade: fade == true }" :style="{ fontSize: fontChange }"
         ref="content" v-for="(r, i) in renderList" :key="r.id" @click="get(i, $event)">
-        <van-skeleton title :row="3" :loading="loading">
           <div class="list" v-for="(p, j) in r.text" :key="j">
             <div class="item" v-if="p != ''">{{ p }}</div>
           </div>
           <div class="count" v-show="scoll != true">
             {{ i + 1 + "/" + renderList.length }}
           </div>
-        </van-skeleton>
       </div>
-
+      <div class="scorll-con" v-if="scoll==true">
+            <div class="prev" @click="prevPage">上一章</div>
+          <div class="next" @click="nextPage">下一章</div>
+          </div>
+         
       <van-popup v-model="showAll" position="bottom" :overlay="false">
         <!-- <div class="value">{{ value + "%" + changeValuePage }}</div> -->
         <div class="currentPage">{{ changeValuePage }}</div>
@@ -37,9 +39,9 @@
         </div>
 
         <div class="bottom-control">
-          <van-cell is-link @click="showPopup">
-            <van-icon name="orders-o" />目录
-          </van-cell>
+          <div  @click="showPopup">
+            <van-icon name="orders-o" /><span>目录</span>
+          </div>
           <div class="show" @click="show = !show">
             <van-icon name="setting-o" /><span>设置</span>
           </div>
@@ -643,20 +645,6 @@ export default {
       this.$refs.text.style.display = "flex";
       this.silde = false;
       this.fade = true;
-      this.scoll = false;
-      let fontColor = null
-      let backgroundColor = sessionStorage.backgroundColor
-        ? JSON.parse(sessionStorage.backgroundColor)
-        : 'px';
-      if (backgroundColor == 'px') {
-        fontColor = 'black'
-      } else {
-        fontColor = backgroundColor.fontColor;
-      }
-      for (let x = 0; x < this.$refs.content.length; x++) {
-        this.$refs.content[x].style.color = fontColor;
-      }
-
       if (this.scrollTop != 0) {
         let showPage = Math.round(this.scrollTop / this.viewHeight);
         this.scollShowPage = showPage;
@@ -683,16 +671,22 @@ export default {
       this.$refs.home.style.overflowY = "auto";
       this.$refs.text.style.display = "block";
       let fontColor = null
+      let color = null
       let backgroundColor = sessionStorage.backgroundColor
         ? JSON.parse(sessionStorage.backgroundColor)
         : 'px';
       if (backgroundColor == 'px') {
         fontColor = 'black'
+        color='rgb(203, 212, 209)'
       } else {
         fontColor = backgroundColor.fontColor;
+        color = backgroundColor.color;
       }
       // console.log("sct" + this.scollShowPage);
-
+      for (let x = 0; x < this.$refs.content.length; x++) {
+        this.$refs.content[x].style.color = fontColor;
+        this.$refs.content[x].style.backgroundColor = color;
+      }
 
       if (this.scollShowPage <= 1) {
         this.$refs.home.scrollTop = this.scollShowPage * this.viewHeight;
@@ -710,18 +704,6 @@ export default {
     black() {
       this.$refs.home.style.overflow = "hidden";
       this.$refs.text.style.display = "flex";
-      let fontColor = null
-      let backgroundColor = sessionStorage.backgroundColor
-        ? JSON.parse(sessionStorage.backgroundColor)
-        : 'px';
-      if (backgroundColor == 'px') {
-        fontColor = 'black'
-      } else {
-        fontColor = backgroundColor.fontColor;
-      }
-      for (let x = 0; x < this.$refs.content.length; x++) {
-        this.$refs.content[x].style.color = fontColor;
-      }
       this.scoll = false;
       this.silde = true;
       this.fade = false;
@@ -771,11 +753,11 @@ export default {
           // console.log('ri' + this.scollShowPage);
           if (i >= this.renderList.length - 1) {
             let gopage = page + 1;
-            if (this.cataList[gopage].vip == 1) {
-              this.$toast("请付款");
+            if (gopage >= newpage) {
+               this.$toast("到结尾了");
             } else {
-              if (gopage >= newpage) {
-                this.$toast("到结尾了");
+              if (this.cataList[gopage].vip == 1) {
+               this.$toast("请付款");
               } else {
                 sessionStorage.setItem("page", gopage);
                 this.$emit("goPage");
@@ -793,11 +775,11 @@ export default {
           //  console.log('li' + this.scollShowPage);
           if (i == 0) {
             let gopage = page - 1;
-            if (this.cataList[gopage].vip == 1) {
-              this.$toast("请付款");
+            if (gopage < 0) {
+             this.$toast("到开头了");
             } else {
-              if (gopage < 0) {
-                this.$toast("到开头了");
+              if (this.cataList[gopage].vip == 1) {
+                 this.$toast("请付款");
               } else {
                 sessionStorage.setItem("page", gopage);
                 this.$emit("goPage");
@@ -823,11 +805,11 @@ export default {
           let x = 100 * (i + 1);
           if (i >= this.renderList.length - 1) {
             let gopage = page + 1;
-            if (this.cataList[gopage].vip == 1) {
-              this.$toast("请付款");
+            if (gopage >= newpage) {
+               this.$toast("到结尾了");
             } else {
-              if (gopage >= newpage) {
-                this.$toast("到结尾了");
+              if (this.cataList[gopage].vip == 1) {
+               this.$toast("请付款");
               } else {
                 sessionStorage.setItem("page", gopage);
                 this.$emit("goPage");
@@ -849,11 +831,11 @@ export default {
           this.scollShowPage = i - 1;
           if (i == 0) {
             let gopage = page - 1;
-            if (this.cataList[gopage].vip == 1) {
-              this.$toast("请付款");
+            if (gopage < 0) {
+             this.$toast("到开头了");
             } else {
-              if (gopage < 0) {
-                this.$toast("到开头了");
+              if (this.cataList[gopage].vip == 1) {
+                 this.$toast("请付款");
               } else {
                 sessionStorage.setItem("page", gopage);
                 this.$emit("goPage");
@@ -1054,6 +1036,21 @@ export default {
     }
   }
 
+  .scorll-con{
+    width: 100vw;
+    height: 50px;
+    display: flex;
+    background-color: #fff;
+    font-size: 18px;
+    text-align: center;
+    line-height: 50px;
+    color: #999;
+    div{
+      flex: 1;
+      border-right: 1px solid gray;
+    }
+  }
+
   .van-popup {
     position: fixed;
     height: 200px;
@@ -1073,29 +1070,20 @@ export default {
       position: absolute;
       width: 100%;
       bottom: 0;
-
-      .van-cell {
-        flex: 1;
-
-        .van-icon-arrow:before {
-          content: "";
-        }
-      }
-
       div {
         text-align: center;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         vertical-align: bottom;
-        flex: 1;
-        padding: 10px 16px;
-        font-size: 14px;
+        flex: 0 0 25%;
+        // padding: 10px 16px;
+        // font-size: 14px;
       }
 
       span {
         display: inline-block;
-        width: 99px;
+        // width: 99px;
         height: 24px;
         margin-top: 5px;
         padding-left: 5px;
