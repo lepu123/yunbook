@@ -6,7 +6,7 @@
         <img src="@/assets/female.png" v-show="wBu" />
         <van-overlay :show="bgShow" />
       </div>
-      <div class="search">
+      <div class="search" @click="$router.push('/search')">
         <p
           style="
             width: 50vw;

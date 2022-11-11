@@ -1,7 +1,8 @@
 <template>
-  <div class="article-item">
+  <div class="article-item" @click="gotoDetail">
     <div class="item-img">
       <img :src="articleObj.cover" :alt="articleObj.title">
+      <i class="play-icon" v-if="channel === 'ting'"></i>
     </div>
     <div class="item-desc">
       <p class="art-title">{{ articleObj.title }}</p>
@@ -15,7 +16,17 @@
 export default {
   name: "sortCard",
   props: {
-    articleObj: Object
+    articleObj: Object,
+    channel: String,
+  },
+  methods: {
+    gotoDetail() {
+      if (this.channel !== 'ting') {
+        this.$router.push(`/detile/${this.articleObj.id}/${this.articleObj.title}`)
+      } else if (this.channel === 'ting') {
+        this.$router.push(`/ListeningView/${this.articleObj.id}`)
+      }
+    }
   }
 }
 </script>
@@ -28,11 +39,24 @@ export default {
   margin-bottom: 25px;
   width: 27.5%;
   height: 32%;
-  box-shadow: 1px 1px 2px rgba(172, 160, 160, 0.99);
+  box-shadow: 2px 2px 2px rgba(172, 160, 160, 0.5);
 
   .item-img {
+    position: relative;
     width: 100%;
     height: 70%;
+
+    .play-icon {
+      position: absolute;
+      display: inline-block;
+      left: 5px;
+      bottom: 5px;
+      width: 20px;
+      height: 20px;
+      background-image: url(@/assets/image/search_icon/icon_play_bookstore_small.png);
+      background-size: cover;
+      background-position: center;
+    }
 
     img {
       width: 100%;

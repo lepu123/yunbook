@@ -13,7 +13,7 @@
 
     <div class="find-other" v-show="find">
       <CollapseTransition>
-        <div class="find-other-show" ref="child" v-if="show">
+        <div class="find-other-show" ref="child" v-show="show">
           <div class="other-item" v-for="(f, n) in find" :key="f.type">
           <span class="other-desc"
                 v-for="(cat, i) in f.catArray"
@@ -33,7 +33,7 @@
             finished-text="没有更多了"
             @load="onLoading"
         >
-          <sort-card v-for="a in article" :key="a.id" :articleObj="a"/>
+          <sort-card v-for="a in article" :channel="channel" :key="a.id" :articleObj="a"/>
         </van-list>
       </div>
 
@@ -78,6 +78,7 @@ export default {
   props: {
     url: String,
     isShort: Boolean,
+    channel: String,
   },
   methods: {
     async getFindData() {

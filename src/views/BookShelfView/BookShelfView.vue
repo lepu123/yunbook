@@ -28,7 +28,7 @@
 
         <div class="banner-top-right">
           <!-- 搜索 -->
-          <span
+          <span @click="$router.push('/search')"
             ><img src="@/assets/image/banner-images/icon_search.png"
           /></span>
           <!-- 浏览记录 -->

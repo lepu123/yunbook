@@ -7,8 +7,10 @@ import BookShelfView from "@/views/BookShelfView/BookShelfView";
 import MimeView from "@/views/MimeView/MimeView";
 import BookMallView from '../views/BookMallVue/BookMallView.vue'
 import ListeningView from '../views/ListeningView.vue'
+import SearchView from "@/views/SearchView/SearchView";
+import SearchDetailView from "@/views/SearchView/SearchDetailView";
 
-import { Tab, Tabs } from 'vant';
+import {Tab, Tabs} from 'vant';
 
 Vue.use(Tab);
 Vue.use(Tabs);
@@ -102,6 +104,16 @@ const routes = [
       keepAlive: false,
     }
   },
+  {
+    path: '/search',
+    name: 'search',
+    component: SearchView,
+  },
+  {
+    path: '/searchDetail',
+    name: 'searchDetail',
+    component: SearchDetailView,
+  }
   
 ]
 

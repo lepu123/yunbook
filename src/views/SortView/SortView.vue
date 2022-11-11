@@ -1,13 +1,13 @@
 <template>
   <div class="classification">
-    <div class="search-btn"></div>
+    <div class="search-btn" @click="getSearch"></div>
     <van-tabs v-model="active" swipeable animated>
       <!-- 外层循环渲染频道 -->
       <van-tab v-for="(node,i) in allStoreArr" :key="node.channel" :title="node.name">
         <div class="class-content">
           <!-- 内层循环渲染分类 -->
           <!-- 分类插件区分开来这里之前出了bug，修复了 -->
-          <SortItem :category="node.cates" :isShort="i > 1"/>
+          <SortItem :category="node.cates" :channel="node.channel" :isShort="i > 1"/>
         </div>
       </van-tab>
     </van-tabs>
@@ -41,6 +41,9 @@ export default {
       let {data} = await this.$axios.get(mergedCategory);
       this.allStoreArr = data;
     },
+    getSearch() {
+      this.$router.push('/search');
+    }
   },
 
 }

@@ -15,16 +15,18 @@
     <div class="search-hop">
       <h2>热门搜索</h2>
       <div class="hot-search">
-        <div v-for="(h,i) in hotCommend" class="hot-article" :key="h.id">
+        <div v-for="(h,i) in hotCommend" class="hot-article" :key="h.id" @click="gotoDetail(h.id,h.name)">
           <span class="hop-icon" :class="topNum(i)">{{ i + 1 }}</span>{{ h.name }}
         </div>
       </div>
     </div>
     <!-- 最近搜索 -->
     <div class="search-history">
-      <h2><span class="search-name">最近搜索</span><i class="delete-icon" :class="{normal: searchHistory[0] !== undefined}" @click="deleteHistory"></i></h2>
+      <h2><span class="search-name">最近搜索</span><i class="delete-icon" :class="{normal: searchHistory[0] !== undefined}"
+                                                  @click="deleteHistory"></i></h2>
       <div class="history-item">
-        <div v-for="h in searchHistory" :key="h.keyword" class="history-desc" @click="gotoHistory(h)"><span><i></i>{{ h.keyword }}</span></div>
+        <div v-for="h in searchHistory" :key="h.keyword" class="history-desc" @click="gotoHistory(h)">
+          <span><i :class="{book: h.path !== '/searchDetail'}"></i>{{ h.keyword }}</span></div>
       </div>
     </div>
     <!-- 搜索推荐 -->
@@ -104,7 +106,7 @@ export default {
     },
     gotoSearchDetails() {
       this.searchHistory = this.searchHistory.filter((item) => {
-        return  item.keyword !== this.keyword
+        return item.keyword !== this.keyword
       })
       let obj = {
         path: '/searchDetail',
@@ -138,9 +140,28 @@ export default {
         this.searchHistory = JSON.parse(str)
       }
     },
-    gotoHistory({path, keyword}) {
-      this.$router.push({path,query: {keyword}})
-    }
+    gotoHistory({path, keyword, id}) {
+      if (path === '/detile') {
+        this.$router.push(`/detile/${id}/${keyword}`);
+      } else if(path === '/searchDetail') {
+        this.$router.push({path, query: {keyword}})
+      } else if(path === '/ListeningView') {
+        this.$router.push(`/ListeningView/${id}`)
+      }
+    },
+    gotoDetail(id, title) {
+      this.searchHistory = this.searchHistory.filter((item) => {
+        return item.id !== id
+      });
+      let obj = {
+        path: '/detile',
+        id,
+        keyword: title
+      };
+      this.searchHistory.unshift(obj);
+      window.localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory))
+      this.$router.push(`/detile/${id}/${title}`);
+    },
   },
   computed: {
     keywordIs() {
@@ -292,6 +313,11 @@ export default {
             background-image: url(@/assets/image/search_icon/icon_search.png);
             background-size: cover;
             background-position: center;
+
+          }
+
+          .book {
+            background-image: url(@/assets/image/search_icon/search_ic_associate_book.png);
           }
         }
 
@@ -356,6 +382,7 @@ export default {
         height: 16px;
         margin-right: 15px;
         background-image: url(@/assets/image/search_icon/search_lenovo_ic_search.png);
+
       }
 
       .goto {
@@ -383,6 +410,10 @@ export default {
           height: 16px;
           margin-right: 15px;
           background-image: url(@/assets/image/search_icon/search_ic_associate_book.png);
+
+          &.type {
+            background-image: url(@/assets/image/search_icon/search_ic_associate_audio.png);
+          }
         }
 
         .goto {
