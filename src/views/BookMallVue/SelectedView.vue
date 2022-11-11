@@ -2,7 +2,7 @@
   <div>
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
       <van-swipe-item v-for="(item, index) in bannersArr" :key="index">
-        <img :src="item.cover" />
+        <img :src="item.cover" @click="swipeToBook(item.id, item.title)" />
       </van-swipe-item>
     </van-swipe>
 
@@ -179,6 +179,31 @@
           </router-link>
         </ul>
       </van-popup>
+
+      <van-popup
+        v-model="showThree"
+        get-container="#app"
+        closeable
+        close-icon="arrow-left"
+        close-icon-position="top-left"
+        position="right"
+        :style="{ height: '100%' }"
+      >
+        <div
+          style="
+            width: 100vw;
+            height: 55px;
+            text-align: center;
+            line-height: 55px;
+            font-size: 19px;
+            font-weight: bolder;
+            border-bottom: 1px solid #ccc;
+          "
+        >
+          {{ gName }}
+        </div>
+        <SortComponent :url="gUrl" />
+      </van-popup>
     </div>
 
     <div class="week-hot">
@@ -228,6 +253,7 @@
 <script>
 import WatchMoreComp from "./WatchMoreComp.vue";
 import { mapMutations } from "vuex";
+import SortComponent from "@/components/SortComponent.vue";
 export default {
   props: {
     selectedUrl: String,
@@ -244,11 +270,14 @@ export default {
       newBookArr: {},
       show: false,
       showTwo: false,
+      showThree: false,
       navList: [],
       active: 0,
       activeKey: 0,
       paiArr: [],
       wanArr: [],
+      gUrl: "",
+      gName: "",
     };
   },
   methods: {
@@ -302,6 +331,17 @@ export default {
             this.wanArr = data.books;
           });
       }
+
+      if (pName == "种田") {
+        this.showThree = true;
+        this.gUrl = wUrl;
+        this.gName = "种田";
+      }
+      if (pName == "古言") {
+        this.showThree = true;
+        this.gUrl = wUrl;
+        this.gName = "古言";
+      }
     },
 
     changeBook(id,title,type,author) {
@@ -312,6 +352,10 @@ export default {
         this.$router.push(`/ListeningView/${id}`);
       }
     },
+
+    swipeToBook(id, title) {
+      this.$router.push(`/detile/${id}/${title}`);
+    },
     ...mapMutations(["getHistory","empty"]),
   },
 
@@ -320,6 +364,7 @@ export default {
   },
   components: {
     WatchMoreComp,
+    SortComponent,
   },
 };
 </script>

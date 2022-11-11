@@ -7,7 +7,18 @@
         <van-overlay :show="bgShow" />
       </div>
       <div class="search">
-        <input type="text" placeholder="唐诗里的烟火人间" />
+        <p
+          style="
+            width: 50vw;
+            height: 35px;
+            border-radius: 999px;
+            margin-left: 20px;
+            line-height:35px;
+            color:#ccc;
+          "
+        >
+          唐诗里的烟火人间
+        </p>
         <van-icon name="search" />
       </div>
     </div>
@@ -238,13 +249,6 @@ export default {
   margin-left: 5px;
   display: flex;
   justify-content: space-between;
-  input {
-    width: 50vw;
-    height: 35px;
-    border-radius: 999px;
-    margin-left: 20px;
-    border: none;
-  }
 
   .van-icon-search:before {
     content: "\e710";

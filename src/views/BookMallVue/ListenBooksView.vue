@@ -2,7 +2,7 @@
   <div class="listenbook">
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
       <van-swipe-item v-for="(item, index) in bannersArr" :key="index">
-        <img :src="item.cover" />
+        <img :src="item.cover" @click="swipeToBook(item.id)" />
       </van-swipe-item>
     </van-swipe>
 
@@ -15,7 +15,6 @@
           padding-top: 18px;
         "
       >
-        
         {{ hotListenArr.name }}
       </p>
 
@@ -111,6 +110,9 @@ export default {
           this.imgOne = data.list[2].cover;
           this.girlsSelect = data.list[3];
         });
+    },
+    swipeToBook(id) {
+      this.$router.push(`/ListeningView/${id}`);
     },
   },
 

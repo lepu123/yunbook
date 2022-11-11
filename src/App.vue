@@ -124,4 +124,20 @@ export default {
   transform: translate3d(-50%, -50%, 0);
   background-color: transparent;
 }
+.van-cell {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  box-sizing: border-box;
+  width: 0;
+  padding: 10px 0px;
+  overflow: hidden;
+  color: #323233;
+  font-size: 14px;
+  line-height: 24px;
+  background-color: #fff;
+}
+
+
 </style>
