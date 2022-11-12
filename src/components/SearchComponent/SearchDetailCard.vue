@@ -1,5 +1,5 @@
 <template>
-  <div class="detail">
+  <div class="detail" @click="gotoDetail">
     <img :src="item.cover" :alt="item.title">
     <div class="detail-wrap">
       <p class="title">{{ item.title }}</p>
@@ -14,6 +14,15 @@ export default {
   name: "SearchDetailCard",
   props: {
     item: Object
+  },
+  methods: {
+    gotoDetail() {
+      if (this.item.bookType !== 0) {
+        this.$router.push(`/ListeningView/${this.item.bookId}`)
+      } else {
+        this.$router.push(`/detile/${this.item.bookId}/${this.item.title}`)
+      }
+    },
   }
 }
 </script>

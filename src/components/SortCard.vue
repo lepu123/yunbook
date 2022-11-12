@@ -1,5 +1,5 @@
 <template>
-  <div class="article-item" @click="$router.push(`/detile/${articleObj.id}/${articleObj.title}}`)">
+  <div class="article-item" @click="gotoDetail">
     <div class="item-img">
       <img :src="articleObj.cover" :alt="articleObj.title">
       <i class="play-icon" v-if="channel === 'ting'"></i>
@@ -18,6 +18,15 @@ export default {
   props: {
     articleObj: Object,
     channel: String,
+  },
+  methods: {
+    gotoDetail() {
+      if (this.channel !== 'ting') {
+        this.$router.push(`/detile/${this.articleObj.id}/${this.articleObj.title}`)
+      } else if (this.channel === 'ting') {
+        this.$router.push(`/ListeningView/${this.articleObj.id}`)
+      }
+    }
   }
 }
 </script>
@@ -73,6 +82,9 @@ export default {
       font-size: 15px;
       color: #999;
       margin-top: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 90%;
     }
   }
 }
